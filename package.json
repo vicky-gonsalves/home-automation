@@ -1,7 +1,14 @@
 {
   "name": "home-automation",
-  "version": "0.1.0",
-  "private": true,
+  "version": "1.0.0",
+  "description": "Home Automation UI - Built with React for Arduino, Raspberry PI based IOT devices",
+  "repository": "https://github.com/vicky-gonsalves/home-automation",
+  "author": "Vicky Gonsalves <vicky.gonsalves@outlook.com>",
+  "license": "MIT",
+  "engines": {
+    "node": ">=12.15.0"
+  },
+  "keywords": [],
   "dependencies": {
     "@material-ui/core": "^4.9.2",
     "@material-ui/icons": "^4.9.1",
