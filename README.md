@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.com/vicky-gonsalves/home-automation.svg?branch=master)](https://travis-ci.com/vicky-gonsalves/home-automation)
+[![Coverage Status](https://coveralls.io/repos/github/vicky-gonsalves/home-automation/badge.svg?branch=master)](https://coveralls.io/github/vicky-gonsalves/home-automation?branch=master)
+
 ## Home Automation UI - Built with React for Arduino, Raspberry PI based IOT devices
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
