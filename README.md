@@ -1,4 +1,4 @@
-## Home Automation UI - for Arduino based IOT devices
+## Home Automation UI - Built with React for Arduino, Raspberry PI based IOT devices
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
