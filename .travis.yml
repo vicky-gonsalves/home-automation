@@ -13,6 +13,7 @@ cache:
     - node_modules
   yarn: true
 script:
+  - yarn build
   - yarn lint
   - yarn coverage:coveralls
 after_success:
