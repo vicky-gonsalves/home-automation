@@ -1,4 +1,4 @@
-## A boilerplate built with react, redux, material-ui, formik, yup, jest, jest-enzyme. Unit tests included.
+## Home Automation UI - for Arduino based IOT devices
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
