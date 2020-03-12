@@ -1,7 +1,7 @@
-import {shallow} from 'enzyme';
+import { shallow } from 'enzyme';
 import React from 'react';
-import {history} from '../../../_helpers/history';
-import {clickButton, findByDataAttr} from '../../../_utils';
+import { history } from '../../../_helpers/history';
+import { clickButton, findByDataAttr } from '../../../_utils';
 import SignInButton from './SignInButton';
 
 describe('SignInButton', () => {
@@ -9,7 +9,7 @@ describe('SignInButton', () => {
     let wrapper;
     beforeEach(() => {
       history.push = jest.fn();
-      wrapper = shallow(<SignInButton/>);
+      wrapper = shallow(<SignInButton />);
     });
     afterEach(() => {
       wrapper.unmount();

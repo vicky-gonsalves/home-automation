@@ -1,18 +1,18 @@
-import {shallow} from 'enzyme';
+import { shallow } from 'enzyme';
 import React from 'react';
-import {checkProps, findByDataAttr} from '../../_utils';
+import { checkProps, findByDataAttr } from '../../_utils';
 import config from '../../config';
 import Navbar from './navbar';
 
 const setUp = (props = {}) => {
-  return shallow(<Navbar {...props}/>);
+  return shallow(<Navbar {...props} />);
 };
 
 describe('Navbar Component', () => {
   describe('Checking PropTypes', () => {
     it('should not throw a warning', () => {
       const expectedPropTypes = {
-        appName: 'Home Automation'
+        appName: 'Home Automation',
       };
 
       const propsErr = checkProps(Navbar, expectedPropTypes);
@@ -24,7 +24,7 @@ describe('Navbar Component', () => {
     let component;
     beforeEach(() => {
       const props = {
-        appName: config.appName
+        appName: config.appName,
       };
       component = setUp(props);
     });
@@ -51,4 +51,3 @@ describe('Navbar Component', () => {
     });
   });
 });
-

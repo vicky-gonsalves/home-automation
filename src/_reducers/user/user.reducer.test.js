@@ -1,12 +1,11 @@
-import {userConstants} from '../../_constants';
-import user, {getCurrentUser} from './user.reducer';
+import { userConstants } from '../../_constants';
+import user from './user.reducer';
 
 describe('User Reducer', () => {
   beforeEach(() => {
     localStorage.clear();
     sessionStorage.clear();
   });
-
 
   it('should return default state', () => {
     const newState = user({}, {});
@@ -16,12 +15,15 @@ describe('User Reducer', () => {
   it('should return new state if SIGN_IN', () => {
     const currentUser = {
       isFetching: true,
-      loginError: null
+      loginError: null,
     };
-    const newState = user({}, {
-      type: userConstants.SIGN_IN,
-      payload: currentUser
-    });
+    const newState = user(
+      {},
+      {
+        type: userConstants.SIGN_IN,
+        payload: currentUser,
+      }
+    );
     expect(newState).toEqual(currentUser);
   });
 
@@ -33,12 +35,15 @@ describe('User Reducer', () => {
       isLoggedIn: true,
       isFetching: false,
       tokens: {},
-      loginError: null
+      loginError: null,
     };
-    const newState = user({}, {
-      type: userConstants.SET_USER,
-      payload: currentUser
-    });
+    const newState = user(
+      {},
+      {
+        type: userConstants.SET_USER,
+        payload: currentUser,
+      }
+    );
     expect(newState).toEqual(currentUser);
   });
 
@@ -52,22 +57,28 @@ describe('User Reducer', () => {
       remember: false,
       tokens: {},
     };
-    const newState = user({}, {
-      type: userConstants.SIGN_OUT,
-      payload: currentUser
-    });
+    const newState = user(
+      {},
+      {
+        type: userConstants.SIGN_OUT,
+        payload: currentUser,
+      }
+    );
     expect(newState).toEqual(currentUser);
   });
 
   it('should return new state if SET_LOGIN_ERROR', () => {
     const currentUser = {
       isFetching: false,
-      loginError: undefined
+      loginError: undefined,
     };
-    const newState = user({}, {
-      type: userConstants.SET_LOGIN_ERROR,
-      payload: currentUser
-    });
+    const newState = user(
+      {},
+      {
+        type: userConstants.SET_LOGIN_ERROR,
+        payload: currentUser,
+      }
+    );
     expect(newState).toEqual(currentUser);
   });
 
@@ -79,13 +90,16 @@ describe('User Reducer', () => {
       isLoggedIn: true,
       isFetching: false,
       tokens: {},
-      loginError: null
+      loginError: null,
     };
     localStorage.setItem('user', JSON.stringify(currentUser));
-    const newState = user({}, {
-      type: userConstants.SET_USER,
-      payload: currentUser
-    });
+    const newState = user(
+      {},
+      {
+        type: userConstants.SET_USER,
+        payload: currentUser,
+      }
+    );
     expect(newState).toEqual(JSON.parse(localStorage.getItem('user')));
   });
 
@@ -97,13 +111,16 @@ describe('User Reducer', () => {
       isLoggedIn: true,
       isFetching: false,
       tokens: {},
-      loginError: null
+      loginError: null,
     };
     sessionStorage.setItem('user', JSON.stringify(currentUser));
-    const newState = user({}, {
-      type: userConstants.SET_USER,
-      payload: currentUser
-    });
+    const newState = user(
+      {},
+      {
+        type: userConstants.SET_USER,
+        payload: currentUser,
+      }
+    );
     expect(newState).toEqual(JSON.parse(sessionStorage.getItem('user')));
   });
 });

@@ -1,7 +1,7 @@
-import {shallow} from 'enzyme';
+import { shallow } from 'enzyme';
 import React from 'react';
-import {findByDataAttr} from '../../_utils';
-import {Toaster} from './toaster';
+import { findByDataAttr } from '../../_utils';
+import { Toaster } from './toaster';
 
 const props = {};
 
@@ -11,7 +11,7 @@ describe('Toaster Component', () => {
     let setLoginErrorMock;
     beforeEach(() => {
       setLoginErrorMock = jest.fn();
-      wrapper = shallow(<Toaster {...props} setLoginError={setLoginErrorMock}/>);
+      wrapper = shallow(<Toaster {...props} setLoginError={setLoginErrorMock} />);
     });
 
     it('should render without error', () => {
@@ -20,14 +20,16 @@ describe('Toaster Component', () => {
     });
 
     it('should set state open true', () => {
-      wrapper.setProps({loginError: true, open: false});
+      wrapper.setProps({ loginError: true, open: false });
       wrapper.instance().componentDidUpdate();
+      // eslint-disable-next-line security/detect-non-literal-fs-filename
       expect(wrapper.props().open).toBe(true);
     });
 
     it('should call setLoginError and set state open to false', () => {
       wrapper.instance().handleClose();
       expect(setLoginErrorMock).toHaveBeenCalled();
+      // eslint-disable-next-line security/detect-non-literal-fs-filename
       expect(wrapper.props().open).toBe(false);
     });
   });

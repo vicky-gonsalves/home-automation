@@ -1,13 +1,13 @@
 import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import {makeStyles} from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
-import {withFormik} from 'formik';
+import { withFormik } from 'formik';
 import React from 'react';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import * as yup from 'yup';
-import {actions} from '../../../_actions';
+import { actions } from '../../../_actions';
 
 const useStyles = makeStyles(theme => ({
   form: {
@@ -16,20 +16,12 @@ const useStyles = makeStyles(theme => ({
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
-  }
+  },
 }));
 
 const SimpleSignInForm = props => {
   const classes = useStyles();
-  const {
-    touched,
-    errors,
-    handleChange,
-    handleBlur,
-    isFetching,
-    handleSubmit,
-    onSubmit
-  } = props;
+  const { touched, errors, handleChange, handleBlur, isFetching, handleSubmit, onSubmit } = props;
 
   return (
     <form className={classes.form} onSubmit={typeof onSubmit === 'function' ? onSubmit : handleSubmit} noValidate>
@@ -47,7 +39,7 @@ const SimpleSignInForm = props => {
         onBlur={handleBlur}
         disabled={isFetching}
         error={errors.email && touched.email}
-        helperText={(errors.email && touched.email) && errors.email}
+        helperText={errors.email && touched.email && errors.email}
         data-test="emailInput"
       />
       <TextField
@@ -64,11 +56,11 @@ const SimpleSignInForm = props => {
         onBlur={handleBlur}
         disabled={isFetching}
         error={errors.password && touched.password}
-        helperText={(errors.password && touched.password) && errors.password}
+        helperText={errors.password && touched.password && errors.password}
         data-test="passwordInput"
       />
       <FormControlLabel
-        control={<Checkbox color="primary" id="remember" name="remember" disabled={isFetching} onChange={handleChange}/>}
+        control={<Checkbox color="primary" id="remember" name="remember" disabled={isFetching} onChange={handleChange} />}
         label="Remember me"
         data-test="rememberMe"
       />
@@ -83,36 +75,32 @@ const SimpleSignInForm = props => {
       >
         Sign In
       </Button>
-
     </form>
   );
 };
 
 export const SignInForm = withFormik({
-  mapPropsToValues: () => ({email: '', password: '', remember: false}),
+  mapPropsToValues: () => ({ email: '', password: '', remember: false }),
   validationSchema: yup.object().shape({
-    email: yup.string().email().required('Please enter email address'),
+    email: yup
+      .string()
+      .email()
+      .required('Please enter email address'),
     password: yup.string().required('Please enter password'),
   }),
-  handleSubmit: (values, {props}) => {
+  handleSubmit: (values, { props }) => {
     props.signIn(values);
   },
-  displayName: 'signInForm'
+  displayName: 'signInForm',
 })(SimpleSignInForm);
 
 function mapStateToProps(state) {
-  const {isFetching} = state.user;
-  return {isFetching};
+  const { isFetching } = state.user;
+  return { isFetching };
 }
 
 const actionCreators = {
-  signIn: actions.signIn
+  signIn: actions.signIn,
 };
 
 export default connect(mapStateToProps, actionCreators)(SignInForm);
-
-
-
-
-
-

@@ -1,4 +1,4 @@
-import {userConstants} from '../../_constants';
+import { userConstants } from '../../_constants';
 
 const getCurrentUser = () => {
   let currentUser;
@@ -19,7 +19,7 @@ const initialState = {
   isLoggedIn: storedUser && storedUser.user && storedUser.tokens,
   isFetching: false,
   tokens: storedUser && storedUser.tokens ? storedUser.tokens : {},
-  loginError: null
+  loginError: null,
 };
 
 const user = (state = initialState, action) => {
@@ -33,13 +33,13 @@ const user = (state = initialState, action) => {
         isLoggedIn: true,
         isFetching: false,
         tokens: action.payload.tokens,
-        loginError: null
+        loginError: null,
       };
     case userConstants.SIGN_IN:
       return {
         ...state,
         isFetching: true,
-        loginError: null
+        loginError: null,
       };
     case userConstants.SIGN_OUT:
       return initialState;
@@ -47,7 +47,7 @@ const user = (state = initialState, action) => {
       return {
         ...state,
         isFetching: false,
-        loginError: action.payload.error
+        loginError: action.payload.error,
       };
     default:
       return state;
