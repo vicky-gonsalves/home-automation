@@ -40,7 +40,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "test-verbose": "react-scripts test --verbose",
-    "coverage": "react-scripts test --coverage",
+    "coverage:coveralls": "react-scripts test --coverage --coverageReporters=text-lcov | coveralls",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
