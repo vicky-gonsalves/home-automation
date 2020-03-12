@@ -1,0 +1,122 @@
+.tank {
+  .overlap {
+    margin-top: -70px;
+    position: relative;
+    color: black;
+    font-size: 40px;
+    text-align: center;
+  }
+
+  .bowl {
+    position: relative;
+    //border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    box-shadow: inset 0 -5px 0 0 rgba(0, 0, 0, 0.5), inset 0 -20px 5px 0 rgba(0, 0, 0, 0.2), inset -15px 0 5px 0 rgba(0, 0, 0, 0.1), inset 15px 0 5px 0 rgba(0, 0, 0, 0.1);
+    //background: -moz-radial-gradient(center, ellipse cover, transparent 0%, transparent 76%, rgba(0, 0, 0, 0.65) 100%);
+    //background: radial-gradient(center, ellipse cover, transparent 0%, transparent 76%, rgba(0, 0, 0, 0.65) 100%);
+    //background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0) 76%, rgba(0, 0, 0, 0.65) 100%);
+    margin: 0 auto;
+
+    &:before {
+      overflow: hidden;
+      //border-radius: 50%;
+      content: "";
+      box-shadow: inset 0 -5px 0 0 rgba(0, 0, 0, 0.5), inset 0 -20px 5px 0 rgba(0, 0, 0, 0.2), inset -15px 0 5px 0 rgba(0, 0, 0, 0.1), inset 15px 0 5px 0 rgba(0, 0, 0, 0.1);
+      //background: -moz-radial-gradient(center, ellipse cover, transparent 0%, transparent 60%, rgba(0, 0, 0, 0.65) 81%, black 100%);
+      //background: radial-gradient(center, ellipse cover, transparent 0%, transparent 60%, rgba(0, 0, 0, 0.65) 81%, black 100%);
+      //background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0) 60%, rgba(0, 0, 0, 0.65) 81%, #000000 100%);
+      //position: absolute;
+      width: 100px;
+      height: 100px;
+      z-index: 2;
+    }
+
+    &:after {
+      content: "";
+      width: 60px;
+      //border-radius: 50%;
+      height: 5px;
+      background: #039be4;
+      box-shadow: inset 0 0 10px 0 #000;
+      //position: absolute;
+      left: 50%;
+      margin-left: -30px;
+      bottom: 0;
+      z-index: 2;
+    }
+
+    .inner {
+      //border-radius: 50%;
+      width: 100px;
+      height: 100px;
+      //background: -moz-radial-gradient(center, ellipse cover, transparent 0%, transparent 76%, rgba(0, 0, 0, 0.65) 100%);
+      //background: radial-gradient(center, ellipse cover, transparent 0%, transparent 76%, rgba(0, 0, 0, 0.65) 100%);
+      //background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0) 76%, rgba(0, 0, 0, 0.65) 100%);
+      overflow: hidden;
+      backface-visibility: hidden;
+      transform: translate3d(0, 0, 0);
+
+      &:before {
+        content: "";
+        width: 20px;
+        height: 20px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        position: absolute;
+        right: 40%;
+        top: 60%;
+        z-index: 2;
+      }
+
+      &:after {
+        content: "";
+        width: 20px;
+        height: 40px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        position: absolute;
+        right: 30%;
+        top: 15%;
+        transform: rotate(-20deg);
+        z-index: 2;
+      }
+    }
+
+    .fill {
+      animation-name: fillAction !important;
+      animation-iteration-count: 1 !important;
+      animation-timing-function: cubic-bezier(0.2, 0.6, 0.8, 0.4) !important;
+      animation-duration: 4s !important;
+      animation-fill-mode: forwards !important;
+      transform: translate(0, 100px);
+    }
+
+    .waveShape {
+      animation-name: waveAction;
+      animation-iteration-count: infinite;
+      animation-timing-function: linear;
+      animation-duration: 1s;
+      width: 100px;
+      height: 100px;
+      fill: #039be4;
+    }
+  }
+
+  @keyframes fillAction {
+    //0% {
+    //  transform: translate(0, 100px);
+    //}
+    //100% {
+    //  transform: translate(0, 0px);
+    //}
+  }
+  @keyframes waveAction {
+    0% {
+      transform: translate(-150px, 0);
+    }
+    100% {
+      transform: translate(0, 0);
+    }
+  }
+}
