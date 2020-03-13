@@ -3,3 +3,5 @@ dist
 coverage
 bin
 src/serviceWorker.js
+index.js
+build
