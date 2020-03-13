@@ -13,9 +13,9 @@ cache:
     - node_modules
   yarn: true
 script:
-  - npm run lint
-  - npm run build
-  - npm run coverage:coveralls
+  - yarn lint
+  - yarn build
+  - yarn coverage:coveralls
 after_success:
   - bash deploy.sh
   - bash ecs_deploy.sh
