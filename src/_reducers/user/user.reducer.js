@@ -1,16 +1,7 @@
 import { userConstants } from '../../_constants';
+import { userService } from '../../_services/user/user.service';
 
-const getCurrentUser = () => {
-  let currentUser;
-  if (localStorage.getItem('user') !== null) {
-    currentUser = JSON.parse(localStorage.getItem('user'));
-  } else if (sessionStorage.getItem('user') !== null) {
-    currentUser = JSON.parse(sessionStorage.getItem('user'));
-  }
-  return currentUser;
-};
-
-const storedUser = getCurrentUser();
+const storedUser = userService.getCurrentUser();
 
 const initialState = {
   name: storedUser && storedUser.user && storedUser.user.name ? storedUser.user.name : null,
@@ -35,6 +26,14 @@ const user = (state = initialState, action) => {
         tokens: action.payload.tokens,
         loginError: null,
       };
+    case userConstants.SET_USER_TOKENS:
+      return {
+        ...state,
+        isLoggedIn: true,
+        isFetching: false,
+        tokens: action.payload.tokens,
+        loginError: null,
+      };
     case userConstants.SIGN_IN:
       return {
         ...state,
@@ -43,6 +42,14 @@ const user = (state = initialState, action) => {
       };
     case userConstants.SIGN_OUT:
       return initialState;
+    case userConstants.GET_ME:
+      return {
+        ...state,
+        name: action.payload.name,
+        email: action.payload.email,
+        isFetching: true,
+        loginError: null,
+      };
     case userConstants.SET_LOGIN_ERROR:
       return {
         ...state,

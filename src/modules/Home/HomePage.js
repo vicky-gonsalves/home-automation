@@ -74,6 +74,7 @@ function mapState(state) {
 const actionCreators = {
   signOut: actions.signOut,
   signIn: actions.signIn,
+  me: actions.me,
   socketInit: socketActions.socketInit,
 };
 
