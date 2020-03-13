@@ -17,6 +17,5 @@ script:
   - yarn build
   - yarn coverage:coveralls
 after_success:
-  - bash merge.sh
   - bash deploy.sh
   - bash ecs_deploy.sh
