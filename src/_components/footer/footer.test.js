@@ -1,18 +1,18 @@
-import {shallow} from 'enzyme';
-import React from 'React';
-import {checkProps, findByDataAttr} from '../../_utils';
+import { shallow } from 'enzyme';
+import React from 'react';
+import { checkProps, findByDataAttr } from '../../_utils';
 import config from '../../config';
 import Footer from './footer';
 
 const setUp = (props = {}) => {
-  return shallow(<Footer {...props}/>);
+  return shallow(<Footer {...props} />);
 };
 
 describe('Footer Component', () => {
   describe('Checking PropTypes', () => {
     it('should not throw a warning', () => {
       const expectedPropTypes = {
-        appName: 'Home Automation'
+        appName: 'Home Automation',
       };
 
       const propsErr = checkProps(Footer, expectedPropTypes);
@@ -20,12 +20,11 @@ describe('Footer Component', () => {
     });
   });
 
-
   describe('Have props', () => {
     let component;
     beforeEach(() => {
       const props = {
-        appName: config.appName
+        appName: config.appName,
       };
       component = setUp(props);
     });

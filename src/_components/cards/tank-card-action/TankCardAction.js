@@ -1,18 +1,18 @@
 import CardActions from '@material-ui/core/CardActions';
 import Collapse from '@material-ui/core/Collapse';
 import IconButton from '@material-ui/core/IconButton';
-import {makeStyles} from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import clsx from 'clsx';
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import TankStats from '../tank-stats/TankStats';
 
 const useStyles = makeStyles(theme => ({
   cardAction: {
     display: 'flex',
     justifyContent: 'space-between',
-    padding: theme.spacing(0, 1)
+    padding: theme.spacing(0, 1),
   },
   expand: {
     transform: 'rotate(0deg)',
@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme => ({
   },
   expandOpen: {
     transform: 'rotate(180deg)',
-  }
+  },
 }));
 
 const TankCardAction = () => {
@@ -47,11 +47,11 @@ const TankCardAction = () => {
           aria-expanded={expanded}
           aria-label="show stats"
         >
-          <ExpandMoreIcon/>
+          <ExpandMoreIcon />
         </IconButton>
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
-        <TankStats/>
+        <TankStats />
       </Collapse>
     </React.Fragment>
   );

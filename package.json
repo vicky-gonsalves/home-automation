@@ -1,34 +1,50 @@
 {
   "name": "home-automation",
-  "version": "0.1.0",
-  "private": true,
+  "version": "1.0.0",
+  "homepage": "http://homeautomation.vickygonsalves.com",
+  "description": "Home Automation UI - Built with React for Arduino, Raspberry PI based IOT devices",
+  "repository": "https://github.com/vicky-gonsalves/home-automation",
+  "author": "Vicky Gonsalves <vicky.gonsalves@outlook.com>",
+  "main": "index.js",
+  "license": "MIT",
+  "engines": {
+    "node": ">=12.15.0"
+  },
+  "keywords": [],
   "dependencies": {
-    "@material-ui/core": "^4.9.2",
+    "@material-ui/core": "^4.9.5",
     "@material-ui/icons": "^4.9.1",
     "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.4.0",
-    "@testing-library/user-event": "^7.1.2",
+    "@testing-library/react": "^9.5.0",
+    "@testing-library/user-event": "^7.2.1",
+    "express": "^4.17.1",
     "formik": "^2.1.4",
     "formik-material-ui": "^2.0.0-beta.1",
     "history": "^4.10.1",
     "node-sass": "^4.13.1",
     "prop-types": "^15.7.2",
     "react": "^16.12.0",
-    "react-dom": "^16.12.0",
+    "react-dom": "^16.13.0",
     "react-redux": "^7.1.3",
     "react-router": "^5.1.2",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.3.1",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
+    "socket.io-client": "^2.3.0",
     "yup": "^0.28.1"
   },
   "scripts": {
     "start": "react-scripts start",
+    "start:build": "node .",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "prettier": "prettier --check **/*.js",
+    "prettier:fix": "prettier --write \"**/*.+(js|jsx|json|css|md)\"",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "test-verbose": "react-scripts test --verbose",
-    "coverage": "react-scripts test --coverage",
+    "coverage:coveralls": "react-scripts test --coverage --coverageReporters=text-lcov | coveralls",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -46,14 +62,35 @@
       "last 1 safari version"
     ]
   },
+  "lint-staged": {
+    "*.+(js|jsx)": [
+      "eslint --fix",
+      "git add"
+    ],
+    "*.+(js|jsx|json|css|md)": [
+      "prettier --write",
+      "git add"
+    ]
+  },
   "devDependencies": {
     "check-prop-types": "^1.1.2",
+    "coveralls": "^3.0.9",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.2",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-config-prettier": "^6.10.0",
+    "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-jest": "^23.8.2",
+    "eslint-plugin-prettier": "^3.1.2",
+    "eslint-plugin-security": "^1.4.0",
     "faker": "^4.1.0",
+    "husky": "^4.2.3",
     "jest": "24.9.0",
     "jest-enzyme": "^7.1.2",
     "jest-localstorage-mock": "^2.4.0",
+    "lint-staged": "^10.0.8",
+    "prettier": "^1.19.1",
     "redux-mock-store": "^1.5.4"
   }
 }

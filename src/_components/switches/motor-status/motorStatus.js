@@ -1,16 +1,15 @@
 import Grid from '@material-ui/core/Grid';
 import Switch from '@material-ui/core/Switch';
 import Typography from '@material-ui/core/Typography';
-import React, {useState} from 'react';
-
+import React, { useState } from 'react';
 
 const MotorStatus = () => {
   const [state, setState] = useState({
-    motorStatus: false
+    motorStatus: false,
   });
 
   const handleChange = name => event => {
-    setState({...state, [name]: event.target.checked});
+    setState({ ...state, [name]: event.target.checked });
   };
 
   return (
@@ -22,7 +21,7 @@ const MotorStatus = () => {
             checked={state.motorStatus}
             onChange={handleChange('motorStatus')}
             value="true"
-            inputProps={{'aria-label': 'motor status'}}
+            inputProps={{ 'aria-label': 'motor status' }}
           />
         </Grid>
         <Grid item>Motor ON</Grid>

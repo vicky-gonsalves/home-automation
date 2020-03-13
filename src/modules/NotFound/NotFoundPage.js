@@ -1,8 +1,8 @@
-import {Container} from '@material-ui/core';
+import { Container } from '@material-ui/core';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
-import React from 'react'
+import React from 'react';
 
 function NotFoundPage() {
   return (
@@ -15,7 +15,7 @@ function NotFoundPage() {
         </CardContent>
       </Card>
     </Container>
-  )
+  );
 }
 
 export default NotFoundPage;

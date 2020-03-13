@@ -1,28 +1,27 @@
-import {createShallow} from '@material-ui/core/test-utils';
-import {mount} from 'enzyme';
+import { createShallow } from '@material-ui/core/test-utils';
+import { mount } from 'enzyme';
 import faker from 'faker';
 import React from 'react';
-import {Provider} from 'react-redux';
+import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import {checkProps, findByDataAttr, submitFormikForm, updateFormikField} from '../../../_utils';
-import DefaultSignInForm, {SignInForm} from './SignInForm';
+import { checkProps, findByDataAttr, submitFormikForm, updateFormikField } from '../../../_utils';
+import DefaultSignInForm, { SignInForm } from './SignInForm';
 
 const mockStore = configureStore([thunk]);
 const initialState = {
   user: {
-    loginError: null
-  }
+    loginError: null,
+  },
 };
 
 const store = mockStore(initialState);
 
-const props = {
-  classes: {form: 'someprop'}
+let props = {
+  classes: { form: 'someprop' },
 };
 const email = faker.internet.email();
 const password = faker.internet.password();
-
 
 describe('SignInForm Component', () => {
   describe('Checking PropTypes', () => {
@@ -35,9 +34,9 @@ describe('SignInForm Component', () => {
   describe('Components Test', () => {
     let wrapper;
     beforeEach(() => {
-      const shallow = createShallow({untilSelector: 'TextField'});
-      const props = {classes: {paper: 'someprop'}};
-      wrapper = shallow(<SignInForm {...props}/>);
+      const shallow = createShallow({ untilSelector: 'TextField' });
+      props = { classes: { paper: 'someprop' } };
+      wrapper = shallow(<SignInForm {...props} />);
     });
 
     it('should have email input field', () => {
@@ -64,9 +63,7 @@ describe('SignInForm Component', () => {
       const component = findByDataAttr(wrapper, 'submitButton');
       expect(component.length).toBe(1);
     });
-
   });
-
 
   describe('Component Testing', () => {
     let component;
@@ -74,7 +71,7 @@ describe('SignInForm Component', () => {
     beforeEach(() => {
       component = mount(
         <Provider store={store}>
-          <DefaultSignInForm {...props}/>
+          <DefaultSignInForm {...props} />
         </Provider>
       );
     });
@@ -126,7 +123,7 @@ describe('SignInForm Component', () => {
     beforeEach(() => {
       component = mount(
         <Provider store={store}>
-          <SignInForm {...props} onSubmit={onLogin}/>
+          <SignInForm {...props} onSubmit={onLogin} />
         </Provider>
       );
     });
@@ -153,8 +150,8 @@ describe('SignInForm Component', () => {
 
     it('should submit form if email and password are valid', async () => {
       const form = component.find(`form`).first();
-      await submitFormikForm(form, {elements: {email: email, password: password}});
+      await submitFormikForm(form, { elements: { email, password } });
       expect(onLogin).toHaveBeenCalledTimes(1);
     });
-  })
+  });
 });

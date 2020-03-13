@@ -1,7 +1,7 @@
-import {Card, CardContent, CardHeader} from '@material-ui/core';
+import { Card, CardContent, CardHeader } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
-import {makeStyles} from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import SettingsIcon from '@material-ui/icons/Settings';
 import WifiIcon from '@material-ui/icons/Wifi';
@@ -12,34 +12,34 @@ import OutdoorCardAction from '../outdoor-card-action/OutdoorCardAction';
 
 const useStyles = makeStyles(theme => ({
   root: {
-    paddingTop: theme.spacing(0)
+    paddingTop: theme.spacing(0),
   },
   default: {
     minHeight: 240,
     display: 'flex',
-    flexDirection: 'column'
+    flexDirection: 'column',
   },
   cardHeader: {
-    padding: theme.spacing(1, 2)
+    padding: theme.spacing(1, 2),
   },
   cardContent: {
-    padding: theme.spacing(0, 1)
+    padding: theme.spacing(0, 1),
   },
   mode: {
-    margin: theme.spacing(1, 0)
+    margin: theme.spacing(1, 0),
   },
   buttonsGrp: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   grow: {
-    flexGrow: 1
+    flexGrow: 1,
   },
   caption: {
-    marginTop: theme.spacing(4)
-  }
+    marginTop: theme.spacing(4),
+  },
 }));
 
 const OutdoorLightCard = () => {
@@ -49,24 +49,23 @@ const OutdoorLightCard = () => {
     <Card className={classes.default}>
       <CardHeader
         className={classes.cardHeader}
-        avatar={<WifiIcon color="primary"/>}
+        avatar={<WifiIcon color="primary" />}
         action={
           <IconButton aria-label="settings">
-            <SettingsIcon/>
+            <SettingsIcon />
           </IconButton>
         }
         title="Outdoor Lights"
-        titleTypographyProps={{align: "center", variant: 'h6', color: 'primary', gutterBottom: false}}
-      >
-      </CardHeader>
+        titleTypographyProps={{ align: 'center', variant: 'h6', color: 'primary', gutterBottom: false }}
+      />
       <CardContent className={classes.cardContent}>
         <div className={classes.root}>
           <Grid container spacing={1}>
             <Grid item xs={9} sm={9} md={9} lg={9}>
-              <Outdoor/>
+              <Outdoor />
             </Grid>
             <Grid item xs={3} sm={3} md={3} lg={3} className={classes.buttonsGrp}>
-              <OutdoorStatus/>
+              <OutdoorStatus />
             </Grid>
           </Grid>
         </div>
@@ -74,8 +73,8 @@ const OutdoorLightCard = () => {
           Last update at: Feb 18, 2020, 11:49:51 AM
         </Typography>
       </CardContent>
-      <div className={classes.grow}/>
-      <OutdoorCardAction/>
+      <div className={classes.grow} />
+      <OutdoorCardAction />
     </Card>
   );
 };

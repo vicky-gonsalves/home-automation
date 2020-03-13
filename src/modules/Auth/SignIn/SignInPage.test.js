@@ -1,13 +1,13 @@
-import {mount, shallow} from 'enzyme';
+import { mount, shallow } from 'enzyme';
 import faker from 'faker';
 import React from 'react';
-import {Provider} from 'react-redux'
+import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import {userConstants} from '../../../_constants';
-import {history} from '../../../_helpers/history';
-import {checkProps, clickButton, findByDataAttr} from '../../../_utils';
-import SignInPage, {SignInPage as SignInPageClass} from './SignInPage';
+import { userConstants } from '../../../_constants';
+import { history } from '../../../_helpers/history';
+import { checkProps, clickButton, findByDataAttr } from '../../../_utils';
+import SignInPage, { SignInPage as SignInPageClass } from './SignInPage';
 
 const mockStore = configureStore([thunk]);
 const name = faker.name.firstName();
@@ -19,20 +19,20 @@ describe('SignInPage', () => {
     let store;
     beforeEach(() => {
       const props = {
-        classes: {paper: 'someprop'},
+        classes: { paper: 'someprop' },
       };
       const initialState = {
         user: {
-          loginError: null
-        }
+          loginError: null,
+        },
       };
       store = mockStore(initialState);
       component = mount(
         <Provider store={store}>
-          <SignInPage {...props}/>
+          <SignInPage {...props} />
         </Provider>
       );
-      //clear SIGN_OUT
+      // clear SIGN_OUT
       store.clearActions();
     });
 
@@ -43,16 +43,16 @@ describe('SignInPage', () => {
 
     it('should dispatch SET_USER', () => {
       const fakeUser = {
-        name: name,
-        email: email,
+        name,
+        email,
       };
       const expectedPayload = {
         type: 'SET_USER',
-        payload: {...fakeUser}
+        payload: { ...fakeUser },
       };
       store.dispatch({
         type: userConstants.SET_USER,
-        payload: fakeUser
+        payload: fakeUser,
       });
       expect(store.getActions()).toEqual([expectedPayload]);
     });
@@ -62,7 +62,7 @@ describe('SignInPage', () => {
     describe('Checking PropTypes', () => {
       it('should not throw a warning', () => {
         const expectedPropTypes = {
-          classes: {}
+          classes: {},
         };
 
         const propsErr = checkProps(SignInPage, expectedPropTypes);
@@ -72,10 +72,10 @@ describe('SignInPage', () => {
 
     describe('Checking Components', () => {
       let wrapper;
-      const props = {classes: {paper: 'someprop'}, signOut: jest.fn()};
+      const props = { classes: { paper: 'someprop' }, signOut: jest.fn() };
       beforeEach(() => {
         history.push = jest.fn();
-        wrapper = shallow(<SignInPageClass {...props}/>);
+        wrapper = shallow(<SignInPageClass {...props} />);
       });
       afterEach(() => {
         wrapper.unmount();
@@ -118,13 +118,13 @@ describe('SignInPage', () => {
       });
 
       it('should navigate to home page if user is logged in', () => {
-        wrapper.setProps({isLoggedIn: true, tokens: {access: 'access_token'}});
+        wrapper.setProps({ isLoggedIn: true, tokens: { access: 'access_token' } });
         wrapper.instance().componentDidUpdate();
         expect(history.push).toHaveBeenCalledTimes(1);
       });
 
       it('should not navigate to home page if user is not logged in', () => {
-        wrapper.setProps({isLoggedIn: false});
+        wrapper.setProps({ isLoggedIn: false });
         wrapper.instance().componentDidUpdate();
         expect(history.push).toHaveBeenCalledTimes(0);
       });
