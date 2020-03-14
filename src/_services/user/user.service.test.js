@@ -1,12 +1,13 @@
 import faker from 'faker';
 import { mockErrorResponse, mockSuccesfulResponse } from '../../_utils';
 import { userService } from './user.service';
+import axios from 'axios';
 
 const id = faker.random.uuid();
 const name = faker.name.firstName();
 const email = faker.internet.email();
 const password = faker.internet.password();
-const successResponse = JSON.stringify({
+const successResponse = {
   user: {
     id,
     email,
@@ -25,13 +26,12 @@ const successResponse = JSON.stringify({
       expires: '2020-03-18T07:40:15.641Z',
     },
   },
-});
+};
 
-const response401 = JSON.stringify({
-  code: 401,
+const response401 = {
   message: 'Incorrect email or password',
   stack: 'Error: Incorrect email or password',
-});
+};
 
 describe('User Service', () => {
   beforeEach(() => {
@@ -40,29 +40,29 @@ describe('User Service', () => {
   });
 
   afterEach(() => {
-    global.fetch.mockClear();
+    axios.mockClear();
   });
 
   it('should return user when signInService is called with valid credentials', async () => {
     mockSuccesfulResponse(200, 'POST', successResponse);
     const response = await userService.signInService(email, password, false);
     expect(response).toBeInstanceOf(Object);
-    expect(response).toEqual(JSON.parse(successResponse));
+    expect(response).toEqual(successResponse);
   });
 
   it('should save user in localStorage when remember is true', async () => {
     mockSuccesfulResponse(200, 'POST', successResponse);
     await userService.signInService(email, password, true);
-    expect(localStorage.setItem).toHaveBeenLastCalledWith('user', successResponse);
-    expect(localStorage.__STORE__.user).toBe(successResponse);
+    expect(localStorage.setItem).toHaveBeenLastCalledWith('user', JSON.stringify(successResponse));
+    expect(localStorage.__STORE__.user).toBe(JSON.stringify(successResponse));
     expect(Object.keys(localStorage.__STORE__).length).toBe(1);
   });
 
   it('should save user in sessionStorage when remember is false', async () => {
     mockSuccesfulResponse(200, 'POST', successResponse);
     await userService.signInService(email, password, false);
-    expect(sessionStorage.setItem).toHaveBeenLastCalledWith('user', successResponse);
-    expect(sessionStorage.__STORE__.user).toBe(successResponse);
+    expect(sessionStorage.setItem).toHaveBeenLastCalledWith('user', JSON.stringify(successResponse));
+    expect(sessionStorage.__STORE__.user).toBe(JSON.stringify(successResponse));
     expect(Object.keys(sessionStorage.__STORE__).length).toBe(1);
   });
 
@@ -75,7 +75,7 @@ describe('User Service', () => {
         expect(res).toBeUndefined();
       })
       .catch(e => {
-        expect(e).toEqual(JSON.parse(response401).message);
+        expect(e).toEqual(response401.message);
         expect(localStorage.removeItem).toHaveBeenLastCalledWith('user');
         expect(sessionStorage.removeItem).toHaveBeenLastCalledWith('user');
         expect(sessionStorage.__STORE__.user).toBeUndefined();
