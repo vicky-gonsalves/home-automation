@@ -70,7 +70,7 @@ function App() {
     createAuthRefreshInterceptor(axios, refreshAuthLogic);
   });
 
-  useEffect(() => {
+  const fetchMe = () => {
     if (isLoggedIn) {
       actions
         .me()
@@ -88,18 +88,19 @@ function App() {
           });
         });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  };
+
+  useEffect(fetchMe, []);
 
   const PrivateRoute = ({ component: Component, ...rest }) => (
     <Route {...rest} render={props => (isLoggedIn === true ? <Component {...props} /> : <Redirect to="/signin" />)} />
   );
 
   return (
-    <Container maxWidth={false} disableGutters={true} className={classes.root}>
-      <Router history={history}>
-        <Switch>
-          <Route path="/" component={PublicPage} exact />
+    <Container maxWidth={false} disableGutters={true} className={classes.root} data-test="appContainer">
+      <Router history={history} data-test="routerComponent">
+        <Switch data-test="switchComponent">
+          <Route path="/" component={PublicPage} exact data-test="publicRouterPath" />
           <Route path="/signin" component={SignInPage} />
           <Route path="/forgot-password" component={ForgotPasswordPage} />
           <PrivateRoute path="/home" component={HomePage} />

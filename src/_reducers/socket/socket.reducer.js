@@ -4,7 +4,7 @@ const initialState = {
   isSocketFetching: false,
 };
 
-const Socket = (state = initialState, action) => {
+const socket = (state = initialState, action) => {
   switch (action.type) {
     case socketConstants.SOCKET_INIT:
       return {
@@ -16,4 +16,4 @@ const Socket = (state = initialState, action) => {
   }
 };
 
-export default Socket;
+export default socket;
