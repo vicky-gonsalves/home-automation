@@ -48,6 +48,7 @@
     "test": "react-scripts test",
     "test-verbose": "react-scripts test --verbose",
     "coverage:coveralls": "react-scripts test --coverage --coverageReporters=text-lcov | coveralls",
+    "coverage": "react-scripts test --coverage --watchAll=false",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
