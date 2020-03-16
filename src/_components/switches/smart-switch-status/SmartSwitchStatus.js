@@ -3,7 +3,7 @@ import Switch from '@material-ui/core/Switch';
 import Typography from '@material-ui/core/Typography';
 import React, { useState } from 'react';
 
-const OutdoorStatus = () => {
+const SmartSwitchStatus = () => {
   const [state, setState] = useState({
     allLights: false,
   });
@@ -31,4 +31,4 @@ const OutdoorStatus = () => {
   );
 };
 
-export default OutdoorStatus;
+export default SmartSwitchStatus;

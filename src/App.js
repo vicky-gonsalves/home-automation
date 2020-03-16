@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Redirect } from 'react-router';
 import { Route, Router, Switch } from 'react-router-dom';
 import { actions, socketActions } from './_actions';
+import { deviceActions } from './_actions/device.actions';
 import { userConstants } from './_constants';
 import { history } from './_helpers/history';
 import { userService } from './_services';
@@ -36,6 +37,7 @@ function App() {
   const disconnect = () => {
     dispatch(actions.signOut());
     dispatch(socketActions.socketDisconnect());
+    dispatch(deviceActions.removeAllDevices());
   };
 
   // Function that will be called to refresh authorization

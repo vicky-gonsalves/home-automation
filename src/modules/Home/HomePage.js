@@ -5,8 +5,8 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { actions, socketActions } from '../../_actions';
-import BedroomCard from '../../_components/cards/bedroom-card/BedroomCard';
-import OutdoorLightCard from '../../_components/cards/outdoor-lights-card/OutdoorLightCard';
+import { deviceActions } from '../../_actions/device.actions';
+import SmartSwitchCard from '../../_components/cards/smart-switch-card/SmartSwitchCard';
 import TankCard from '../../_components/cards/tank-card/TankCard';
 import Footer from '../../_components/footer';
 import Navbar from '../../_components/navbar';
@@ -37,6 +37,14 @@ export class HomePage extends Component {
     }
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.connected !== this.props.connected) {
+      if (this.props.connected) {
+        this.props.myDevices();
+      }
+    }
+  }
+
   render() {
     const { classes } = this.props;
     return (
@@ -46,15 +54,12 @@ export class HomePage extends Component {
         <Container disableGutters={true} maxWidth="xl">
           <div className={classes.root}>
             <Grid container spacing={3}>
-              <Grid item xs={12} sm={12} md={6} xl={4}>
-                <TankCard />
-              </Grid>
-              <Grid item xs={12} sm={12} md={6} xl={4}>
-                <OutdoorLightCard />
-              </Grid>
-              <Grid item xs={12} sm={12} md={6} xl={4}>
-                <BedroomCard />
-              </Grid>
+              {this.props.devices.map(device => (
+                <Grid key={device.deviceId} item xs={12} sm={12} md={6} xl={4}>
+                  {device.variant && device.variant === 'tank' && <TankCard deviceName={device.name} />}
+                  {device.variant && device.variant === 'smartSwitch' && <SmartSwitchCard deviceName={device.name} />}
+                </Grid>
+              ))}
             </Grid>
           </div>
         </Container>
@@ -75,7 +80,8 @@ HomePage.propTypes = {
 function mapState(state) {
   const { isLoggedIn, tokens, isAuthorized } = state.user;
   const { isSocketFetching, connected } = state.socket;
-  return { isLoggedIn, tokens, isSocketFetching, isAuthorized, connected };
+  const { devices } = state.device;
+  return { isLoggedIn, tokens, isSocketFetching, isAuthorized, connected, devices };
 }
 
 const actionCreators = {
@@ -83,6 +89,8 @@ const actionCreators = {
   signIn: actions.signIn,
   me: actions.me,
   socketInit: socketActions.socketInit,
+  myDevices: deviceActions.myDevices,
+  removeAllDevices: deviceActions.removeAllDevices,
 };
 
 const connectedHomePage = connect(mapState, actionCreators)(HomePage);

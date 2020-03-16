@@ -6,9 +6,9 @@ import Typography from '@material-ui/core/Typography';
 import SettingsIcon from '@material-ui/icons/Settings';
 import WifiIcon from '@material-ui/icons/Wifi';
 import React from 'react';
-import Outdoor from '../../outdoor/Outdoor';
-import OutdoorStatus from '../../switches/outdoor-status/OutdoorStatus';
-import OutdoorCardAction from '../outdoor-card-action/OutdoorCardAction';
+import SmartSwitch from '../../smartSwitch/SmartSwitch';
+import SmartSwitchStatus from '../../switches/smart-switch-status/SmartSwitchStatus';
+import SmartSwitchCardAction from '../smart-switch-card-action/SmartSwitchCardAction';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -42,7 +42,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const OutdoorLightCard = () => {
+const SmartSwitchCard = props => {
   const classes = useStyles();
 
   return (
@@ -55,17 +55,17 @@ const OutdoorLightCard = () => {
             <SettingsIcon />
           </IconButton>
         }
-        title="Outdoor Lights"
+        title={props.deviceName}
         titleTypographyProps={{ align: 'center', variant: 'h6', color: 'primary', gutterBottom: false }}
       />
       <CardContent className={classes.cardContent}>
         <div className={classes.root}>
           <Grid container spacing={1}>
             <Grid item xs={9} sm={9} md={9} lg={9}>
-              <Outdoor />
+              <SmartSwitch />
             </Grid>
             <Grid item xs={3} sm={3} md={3} lg={3} className={classes.buttonsGrp}>
-              <OutdoorStatus />
+              <SmartSwitchStatus />
             </Grid>
           </Grid>
         </div>
@@ -74,9 +74,9 @@ const OutdoorLightCard = () => {
         </Typography>
       </CardContent>
       <div className={classes.grow} />
-      <OutdoorCardAction />
+      <SmartSwitchCardAction />
     </Card>
   );
 };
 
-export default OutdoorLightCard;
+export default SmartSwitchCard;

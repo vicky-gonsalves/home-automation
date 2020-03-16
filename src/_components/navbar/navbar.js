@@ -10,6 +10,7 @@ import BrightnessAutoIcon from '@material-ui/icons/BrightnessAuto';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { actions, socketActions } from '../../_actions';
+import { deviceActions } from '../../_actions/device.actions';
 
 const useStyles = makeStyles(() => ({
   title: {
@@ -37,6 +38,7 @@ export default function Navbar(props) {
     handleClose();
     dispatch(actions.signOut());
     dispatch(socketActions.socketDisconnect());
+    dispatch(deviceActions.removeAllDevices());
   };
 
   return (

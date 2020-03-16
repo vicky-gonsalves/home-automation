@@ -13,7 +13,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const Outdoor = () => {
+const SmartSwitch = () => {
   const classes = useStyles();
 
   const [state, setState] = useState({
@@ -86,4 +86,4 @@ const Outdoor = () => {
   );
 };
 
-export default Outdoor;
+export default SmartSwitch;

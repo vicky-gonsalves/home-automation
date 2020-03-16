@@ -35,7 +35,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const TankCard = () => {
+const TankCard = props => {
   const classes = useStyles();
 
   return (
@@ -48,7 +48,7 @@ const TankCard = () => {
             <SettingsIcon />
           </IconButton>
         }
-        title="Tank"
+        title={props.deviceName}
         titleTypographyProps={{ align: 'center', variant: 'h6', color: 'primary', gutterBottom: false }}
       />
       <CardContent className={classes.cardContent}>

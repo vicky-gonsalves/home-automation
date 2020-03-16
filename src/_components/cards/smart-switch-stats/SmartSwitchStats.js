@@ -8,7 +8,7 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(0, 1),
   },
 }));
-const OutdoorStats = () => {
+const SmartSwitchStats = () => {
   const classes = useStyles();
 
   return (
@@ -20,4 +20,4 @@ const OutdoorStats = () => {
   );
 };
 
-export default OutdoorStats;
+export default SmartSwitchStats;

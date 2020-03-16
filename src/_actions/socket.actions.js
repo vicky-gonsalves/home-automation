@@ -1,5 +1,5 @@
 import socketIOClient from 'socket.io-client';
-import { socketConstants } from '../_constants';
+import { deviceConstants, socketConstants } from '../_constants';
 import config from '../config';
 
 let socket;
@@ -24,6 +24,10 @@ const socketInit = accessToken => dispatch => {
 
     // eslint-disable-next-line no-console
     console.log(data);
+    dispatch({
+      type: deviceConstants.DEVICE_CREATED,
+      payload: data,
+    });
   });
 
   socket.on('DEVICE_UPDATED', function(data) {
@@ -31,6 +35,10 @@ const socketInit = accessToken => dispatch => {
     console.log('ON DEVICE_UPDATED: ');
     // eslint-disable-next-line no-console
     console.log(data);
+    dispatch({
+      type: deviceConstants.DEVICE_UPDATED,
+      payload: data,
+    });
   });
 
   socket.on('DEVICE_DELETED', function(data) {
@@ -38,6 +46,10 @@ const socketInit = accessToken => dispatch => {
     console.log('ON DEVICE_DELETED: ');
     // eslint-disable-next-line no-console
     console.log(data);
+    dispatch({
+      type: deviceConstants.DEVICE_DELETED,
+      payload: data,
+    });
   });
 
   // Sub Device params events-----------------------------------------------------------------------------------------

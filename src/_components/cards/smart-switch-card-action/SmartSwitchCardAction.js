@@ -6,7 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import clsx from 'clsx';
 import React, { useState } from 'react';
-import BedroomStats from '../bedroom-stats/BedroomStats';
+import SmartSwitchStats from '../smart-switch-stats/SmartSwitchStats';
 
 const useStyles = makeStyles(theme => ({
   cardAction: {
@@ -26,7 +26,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const BedroomCardAction = () => {
+const SmartSwitchCardAction = () => {
   const classes = useStyles();
   const [expanded, setExpanded] = useState(false);
 
@@ -37,7 +37,7 @@ const BedroomCardAction = () => {
     <React.Fragment>
       <CardActions className={classes.cardAction}>
         <Typography component="div" color="error" variant="body1">
-          Light will be turned off automatically in <strong>30 Minutes</strong>
+          Light 1 will be turned off automatically in <strong>30 Minutes</strong>
         </Typography>
         <IconButton
           className={clsx(classes.expand, {
@@ -51,10 +51,10 @@ const BedroomCardAction = () => {
         </IconButton>
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
-        <BedroomStats />
+        <SmartSwitchStats />
       </Collapse>
     </React.Fragment>
   );
 };
 
-export default BedroomCardAction;
+export default SmartSwitchCardAction;
