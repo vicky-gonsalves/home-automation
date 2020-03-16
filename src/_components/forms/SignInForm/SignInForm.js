@@ -41,6 +41,7 @@ const SimpleSignInForm = props => {
         error={errors.email && touched.email}
         helperText={errors.email && touched.email && errors.email}
         data-test="emailInput"
+        value="vicky.gonsalves@outlook.com"
       />
       <TextField
         variant="outlined"
@@ -58,6 +59,7 @@ const SimpleSignInForm = props => {
         error={errors.password && touched.password}
         helperText={errors.password && touched.password && errors.password}
         data-test="passwordInput"
+        value="Vickyg@1"
       />
       <FormControlLabel
         control={<Checkbox color="primary" id="remember" name="remember" disabled={isFetching} onChange={handleChange} />}
@@ -80,7 +82,7 @@ const SimpleSignInForm = props => {
 };
 
 export const SignInForm = withFormik({
-  mapPropsToValues: () => ({ email: '', password: '', remember: false }),
+  mapPropsToValues: () => ({ email: 'vicky.gonsalves@outlook.com', password: 'Vickyg@1', remember: false }),
   validationSchema: yup.object().shape({
     email: yup
       .string()

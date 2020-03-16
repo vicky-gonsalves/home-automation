@@ -2,6 +2,7 @@ import { socketConstants } from '../../_constants';
 
 const initialState = {
   isSocketFetching: false,
+  connected: false,
 };
 
 const socket = (state = initialState, action) => {
@@ -10,6 +11,17 @@ const socket = (state = initialState, action) => {
       return {
         ...state,
         isSocketFetching: true,
+      };
+    case socketConstants.CONNECTED:
+      return {
+        ...state,
+        isSocketFetching: false,
+        connected: true,
+      };
+    case socketConstants.DISCONNECTED:
+      return {
+        ...state,
+        connected: false,
       };
     default:
       return state;

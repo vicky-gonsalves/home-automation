@@ -25,7 +25,14 @@ const useStyles = theme => ({
 
 export class HomePage extends Component {
   componentDidMount() {
-    if (this.props.tokens && this.props.tokens.access && this.props.tokens.access.token) {
+    if (
+      this.props.isAuthorized &&
+      this.props.isLoggedIn &&
+      this.props.tokens &&
+      this.props.tokens.access &&
+      this.props.tokens.access.token &&
+      !this.props.connected
+    ) {
       this.props.socketInit(this.props.tokens.access.token);
     }
   }
@@ -66,9 +73,9 @@ HomePage.propTypes = {
 };
 
 function mapState(state) {
-  const { isLoggedIn, tokens } = state.user;
-  const { isSocketFetching } = state.socket;
-  return { isLoggedIn, tokens, isSocketFetching };
+  const { isLoggedIn, tokens, isAuthorized } = state.user;
+  const { isSocketFetching, connected } = state.socket;
+  return { isLoggedIn, tokens, isSocketFetching, isAuthorized, connected };
 }
 
 const actionCreators = {

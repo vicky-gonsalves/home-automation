@@ -91,9 +91,30 @@ const socketInit = accessToken => dispatch => {
     console.log('ON CONNECTED: ');
     // eslint-disable-next-line no-console
     console.log(data);
+    dispatch({
+      type: socketConstants.CONNECTED,
+    });
+  });
+
+  // Connection succeeded
+  socket.on('disconnect', function(data) {
+    // eslint-disable-next-line no-console
+    console.log('ON disconnect: ');
+    // eslint-disable-next-line no-console
+    console.log(data);
+  });
+};
+
+const socketDisconnect = () => dispatch => {
+  if (socket) {
+    socket.disconnect();
+  }
+  dispatch({
+    type: socketConstants.DISCONNECTED,
   });
 };
 
 export const socketActions = {
   socketInit,
+  socketDisconnect,
 };

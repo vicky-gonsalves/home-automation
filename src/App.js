@@ -6,7 +6,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect } from 'react-router';
 import { Route, Router, Switch } from 'react-router-dom';
-import { actions } from './_actions';
+import { actions, socketActions } from './_actions';
 import { userConstants } from './_constants';
 import { history } from './_helpers/history';
 import { userService } from './_services';
@@ -29,8 +29,14 @@ const useStyles = makeStyles(theme => ({
 
 function App() {
   const classes = useStyles();
-  let isLoggedIn;
+  const currentUser = useSelector(state => state.user);
+  const isLoggedIn = currentUser.isLoggedIn && currentUser.tokens !== null;
   const dispatch = useDispatch();
+
+  const disconnect = () => {
+    dispatch(actions.signOut());
+    dispatch(socketActions.socketDisconnect());
+  };
 
   // Function that will be called to refresh authorization
   const refreshAuthLogic = failedRequest =>
@@ -48,27 +54,17 @@ function App() {
         return Promise.resolve();
       })
       .catch(e => {
-        dispatch({
-          type: userConstants.SIGN_OUT,
-        });
-        userService.signOutService();
-        isLoggedIn = false;
-        history.push('/signin');
+        disconnect();
         return Promise.reject(e);
       });
 
-  useSelector(state => {
-    if (state && state.user.isLoggedIn && state.user.tokens !== null) {
-      isLoggedIn = true;
-      axios.interceptors.request.use(request => {
-        request.headers.Authorization = `Bearer ${userService.getAccessToken()}`;
-        return request;
-      });
-    } else {
-      isLoggedIn = false;
-    }
+  if (isLoggedIn) {
+    axios.interceptors.request.use(request => {
+      request.headers.Authorization = `Bearer ${userService.getAccessToken()}`;
+      return request;
+    });
     createAuthRefreshInterceptor(axios, refreshAuthLogic);
-  });
+  }
 
   const fetchMe = () => {
     if (isLoggedIn) {
@@ -83,9 +79,7 @@ function App() {
           }
         })
         .catch(() => {
-          dispatch({
-            type: userConstants.SIGN_OUT,
-          });
+          disconnect();
         });
     }
   };

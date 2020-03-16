@@ -38,12 +38,6 @@ const useStyles = theme => ({
 });
 
 export class SignInPage extends Component {
-  constructor(props) {
-    super(props);
-    // reset login status
-    this.props.signOut();
-  }
-
   // eslint-disable-next-line class-methods-use-this
   navigateToForgotPass() {
     history.push('/forgot-password');
