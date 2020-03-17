@@ -4,7 +4,7 @@ import config from '../../config';
 
 const handleResponse = response => {
   if (response && response.data && response.data.devices && response.data.devices.myDevices) {
-    return Promise.resolve(response.data.devices.myDevices);
+    return Promise.resolve(response.data.devices);
   }
   return Promise.reject(response);
 };

@@ -60,6 +60,12 @@ export class HomePage extends Component {
                   {device.variant && device.variant === 'smartSwitch' && <SmartSwitchCard deviceName={device.name} />}
                 </Grid>
               ))}
+              {this.props.sharedDevices.map(device => (
+                <Grid key={device.deviceId} item xs={12} sm={12} md={6} xl={4}>
+                  {device.variant && device.variant === 'tank' && <TankCard deviceName={device.name} />}
+                  {device.variant && device.variant === 'smartSwitch' && <SmartSwitchCard deviceName={device.name} />}
+                </Grid>
+              ))}
             </Grid>
           </div>
         </Container>
@@ -81,7 +87,8 @@ function mapState(state) {
   const { isLoggedIn, tokens, isAuthorized } = state.user;
   const { isSocketFetching, connected } = state.socket;
   const { devices } = state.device;
-  return { isLoggedIn, tokens, isSocketFetching, isAuthorized, connected, devices };
+  const { sharedDevices } = state.sharedDevice;
+  return { isLoggedIn, tokens, isSocketFetching, isAuthorized, connected, devices, sharedDevices };
 }
 
 const actionCreators = {

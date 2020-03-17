@@ -1,4 +1,4 @@
-import { deviceConstants } from '../_constants';
+import { deviceConstants, sharedDeviceConstants } from '../_constants';
 import { deviceService } from '../_services';
 
 const setDevices = devices => dispatch => {
@@ -8,14 +8,24 @@ const setDevices = devices => dispatch => {
   });
 };
 
+const setSharedDevices = sharedDevices => dispatch => {
+  dispatch({
+    type: sharedDeviceConstants.SHARED_DEVICE_STORE_ALL,
+    payload: sharedDevices,
+  });
+};
+
 const myDevices = () => async dispatch => {
   dispatch({
     type: deviceConstants.DEVICE_UPDATE_FETCHING,
   });
   try {
     const devices = await deviceService.getMyDevices();
-    if (devices) {
-      dispatch(setDevices(devices));
+    if (devices && devices.myDevices) {
+      dispatch(setDevices(devices.myDevices));
+    }
+    if (devices && devices.sharedDevices) {
+      dispatch(setSharedDevices(devices.sharedDevices));
     }
   } catch (e) {
     dispatch({

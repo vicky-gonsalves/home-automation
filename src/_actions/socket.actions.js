@@ -1,5 +1,5 @@
 import socketIOClient from 'socket.io-client';
-import { deviceConstants, socketConstants } from '../_constants';
+import { deviceConstants, sharedDeviceConstants, socketConstants } from '../_constants';
 import config from '../config';
 
 let socket;
@@ -50,6 +50,10 @@ const socketInit = accessToken => dispatch => {
       type: deviceConstants.DEVICE_DELETED,
       payload: data,
     });
+    dispatch({
+      type: sharedDeviceConstants.SHARED_DEVICE_DELETED,
+      payload: data,
+    });
   });
 
   // Sub Device params events-----------------------------------------------------------------------------------------
@@ -95,6 +99,30 @@ const socketInit = accessToken => dispatch => {
     console.log('ON SUB_DEVICE_PARAMS_DELETED: ');
     // eslint-disable-next-line no-console
     console.log(data);
+  });
+
+  // Shared Device access events--------------------------------------------------------------------------------------
+
+  socket.on('SHARED_DEVICE_ACCESS_CREATED', function(data) {
+    // eslint-disable-next-line no-console
+    console.log('ON SHARED_DEVICE_ACCESS_CREATED: ');
+    // eslint-disable-next-line no-console
+    console.log(data);
+    dispatch({
+      type: sharedDeviceConstants.SHARED_DEVICE_CREATED,
+      payload: data,
+    });
+  });
+
+  socket.on('SHARED_DEVICE_ACCESS_DELETED', function(data) {
+    // eslint-disable-next-line no-console
+    console.log('ON SHARED_DEVICE_ACCESS_DELETED: ');
+    // eslint-disable-next-line no-console
+    console.log(data);
+    dispatch({
+      type: sharedDeviceConstants.SHARED_DEVICE_DELETED,
+      payload: data,
+    });
   });
 
   // Connection succeeded
