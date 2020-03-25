@@ -6,8 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import SettingsIcon from '@material-ui/icons/Settings';
 import WifiIcon from '@material-ui/icons/Wifi';
 import React from 'react';
-import SmartSwitch from '../../smartSwitch/SmartSwitch';
-import SmartSwitchStatus from '../../switches/smart-switch-status/SmartSwitchStatus';
+import SubDeviceComponent from '../../sub-device/SubDeviceComponent';
 import SmartSwitchCardAction from '../smart-switch-card-action/SmartSwitchCardAction';
 
 const useStyles = makeStyles(theme => ({
@@ -32,7 +31,7 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'center',
+    textAlign: 'center',
   },
   grow: {
     flexGrow: 1,
@@ -62,10 +61,10 @@ const SmartSwitchCard = props => {
         <div className={classes.root}>
           <Grid container spacing={1}>
             <Grid item xs={9} sm={9} md={9} lg={9}>
-              <SmartSwitch />
+              <SubDeviceComponent deviceId={props.deviceId} />
             </Grid>
             <Grid item xs={3} sm={3} md={3} lg={3} className={classes.buttonsGrp}>
-              <SmartSwitchStatus />
+              <SubDeviceComponent all={props.deviceId} />
             </Grid>
           </Grid>
         </div>

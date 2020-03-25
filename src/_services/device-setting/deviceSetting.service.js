@@ -23,15 +23,15 @@ const handleError = error => {
   return Promise.reject(err);
 };
 
-const getMyDevices = async () => {
+const updateSubDeviceSettings = async settings => {
   try {
-    const response = await axios.get(`${config.apiUrl}/me/devices`);
+    const response = await axios.patch(`${config.apiUrl}/settings/multi`, settings);
     return handleResponse(response);
   } catch (error) {
     return handleError(error);
   }
 };
 
-export const deviceService = {
-  getMyDevices,
+export const subDeviceSettingService = {
+  updateSubDeviceSettings,
 };

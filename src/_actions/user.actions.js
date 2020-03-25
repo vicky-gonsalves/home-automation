@@ -37,6 +37,7 @@ const signIn = userObj => dispatch => {
           tokens: response.tokens,
         })
       );
+      dispatch(setLoginError(null));
     })
     .catch(error => {
       // handle error

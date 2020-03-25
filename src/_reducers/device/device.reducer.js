@@ -13,8 +13,6 @@ const device = (state = initialState, action) => {
         ...state,
         isFetchingDevice: true,
       };
-    case deviceConstants.DEVICE_GET_ALL:
-      return state.devices;
     case deviceConstants.DEVICE_STORE_ALL:
       return {
         ...state,

@@ -22,6 +22,7 @@ const socket = (state = initialState, action) => {
       return {
         ...state,
         connected: false,
+        isSocketFetching: false,
       };
     default:
       return state;

@@ -1,5 +1,13 @@
 import socketIOClient from 'socket.io-client';
-import { deviceConstants, sharedDeviceConstants, socketConstants } from '../_constants';
+import {
+  deviceConstants,
+  deviceSettingConstants,
+  sharedDeviceConstants,
+  socketConstants,
+  subDeviceConstants,
+  subDeviceParamConstants,
+  subDeviceSettingConstants,
+} from '../_constants';
 import config from '../config';
 
 let socket;
@@ -54,6 +62,22 @@ const socketInit = accessToken => dispatch => {
       type: sharedDeviceConstants.SHARED_DEVICE_DELETED,
       payload: data,
     });
+    dispatch({
+      type: subDeviceConstants.PARENT_DEVICE_DELETED_FOR_SUB_DEVICE,
+      payload: data,
+    });
+    dispatch({
+      type: subDeviceParamConstants.PARENT_DEVICE_DELETED_FOR_SUB_DEVICE_PARAM,
+      payload: data,
+    });
+    dispatch({
+      type: deviceSettingConstants.PARENT_DEVICE_DELETED_FOR_DEVICE_SETTING,
+      payload: data,
+    });
+    dispatch({
+      type: subDeviceSettingConstants.PARENT_DEVICE_DELETED_FOR_SUB_DEVICE_SETTING,
+      payload: data,
+    });
   });
 
   // Sub Device params events-----------------------------------------------------------------------------------------
@@ -62,6 +86,10 @@ const socketInit = accessToken => dispatch => {
     console.log('ON SUB_DEVICE_CREATED: ');
     // eslint-disable-next-line no-console
     console.log(data);
+    dispatch({
+      type: subDeviceConstants.SUB_DEVICE_CREATED,
+      payload: data,
+    });
   });
 
   socket.on('SUB_DEVICE_UPDATED', function(data) {
@@ -69,6 +97,10 @@ const socketInit = accessToken => dispatch => {
     console.log('ON SUB_DEVICE_UPDATED: ');
     // eslint-disable-next-line no-console
     console.log(data);
+    dispatch({
+      type: subDeviceConstants.SUB_DEVICE_UPDATED,
+      payload: data,
+    });
   });
 
   socket.on('SUB_DEVICE_DELETED', function(data) {
@@ -76,29 +108,64 @@ const socketInit = accessToken => dispatch => {
     console.log('ON SUB_DEVICE_DELETED: ');
     // eslint-disable-next-line no-console
     console.log(data);
+    dispatch({
+      type: subDeviceConstants.SUB_DEVICE_DELETED,
+      payload: data,
+    });
+    dispatch({
+      type: subDeviceParamConstants.PARENT_SUB_DEVICE_DELETED_FOR_SUB_DEVICE_PARAM,
+      payload: data,
+    });
+    dispatch({
+      type: subDeviceSettingConstants.PARENT_SUB_DEVICE_DELETED_FOR_SUB_DEVICE_SETTING,
+      payload: data,
+    });
   });
 
   // SUB Device params events-----------------------------------------------------------------------------------------
 
-  socket.on('SUB_DEVICE_PARAMS_CREATED', function(data) {
+  socket.on('SUB_DEVICE_PARAM_CREATED', function(data) {
     // eslint-disable-next-line no-console
-    console.log('ON SUB_DEVICE_PARAMS_CREATED: ');
+    console.log('ON SUB_DEVICE_PARAM_CREATED: ');
     // eslint-disable-next-line no-console
     console.log(data);
+    dispatch({
+      type: subDeviceParamConstants.SUB_DEVICE_PARAM_CREATED,
+      payload: data,
+    });
   });
 
-  socket.on('SUB_DEVICE_PARAMS_UPDATED', function(data) {
+  socket.on('SUB_DEVICE_PARAM_UPDATED', function(data) {
     // eslint-disable-next-line no-console
-    console.log('ON SUB_DEVICE_PARAMS_UPDATED: ');
+    console.log('ON SUB_DEVICE_PARAM_UPDATED: ');
     // eslint-disable-next-line no-console
     console.log(data);
+    dispatch({
+      type: subDeviceParamConstants.SUB_DEVICE_PARAM_UPDATED,
+      payload: data,
+    });
   });
 
-  socket.on('SUB_DEVICE_PARAMS_DELETED', function(data) {
+  socket.on('SUB_DEVICE_MULTI_PARAM_UPDATED', function(data) {
     // eslint-disable-next-line no-console
-    console.log('ON SUB_DEVICE_PARAMS_DELETED: ');
+    console.log('ON SUB_DEVICE_MULTI_PARAM_UPDATED: ');
     // eslint-disable-next-line no-console
     console.log(data);
+    dispatch({
+      type: subDeviceParamConstants.SUB_DEVICE_MULTI_STATUS_UPDATED,
+      payload: data,
+    });
+  });
+
+  socket.on('SUB_DEVICE_PARAM_DELETED', function(data) {
+    // eslint-disable-next-line no-console
+    console.log('ON SUB_DEVICE_PARAM_DELETED: ');
+    // eslint-disable-next-line no-console
+    console.log(data);
+    dispatch({
+      type: subDeviceParamConstants.SUB_DEVICE_PARAM_DELETED,
+      payload: data,
+    });
   });
 
   // Shared Device access events--------------------------------------------------------------------------------------
@@ -121,6 +188,70 @@ const socketInit = accessToken => dispatch => {
     console.log(data);
     dispatch({
       type: sharedDeviceConstants.SHARED_DEVICE_DELETED,
+      payload: data,
+    });
+    dispatch({
+      type: subDeviceConstants.PARENT_DEVICE_DELETED_FOR_SUB_DEVICE,
+      payload: data,
+    });
+    dispatch({
+      type: subDeviceParamConstants.PARENT_DEVICE_DELETED_FOR_SUB_DEVICE_PARAM,
+      payload: data,
+    });
+    dispatch({
+      type: deviceSettingConstants.PARENT_DEVICE_DELETED_FOR_DEVICE_SETTING,
+      payload: data,
+    });
+    dispatch({
+      type: subDeviceSettingConstants.PARENT_DEVICE_DELETED_FOR_SUB_DEVICE_SETTING,
+      payload: data,
+    });
+  });
+
+  // Device Settings--------------------------------------------------------------------------------------
+
+  socket.on('DEVICE_SETTING_CREATED', function(data) {
+    // eslint-disable-next-line no-console
+    console.log('ON DEVICE_SETTING_CREATED: ');
+    // eslint-disable-next-line no-console
+    console.log(data);
+    dispatch({
+      type: deviceSettingConstants.DEVICE_SETTING_CREATED,
+      payload: data,
+    });
+  });
+
+  socket.on('DEVICE_SETTING_UPDATED', function(data) {
+    // eslint-disable-next-line no-console
+    console.log('ON DEVICE_SETTING_UPDATED: ');
+    // eslint-disable-next-line no-console
+    console.log(data);
+    dispatch({
+      type: deviceSettingConstants.DEVICE_SETTING_UPDATED,
+      payload: data,
+    });
+  });
+
+  // Sub-Device Settings--------------------------------------------------------------------------------------
+
+  socket.on('SUB_DEVICE_SETTING_CREATED', function(data) {
+    // eslint-disable-next-line no-console
+    console.log('ON SUB_DEVICE_SETTING_CREATED: ');
+    // eslint-disable-next-line no-console
+    console.log(data);
+    dispatch({
+      type: subDeviceSettingConstants.SUB_DEVICE_SETTING_CREATED,
+      payload: data,
+    });
+  });
+
+  socket.on('SUB_DEVICE_SETTING_UPDATED', function(data) {
+    // eslint-disable-next-line no-console
+    console.log('ON SUB_DEVICE_SETTING_UPDATED: ');
+    // eslint-disable-next-line no-console
+    console.log(data);
+    dispatch({
+      type: subDeviceSettingConstants.SUB_DEVICE_SETTING_UPDATED,
       payload: data,
     });
   });

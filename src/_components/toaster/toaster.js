@@ -3,7 +3,6 @@ import Snackbar from '@material-ui/core/Snackbar';
 import CloseIcon from '@material-ui/icons/Close';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { actions } from '../../_actions/user.actions';
 
 export class Toaster extends Component {
   constructor(props) {
@@ -13,13 +12,18 @@ export class Toaster extends Component {
   }
 
   componentDidUpdate() {
-    if (!!this.props.loginError && !this.state.open) {
+    const { loginError, settingError, subDeviceSettingError } = this.props;
+    const { open } = this.state;
+    if (!!loginError && !open) {
+      this.setState({ open: true });
+    } else if (!!settingError && !open) {
+      this.setState({ open: true });
+    } else if (!!subDeviceSettingError && !open) {
       this.setState({ open: true });
     }
   }
 
   handleClose() {
-    this.props.setLoginError(null);
     this.setState({ open: false });
   }
 
@@ -51,12 +55,12 @@ export class Toaster extends Component {
 
 function mapState(state) {
   const { loginError } = state.user;
-  return { loginError };
+  const { settingError } = state.deviceSetting;
+  const { subDeviceSettingError } = state.subDeviceSetting;
+  return { loginError, settingError, subDeviceSettingError };
 }
 
-const actionCreators = {
-  setLoginError: actions.setLoginError,
-};
+const actionCreators = {};
 const connectedToaster = connect(mapState, actionCreators)(Toaster);
 
 export default connectedToaster;

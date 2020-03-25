@@ -24,6 +24,12 @@ const sharedDevice = (state = initialState, action) => {
         sharedDevices: state.sharedDevices.filter(device => device.deviceId !== action.payload.deviceId),
       };
 
+    case sharedDeviceConstants.SHARED_DEVICE_REMOVE_ALL:
+      return {
+        ...state,
+        sharedDevices: [],
+      };
+
     default:
       return state;
   }

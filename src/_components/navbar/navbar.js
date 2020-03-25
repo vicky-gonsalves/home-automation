@@ -9,8 +9,16 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import BrightnessAutoIcon from '@material-ui/icons/BrightnessAuto';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { actions, socketActions } from '../../_actions';
-import { deviceActions } from '../../_actions/device.actions';
+import {
+  actions,
+  deviceActions,
+  deviceSettingActions,
+  socketActions,
+  subDeviceActions,
+  subDeviceParamActions,
+  subDeviceSettingActions,
+} from '../../_actions';
+import { sharedDeviceActions } from '../../_actions/sharedDevice.actions';
 
 const useStyles = makeStyles(() => ({
   title: {
@@ -39,6 +47,11 @@ export default function Navbar(props) {
     dispatch(actions.signOut());
     dispatch(socketActions.socketDisconnect());
     dispatch(deviceActions.removeAllDevices());
+    dispatch(sharedDeviceActions.removeAllSharedDevices());
+    dispatch(subDeviceActions.removeAllSubDevices());
+    dispatch(subDeviceParamActions.removeAllSubDeviceParams());
+    dispatch(deviceSettingActions.removeAllSettings());
+    dispatch(subDeviceSettingActions.removeAllSettings());
   };
 
   return (

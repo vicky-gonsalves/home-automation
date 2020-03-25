@@ -56,14 +56,20 @@ export class HomePage extends Component {
             <Grid container spacing={3}>
               {this.props.devices.map(device => (
                 <Grid key={device.deviceId} item xs={12} sm={12} md={6} xl={4}>
-                  {device.variant && device.variant === 'tank' && <TankCard deviceName={device.name} />}
-                  {device.variant && device.variant === 'smartSwitch' && <SmartSwitchCard deviceName={device.name} />}
+                  {device.variant && device.variant === 'tank' && (
+                    <TankCard deviceName={device.name} deviceId={device.deviceId} />
+                  )}
+                  {device.variant && device.variant === 'smartSwitch' && (
+                    <SmartSwitchCard deviceName={device.name} deviceId={device.deviceId} />
+                  )}
                 </Grid>
               ))}
               {this.props.sharedDevices.map(device => (
                 <Grid key={device.deviceId} item xs={12} sm={12} md={6} xl={4}>
                   {device.variant && device.variant === 'tank' && <TankCard deviceName={device.name} />}
-                  {device.variant && device.variant === 'smartSwitch' && <SmartSwitchCard deviceName={device.name} />}
+                  {device.variant && device.variant === 'smartSwitch' && (
+                    <SmartSwitchCard deviceName={device.name} deviceId={device.deviceId} />
+                  )}
                 </Grid>
               ))}
             </Grid>

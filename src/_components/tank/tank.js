@@ -1,12 +1,12 @@
 import React from 'react';
 import './tank.scss';
 
-const Tank = () => {
+const Tank = props => {
   return (
     <div className="tank">
       <div className="bowl">
         <div className="inner">
-          <div className="fill" style={{ transform: `translate(0,${100 - (100 * 80) / 100}px)` }}>
+          <div className="fill" style={{ transform: `translate(0,${100 - (100 * props.waterLevel) / 100}px)` }}>
             <svg
               version="1.1"
               xmlns="http://www.w3.org/2000/svg"
@@ -28,7 +28,7 @@ const Tank = () => {
           </div>
         </div>
       </div>
-      <h1 className="overlap">80%</h1>
+      <h1 className="overlap">{props.waterLevel}%</h1>
     </div>
   );
 };
