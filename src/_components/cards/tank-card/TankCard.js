@@ -9,7 +9,6 @@ import moment from 'moment';
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { settingDialogActions } from '../../../_actions/settingDialog.actions';
-import MotorSettingDialog from '../../dialogs/motor-setting-dialog/motorSettingDialog';
 import MotorMode from '../../radios/motor-mode/motorMode';
 import MotorSwitch from '../../switches/motor-switch/motorSwitch';
 import Tank from '../../tank/tank';
@@ -67,9 +66,7 @@ const TankCard = props => {
     state && state.subDeviceParam && state.subDeviceParam.subDeviceParams ? state.subDeviceParam.subDeviceParams : []
   );
 
-  const handleSettingDialog = () => {
-    dispatch(settingDialogActions.open());
-  };
+  const handleSettingDialog = () => dispatch(settingDialogActions.open(props.deviceName, props.deviceId, 'tank'));
 
   if (subDeviceParams && subDeviceParams.length) {
     const wLevel = subDeviceParams.filter(subDeviceParam => subDeviceParam && subDeviceParam.paramName === 'waterLevel');
@@ -130,7 +127,6 @@ const TankCard = props => {
         </div>
       </CardContent>
       <TankCardAction />
-      <MotorSettingDialog name={props.deviceName} deviceId={props.deviceId} />
     </Card>
   );
 };

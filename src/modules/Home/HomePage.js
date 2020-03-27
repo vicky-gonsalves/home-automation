@@ -8,6 +8,7 @@ import { actions, socketActions } from '../../_actions';
 import { deviceActions } from '../../_actions/device.actions';
 import SmartSwitchCard from '../../_components/cards/smart-switch-card/SmartSwitchCard';
 import TankCard from '../../_components/cards/tank-card/TankCard';
+import SettingDialog from '../../_components/dialogs/setting-dialog/settingDialog';
 import Footer from '../../_components/footer';
 import Navbar from '../../_components/navbar';
 import config from '../../config';
@@ -75,6 +76,7 @@ export class HomePage extends Component {
             </Grid>
           </div>
         </Container>
+        <SettingDialog />
         {/* Footer */}
         <footer className={classes.footer}>
           <Footer appName={config.appName} data-test="footerComponent" />

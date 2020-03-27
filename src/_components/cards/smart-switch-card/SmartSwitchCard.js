@@ -6,6 +6,8 @@ import Typography from '@material-ui/core/Typography';
 import SettingsIcon from '@material-ui/icons/Settings';
 import WifiIcon from '@material-ui/icons/Wifi';
 import React from 'react';
+import { useDispatch } from 'react-redux';
+import { settingDialogActions } from '../../../_actions/settingDialog.actions';
 import SubDeviceComponent from '../../sub-device/SubDeviceComponent';
 import SmartSwitchCardAction from '../smart-switch-card-action/SmartSwitchCardAction';
 
@@ -43,6 +45,8 @@ const useStyles = makeStyles(theme => ({
 
 const SmartSwitchCard = props => {
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const handleSettingDialog = () => dispatch(settingDialogActions.open(props.deviceName, props.deviceId, 'smartSwitch'));
 
   return (
     <Card className={classes.default}>
@@ -50,7 +54,7 @@ const SmartSwitchCard = props => {
         className={classes.cardHeader}
         avatar={<WifiIcon color="primary" />}
         action={
-          <IconButton aria-label="settings">
+          <IconButton aria-label="settings" onClick={handleSettingDialog}>
             <SettingsIcon />
           </IconButton>
         }

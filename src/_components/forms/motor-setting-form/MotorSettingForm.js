@@ -10,6 +10,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import * as yup from 'yup';
 import { deviceSettingActions } from '../../../_actions';
+import { settingDialogActions } from '../../../_actions/settingDialog.actions';
 
 const useStyles = makeStyles(theme => ({
   form: {
@@ -24,6 +25,10 @@ const useStyles = makeStyles(theme => ({
   },
   selectEmpty: {
     marginTop: theme.spacing(2),
+  },
+  dialogAction: {
+    display: 'flex',
+    justifyContent: 'space-between',
   },
 }));
 
@@ -58,9 +63,9 @@ const getSetting = (deviceSettings, deviceId, paramName) => {
 };
 
 const getSettingValue = (deviceSettings, deviceId, paramName) => {
-  const prefereedSubDevice = getSetting(deviceSettings, deviceId, paramName);
-  if (prefereedSubDevice) {
-    return prefereedSubDevice.paramValue;
+  const subDevice = getSetting(deviceSettings, deviceId, paramName);
+  if (subDevice) {
+    return subDevice.paramValue;
   }
   return '';
 };
@@ -68,12 +73,15 @@ const getSettingValue = (deviceSettings, deviceId, paramName) => {
 const SimpleMotorSettingForm = props => {
   let thisSubDevices;
   const classes = useStyles();
-  const { values, touched, errors, handleChange, handleBlur, isFetching, handleSubmit, onSubmit, subDevices } = props;
-  if (props.deviceId && subDevices.length) {
+  const { values, touched, errors, handleChange, handleBlur, isFetching, handleSubmit, onSubmit, subDevices, close } = props;
+  if (props.deviceId && subDevices && subDevices.length) {
     thisSubDevices = subDevices.filter(
       subDevice => subDevice.deviceId === props.deviceId && subDevice.type === 'motorSwitch'
     );
   }
+  const handleClose = () => {
+    close('tank');
+  };
   return (
     <form className={classes.form} onSubmit={typeof onSubmit === 'function' ? onSubmit : handleSubmit} noValidate>
       {thisSubDevices && thisSubDevices.length && (
@@ -112,8 +120,8 @@ const SimpleMotorSettingForm = props => {
         onChange={handleChange}
         onBlur={handleBlur}
         disabled={isFetching}
-        error={errors.autoShutDownTime && touched.autoShutDownTime}
-        helperText={errors.autoShutDownTime && touched.autoShutDownTime && errors.autoShutDownTime}
+        error={errors && errors.autoShutDownTime && touched.autoShutDownTime}
+        helperText={errors && errors.autoShutDownTime && touched && touched.autoShutDownTime && errors.autoShutDownTime}
         data-test="autoShutDownTimeInput"
         value={values.autoShutDownTime}
       />
@@ -129,22 +137,32 @@ const SimpleMotorSettingForm = props => {
         onChange={handleChange}
         onBlur={handleBlur}
         disabled={isFetching}
-        error={errors.waterLevelToStart && touched.waterLevelToStart}
-        helperText={errors.waterLevelToStart && touched.waterLevelToStart && errors.waterLevelToStart}
+        error={errors && errors.waterLevelToStart && touched.waterLevelToStart}
+        helperText={errors && touched && touched.waterLevelToStart && errors.waterLevelToStart}
         data-test="waterLevelToStartInput"
         value={values.waterLevelToStart}
       />
-      <Button
-        type="submit"
-        fullWidth
-        variant="contained"
-        color="primary"
-        className={classes.submit}
-        disabled={isFetching}
-        data-test="submitButton"
-      >
-        Save Settings
-      </Button>
+      <div className={classes.dialogAction}>
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          className={classes.submit}
+          disabled={isFetching}
+          data-test="submitButton"
+        >
+          Save Settings
+        </Button>
+        <Button
+          type="button"
+          className={classes.submit}
+          disabled={isFetching}
+          data-test="cancelButton"
+          onClick={handleClose}
+        >
+          Cancel
+        </Button>
+      </div>
     </form>
   );
 };
@@ -180,6 +198,7 @@ function mapStateToProps(state) {
 
 const actionCreators = {
   saveSettings: deviceSettingActions.saveDeviceSettings,
+  close: settingDialogActions.close,
 };
 
 export default connect(mapStateToProps, actionCreators)(MotorSettingForm);

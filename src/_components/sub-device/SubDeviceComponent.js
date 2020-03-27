@@ -22,10 +22,10 @@ const SubDeviceComponent = props => {
     state && state.subDevice && state.subDevice.subDevices ? state.subDevice.subDevices : []
   );
 
-  if (props.deviceId && subDevices.length) {
+  if (props.deviceId && subDevices && subDevices.length) {
     thisSubDevices = subDevices.filter(subDevice => subDevice.deviceId === props.deviceId);
   }
-  if (props.all && subDevices.length) {
+  if (props.all && subDevices && subDevices.length) {
     thisSubDevicesLength = subDevices.filter(subDevice => subDevice.deviceId === props.all).length;
   }
 

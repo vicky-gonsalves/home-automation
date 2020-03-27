@@ -1,5 +1,5 @@
 import { pick } from 'lodash';
-import { subDeviceSettingConstants } from '../_constants';
+import { subDeviceSettingConstants } from '../_constants/subDeviceSetting.constants';
 import { subDeviceSettingService } from '../_services';
 import { settingDialogActions } from './settingDialog.actions';
 
@@ -25,11 +25,11 @@ const removeAllSettings = () => dispatch => {
   });
 };
 
-const saveSubDeviceSettings = settings => async dispatch => {
-  const autoShutDownTime = pickFilteredParams(settings.autoShutDownTime);
+const saveSubDeviceSettings = _settings => async dispatch => {
+  const settings = _settings.map(setting => pickFilteredParams(setting));
   try {
     dispatch(setProgress(true));
-    await subDeviceSettingService.updateSubDeviceSettings([autoShutDownTime]);
+    await subDeviceSettingService.updateSubDeviceSettings(settings);
     dispatch(setProgress(false));
     dispatch(settingDialogActions.close());
   } catch (error) {

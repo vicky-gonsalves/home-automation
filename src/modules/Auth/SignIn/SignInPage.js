@@ -10,7 +10,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { actions } from '../../../_actions/user.actions';
 import Footer from '../../../_components/footer/footer';
-import SignInForm from '../../../_components/forms/SignInForm/SignInForm';
+import SignInForm from '../../../_components/forms/signIn-form/SignInForm';
 import Navbar from '../../../_components/navbar/navbar';
 import { history } from '../../../_helpers/history';
 import config from '../../../config';
