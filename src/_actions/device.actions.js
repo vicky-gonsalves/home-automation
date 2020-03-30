@@ -1,6 +1,7 @@
 import {
   deviceConstants,
   deviceSettingConstants,
+  onlineDeviceConstants,
   sharedDeviceConstants,
   subDeviceConstants,
   subDeviceParamConstants,
@@ -50,6 +51,13 @@ const setSubDeviceSettings = subDeviceSettings => dispatch => {
   });
 };
 
+const setOnlineDevices = onlineDevices => dispatch => {
+  dispatch({
+    type: onlineDeviceConstants.ONLINE_DEVICE_STORE_ALL,
+    payload: onlineDevices,
+  });
+};
+
 const myDevices = () => async dispatch => {
   dispatch({
     type: deviceConstants.DEVICE_UPDATE_FETCHING,
@@ -75,6 +83,9 @@ const myDevices = () => async dispatch => {
       if (data.settings && data.settings.subDeviceSettings) {
         dispatch(setSubDeviceSettings(data.settings.subDeviceSettings));
       }
+    }
+    if (data && data.onlineDevices) {
+      dispatch(setOnlineDevices(data.onlineDevices));
     }
   } catch (e) {
     dispatch({

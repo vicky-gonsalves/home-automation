@@ -2,6 +2,7 @@ import socketIOClient from 'socket.io-client';
 import {
   deviceConstants,
   deviceSettingConstants,
+  onlineDeviceConstants,
   sharedDeviceConstants,
   socketConstants,
   subDeviceConstants,
@@ -76,6 +77,10 @@ const socketInit = accessToken => dispatch => {
     });
     dispatch({
       type: subDeviceSettingConstants.PARENT_DEVICE_DELETED_FOR_SUB_DEVICE_SETTING,
+      payload: data,
+    });
+    dispatch({
+      type: onlineDeviceConstants.PARENT_DEVICE_DELETED_FOR_ONLINE_DEVICE,
       payload: data,
     });
   });
@@ -252,6 +257,30 @@ const socketInit = accessToken => dispatch => {
     console.log(data);
     dispatch({
       type: subDeviceSettingConstants.SUB_DEVICE_SETTING_UPDATED,
+      payload: data,
+    });
+  });
+
+  // Online device status--------------------------------------------------------------------------------------
+
+  socket.on('SOCKET_ID_CREATED', function(data) {
+    // eslint-disable-next-line no-console
+    console.log('ON SOCKET_ID_CREATED: ');
+    // eslint-disable-next-line no-console
+    console.log(data);
+    dispatch({
+      type: onlineDeviceConstants.ONLINE_DEVICE_CREATED,
+      payload: data,
+    });
+  });
+
+  socket.on('SOCKET_ID_DELETED', function(data) {
+    // eslint-disable-next-line no-console
+    console.log('ON SOCKET_ID_DELETED: ');
+    // eslint-disable-next-line no-console
+    console.log(data);
+    dispatch({
+      type: onlineDeviceConstants.ONLINE_DEVICE_DELETED,
       payload: data,
     });
   });

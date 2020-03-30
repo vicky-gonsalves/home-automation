@@ -13,6 +13,7 @@ import {
   actions,
   deviceActions,
   deviceSettingActions,
+  onlineDeviceActions,
   socketActions,
   subDeviceActions,
   subDeviceParamActions,
@@ -52,6 +53,7 @@ export default function Navbar(props) {
     dispatch(subDeviceParamActions.removeAllSubDeviceParams());
     dispatch(deviceSettingActions.removeAllSettings());
     dispatch(subDeviceSettingActions.removeAllSettings());
+    dispatch(onlineDeviceActions.removeAllOnlineDevices());
   };
 
   return (

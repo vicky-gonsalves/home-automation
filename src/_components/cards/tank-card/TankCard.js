@@ -4,11 +4,12 @@ import IconButton from '@material-ui/core/IconButton';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import SettingsIcon from '@material-ui/icons/Settings';
-import WifiIcon from '@material-ui/icons/Wifi';
 import moment from 'moment';
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { settingDialogActions } from '../../../_actions/settingDialog.actions';
+import DeviceOfflineAlert from '../../device-offline-alert/deviceOfflineAlert';
+import OnlineDeviceStatus from '../../online-device-status/onlineDeviceStatus';
 import MotorMode from '../../radios/motor-mode/motorMode';
 import MotorSwitch from '../../switches/motor-switch/motorSwitch';
 import Tank from '../../tank/tank';
@@ -55,8 +56,16 @@ const TankCard = props => {
   const ref = useRef(null);
   let thisSubDevices;
   let waterLevel = 0;
+  let isDeviceOnline = false;
 
   ref.current = { updatedAt, setUpdatedAt };
+
+  const socketIds = useSelector(state => state.onlineDevice);
+  if (socketIds && socketIds.onlineDevices && socketIds.onlineDevices.length && props.deviceId) {
+    isDeviceOnline =
+      socketIds.onlineDevices.filter(onlineDevice => onlineDevice.bindedTo && onlineDevice.bindedTo === props.deviceId)
+        .length > 0;
+  }
 
   const subDevices = useSelector(state =>
     state && state.subDevice && state.subDevice.subDevices ? state.subDevice.subDevices : []
@@ -96,7 +105,7 @@ const TankCard = props => {
     <Card className={classes.default}>
       <CardHeader
         className={classes.cardHeader}
-        avatar={<WifiIcon color="primary" />}
+        avatar={<OnlineDeviceStatus isDeviceOnline={isDeviceOnline} />}
         action={
           <IconButton aria-label="settings" onClick={handleSettingDialog}>
             <SettingsIcon />
@@ -106,6 +115,7 @@ const TankCard = props => {
         titleTypographyProps={{ align: 'center', variant: 'h6', color: 'primary', gutterBottom: false }}
       />
       <CardContent className={classes.cardContent}>
+        {!isDeviceOnline && <DeviceOfflineAlert />}
         <div className={classes.root}>
           <Grid container spacing={1}>
             <Grid item xs={5} sm={4} md={5} lg={3}>
