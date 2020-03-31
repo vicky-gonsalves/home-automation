@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { settingDialogActions } from '../../../_actions/settingDialog.actions';
 import DeviceOfflineAlert from '../../device-offline-alert/deviceOfflineAlert';
 import OnlineDeviceStatus from '../../online-device-status/onlineDeviceStatus';
+import PreferredDevice from '../../preferred-device/preferredDevice';
 import MotorMode from '../../radios/motor-mode/motorMode';
 import MotorSwitch from '../../switches/motor-switch/motorSwitch';
 import Tank from '../../tank/tank';
@@ -57,6 +58,7 @@ const TankCard = props => {
   let thisSubDevices;
   let waterLevel = 0;
   let isDeviceOnline = false;
+  let preferredDevice;
 
   ref.current = { updatedAt, setUpdatedAt };
 
@@ -90,6 +92,20 @@ const TankCard = props => {
     thisSubDevices = subDevices.filter(
       subDevice => subDevice.deviceId === props.deviceId && subDevice.type === 'motorSwitch'
     );
+  }
+
+  const deviceSettings = useSelector(state =>
+    state && state.deviceSetting && state.deviceSetting.deviceSettings ? state.deviceSetting.deviceSettings : []
+  );
+
+  if (props.deviceId && subDevices.length && deviceSettings.length) {
+    preferredDevice = deviceSettings.filter(
+      setting =>
+        setting.bindedTo === props.deviceId &&
+        setting.type === 'device' &&
+        setting.idType === 'deviceId' &&
+        setting.paramName === 'preferredSubDevice'
+    )[0];
   }
 
   useEffect(() => {
@@ -128,6 +144,9 @@ const TankCard = props => {
               {thisSubDevices &&
                 thisSubDevices.map(subDevice => (
                   <div key={subDevice.subDeviceId} className={classes.items}>
+                    {thisSubDevices.length > 1 &&
+                      preferredDevice &&
+                      preferredDevice.paramValue === subDevice.subDeviceId && <PreferredDevice />}
                     <MotorSwitch name={subDevice.name} deviceId={props.deviceId} subDeviceId={subDevice.subDeviceId} />
                     <MotorMode name={subDevice.name} deviceId={props.deviceId} subDeviceId={subDevice.subDeviceId} />
                   </div>

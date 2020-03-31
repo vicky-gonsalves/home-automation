@@ -57,7 +57,7 @@ const MotorMode = props => {
     <React.Fragment>
       {thisSubDeviceParams && thisSubDeviceParams[0] && thisSubDeviceParams[0].paramValue && (
         <FormControl component="fieldset" className={classes.mode}>
-          <FormLabel component="legend">Motor Mode</FormLabel>
+          <FormLabel component="legend">Motor Start/Stop Mode</FormLabel>
           <RadioGroup
             aria-label="mode"
             name="mode"
