@@ -1,6 +1,7 @@
 import socketIOClient from 'socket.io-client';
 import {
   deviceConstants,
+  deviceParamConstants,
   deviceSettingConstants,
   onlineDeviceConstants,
   sharedDeviceConstants,
@@ -81,6 +82,10 @@ const socketInit = accessToken => dispatch => {
     });
     dispatch({
       type: onlineDeviceConstants.PARENT_DEVICE_DELETED_FOR_ONLINE_DEVICE,
+      payload: data,
+    });
+    dispatch({
+      type: deviceParamConstants.PARENT_DEVICE_DELETED_FOR_DEVICE_PARAM,
       payload: data,
     });
   });
@@ -173,6 +178,41 @@ const socketInit = accessToken => dispatch => {
     });
   });
 
+  // Device params events-----------------------------------------------------------------------------------------
+
+  socket.on('DEVICE_PARAM_CREATED', function(data) {
+    // eslint-disable-next-line no-console
+    console.log('ON DEVICE_PARAM_CREATED: ');
+    // eslint-disable-next-line no-console
+    console.log(data);
+    dispatch({
+      type: deviceParamConstants.DEVICE_PARAM_CREATED,
+      payload: data,
+    });
+  });
+
+  socket.on('DEVICE_PARAM_UPDATED', function(data) {
+    // eslint-disable-next-line no-console
+    console.log('ON DEVICE_PARAM_UPDATED: ');
+    // eslint-disable-next-line no-console
+    console.log(data);
+    dispatch({
+      type: deviceParamConstants.DEVICE_PARAM_UPDATED,
+      payload: data,
+    });
+  });
+
+  socket.on('DEVICE_PARAM_DELETED', function(data) {
+    // eslint-disable-next-line no-console
+    console.log('ON DEVICE_PARAM_DELETED: ');
+    // eslint-disable-next-line no-console
+    console.log(data);
+    dispatch({
+      type: deviceParamConstants.DEVICE_PARAM_DELETED,
+      payload: data,
+    });
+  });
+
   // Shared Device access events--------------------------------------------------------------------------------------
 
   socket.on('SHARED_DEVICE_ACCESS_CREATED', function(data) {
@@ -209,6 +249,10 @@ const socketInit = accessToken => dispatch => {
     });
     dispatch({
       type: subDeviceSettingConstants.PARENT_DEVICE_DELETED_FOR_SUB_DEVICE_SETTING,
+      payload: data,
+    });
+    dispatch({
+      type: deviceParamConstants.PARENT_DEVICE_DELETED_FOR_DEVICE_PARAM,
       payload: data,
     });
   });

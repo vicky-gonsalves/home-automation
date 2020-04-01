@@ -7,6 +7,7 @@ import {
   subDeviceParamConstants,
   subDeviceSettingConstants,
 } from '../_constants';
+import { deviceParamConstants } from '../_constants/deviecParam.constants';
 import { deviceService } from '../_services';
 
 const setDevices = devices => dispatch => {
@@ -27,6 +28,13 @@ const setSubDevices = subDevices => dispatch => {
   dispatch({
     type: subDeviceConstants.SUB_DEVICE_STORE_ALL,
     payload: subDevices,
+  });
+};
+
+const setDeviceParams = deviceParams => dispatch => {
+  dispatch({
+    type: deviceParamConstants.DEVICE_PARAM_STORE_ALL,
+    payload: deviceParams,
   });
 };
 
@@ -75,6 +83,9 @@ const myDevices = () => async dispatch => {
     }
     if (data && data.subDeviceParams) {
       dispatch(setSubDeviceParams(data.subDeviceParams));
+    }
+    if (data && data.deviceParams) {
+      dispatch(setDeviceParams(data.deviceParams));
     }
     if (data && data.settings) {
       if (data.settings && data.settings.deviceSettings) {

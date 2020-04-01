@@ -9,6 +9,7 @@ import { Route, Router, Switch } from 'react-router-dom';
 import {
   actions,
   deviceActions,
+  deviceParamActions,
   deviceSettingActions,
   onlineDeviceActions,
   socketActions,
@@ -49,6 +50,7 @@ function App() {
     dispatch(deviceActions.removeAllDevices());
     dispatch(sharedDeviceActions.removeAllSharedDevices());
     dispatch(subDeviceActions.removeAllSubDevices());
+    dispatch(deviceParamActions.removeAllDeviceParams());
     dispatch(subDeviceParamActions.removeAllSubDeviceParams());
     dispatch(deviceSettingActions.removeAllSettings());
     dispatch(subDeviceSettingActions.removeAllSettings());

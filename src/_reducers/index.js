@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux';
 import alert from './alert/alert.reducer';
+import deviceParam from './device-param/devieParam.reducer';
 import deviceSetting from './device-setting/deviceSetting.reducer';
 import device from './device/device.reducer';
 import settingDialog from './dialog/settingDialog.reducer';
@@ -23,6 +24,7 @@ const rootReducer = combineReducers({
   deviceSetting,
   subDeviceSetting,
   onlineDevice,
+  deviceParam,
 });
 
 export default rootReducer;

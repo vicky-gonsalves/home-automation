@@ -9,3 +9,4 @@ export * from './settingDialog.constants';
 export * from './deviceSetting.constants';
 export * from './subDeviceSetting.constants';
 export * from './onlineDevice.constants';
+export * from './deviecParam.constants';

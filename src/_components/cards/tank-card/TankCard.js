@@ -73,14 +73,14 @@ const TankCard = props => {
     state && state.subDevice && state.subDevice.subDevices ? state.subDevice.subDevices : []
   );
 
-  const subDeviceParams = useSelector(state =>
-    state && state.subDeviceParam && state.subDeviceParam.subDeviceParams ? state.subDeviceParam.subDeviceParams : []
+  const deviceParams = useSelector(state =>
+    state && state.deviceParam && state.deviceParam.deviceParams ? state.deviceParam.deviceParams : []
   );
 
   const handleSettingDialog = () => dispatch(settingDialogActions.open(props.deviceName, props.deviceId, 'tank'));
 
-  if (subDeviceParams && subDeviceParams.length) {
-    const wLevel = subDeviceParams.filter(subDeviceParam => subDeviceParam && subDeviceParam.paramName === 'waterLevel');
+  if (deviceParams && deviceParams.length) {
+    const wLevel = deviceParams.filter(deviceParam => deviceParam && deviceParam.paramName === 'waterLevel');
     if (wLevel.length) {
       waterLevel = wLevel[0];
       if (waterLevel && waterLevel.updatedAt) {
