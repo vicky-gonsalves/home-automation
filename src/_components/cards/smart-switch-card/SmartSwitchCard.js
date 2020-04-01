@@ -10,7 +10,7 @@ import { settingDialogActions } from '../../../_actions/settingDialog.actions';
 import DeviceOfflineAlert from '../../device-offline-alert/deviceOfflineAlert';
 import OnlineDeviceStatus from '../../online-device-status/onlineDeviceStatus';
 import SubDeviceComponent from '../../sub-device/SubDeviceComponent';
-import SmartSwitchCardAction from '../smart-switch-card-action/SmartSwitchCardAction';
+import CardActionFooter from '../card-action/CardActionFooter';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -92,7 +92,7 @@ const SmartSwitchCard = props => {
         </Typography>
       </CardContent>
       <div className={classes.grow} />
-      <SmartSwitchCardAction />
+      <CardActionFooter deviceId={props.deviceId} />
     </Card>
   );
 };

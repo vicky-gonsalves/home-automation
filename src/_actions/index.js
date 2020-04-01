@@ -8,3 +8,4 @@ export * from './deviceSetting.actions';
 export * from './subDeviceSetting.actions';
 export * from './onlineDevice.actions';
 export * from './deviceParam.actions';
+export * from './log.actions';

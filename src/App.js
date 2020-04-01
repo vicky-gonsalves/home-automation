@@ -11,6 +11,7 @@ import {
   deviceActions,
   deviceParamActions,
   deviceSettingActions,
+  logActions,
   onlineDeviceActions,
   socketActions,
   subDeviceActions,
@@ -55,6 +56,7 @@ function App() {
     dispatch(deviceSettingActions.removeAllSettings());
     dispatch(subDeviceSettingActions.removeAllSettings());
     dispatch(onlineDeviceActions.removeAllOnlineDevices());
+    dispatch(logActions.removeAllLogs());
   };
 
   // Function that will be called to refresh authorization

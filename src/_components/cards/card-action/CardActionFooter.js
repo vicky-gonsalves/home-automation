@@ -6,7 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import clsx from 'clsx';
 import React, { useState } from 'react';
-import TankStats from '../tank-stats/TankStats';
+import Stats from '../stats/Stats';
 
 const useStyles = makeStyles(theme => ({
   cardAction: {
@@ -26,7 +26,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const TankCardAction = () => {
+const CardActionFooter = props => {
   const classes = useStyles();
   const [expanded, setExpanded] = useState(false);
 
@@ -51,10 +51,10 @@ const TankCardAction = () => {
         </IconButton>
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
-        <TankStats />
+        <Stats deviceId={props.deviceId} />
       </Collapse>
     </React.Fragment>
   );
 };
 
-export default TankCardAction;
+export default CardActionFooter;

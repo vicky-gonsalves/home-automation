@@ -19,6 +19,7 @@ import {
   subDeviceParamActions,
   deviceParamActions,
   subDeviceSettingActions,
+  logActions,
 } from '../../_actions';
 import { sharedDeviceActions } from '../../_actions/sharedDevice.actions';
 
@@ -56,6 +57,7 @@ export default function Navbar(props) {
     dispatch(deviceSettingActions.removeAllSettings());
     dispatch(subDeviceSettingActions.removeAllSettings());
     dispatch(onlineDeviceActions.removeAllOnlineDevices());
+    dispatch(logActions.removeAllLogs());
   };
 
   return (

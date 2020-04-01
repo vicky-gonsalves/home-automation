@@ -1,6 +1,7 @@
 import {
   deviceConstants,
   deviceSettingConstants,
+  logConstants,
   onlineDeviceConstants,
   sharedDeviceConstants,
   subDeviceConstants,
@@ -66,6 +67,13 @@ const setOnlineDevices = onlineDevices => dispatch => {
   });
 };
 
+const setLogs = logs => dispatch => {
+  dispatch({
+    type: logConstants.LOG_STORE_ALL,
+    payload: logs,
+  });
+};
+
 const myDevices = () => async dispatch => {
   dispatch({
     type: deviceConstants.DEVICE_UPDATE_FETCHING,
@@ -97,6 +105,9 @@ const myDevices = () => async dispatch => {
     }
     if (data && data.onlineDevices) {
       dispatch(setOnlineDevices(data.onlineDevices));
+    }
+    if (data && data.logs) {
+      dispatch(setLogs(data.logs));
     }
   } catch (e) {
     dispatch({

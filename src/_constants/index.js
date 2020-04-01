@@ -10,3 +10,4 @@ export * from './deviceSetting.constants';
 export * from './subDeviceSetting.constants';
 export * from './onlineDevice.constants';
 export * from './deviecParam.constants';
+export * from './log.constants';

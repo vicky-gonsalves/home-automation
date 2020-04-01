@@ -3,6 +3,7 @@ import {
   deviceConstants,
   deviceParamConstants,
   deviceSettingConstants,
+  logConstants,
   onlineDeviceConstants,
   sharedDeviceConstants,
   socketConstants,
@@ -88,6 +89,10 @@ const socketInit = accessToken => dispatch => {
       type: deviceParamConstants.PARENT_DEVICE_DELETED_FOR_DEVICE_PARAM,
       payload: data,
     });
+    dispatch({
+      type: logConstants.PARENT_DEVICE_DELETED_FOR_LOG,
+      payload: data,
+    });
   });
 
   // Sub Device params events-----------------------------------------------------------------------------------------
@@ -128,6 +133,10 @@ const socketInit = accessToken => dispatch => {
     });
     dispatch({
       type: subDeviceSettingConstants.PARENT_SUB_DEVICE_DELETED_FOR_SUB_DEVICE_SETTING,
+      payload: data,
+    });
+    dispatch({
+      type: logConstants.PARENT_SUB_DEVICE_DELETED_FOR_LOG,
       payload: data,
     });
   });
@@ -255,6 +264,10 @@ const socketInit = accessToken => dispatch => {
       type: deviceParamConstants.PARENT_DEVICE_DELETED_FOR_DEVICE_PARAM,
       payload: data,
     });
+    dispatch({
+      type: logConstants.PARENT_DEVICE_DELETED_FOR_LOG,
+      payload: data,
+    });
   });
 
   // Device Settings--------------------------------------------------------------------------------------
@@ -327,6 +340,21 @@ const socketInit = accessToken => dispatch => {
       type: onlineDeviceConstants.ONLINE_DEVICE_DELETED,
       payload: data,
     });
+  });
+
+  // logs-------------------------------------------------------------------------------------------------------
+
+  socket.on('LOG_CREATED', function(data) {
+    // eslint-disable-next-line no-console
+    console.log('ON LOG_CREATED: ');
+    // eslint-disable-next-line no-console
+    console.log(data);
+    if (!data.isDevLog) {
+      dispatch({
+        type: logConstants.LOG_CREATED,
+        payload: data,
+      });
+    }
   });
 
   // Connection succeeded

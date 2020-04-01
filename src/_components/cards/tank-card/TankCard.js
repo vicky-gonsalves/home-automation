@@ -14,7 +14,7 @@ import PreferredDevice from '../../preferred-device/preferredDevice';
 import MotorMode from '../../radios/motor-mode/motorMode';
 import MotorSwitch from '../../switches/motor-switch/motorSwitch';
 import Tank from '../../tank/tank';
-import TankCardAction from '../tank-card-action/TankCardAction';
+import CardActionFooter from '../card-action/CardActionFooter';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -155,7 +155,7 @@ const TankCard = props => {
           </Grid>
         </div>
       </CardContent>
-      <TankCardAction />
+      <CardActionFooter deviceId={props.deviceId} />
     </Card>
   );
 };
