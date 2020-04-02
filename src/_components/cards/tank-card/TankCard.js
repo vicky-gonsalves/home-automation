@@ -155,7 +155,7 @@ const TankCard = props => {
           </Grid>
         </div>
       </CardContent>
-      <CardActionFooter deviceId={props.deviceId} />
+      <CardActionFooter deviceId={props.deviceId} deviceVariant="tank" />
     </Card>
   );
 };

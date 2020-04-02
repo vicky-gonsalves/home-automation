@@ -2,10 +2,11 @@ import CardActions from '@material-ui/core/CardActions';
 import Collapse from '@material-ui/core/Collapse';
 import IconButton from '@material-ui/core/IconButton';
 import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import clsx from 'clsx';
 import React, { useState } from 'react';
+import SmartSwitchAlert from '../../alerts/smart-switch-alert/smartSwitchAlert';
+import TankAlert from '../../alerts/tank-alert/tankAlert';
 import Stats from '../stats/Stats';
 
 const useStyles = makeStyles(theme => ({
@@ -36,9 +37,8 @@ const CardActionFooter = props => {
   return (
     <React.Fragment>
       <CardActions className={classes.cardAction}>
-        <Typography component="div" color="error" variant="body1">
-          Motor will be turned off automatically in <strong>30 Minutes</strong>
-        </Typography>
+        {props.deviceVariant === 'tank' && <TankAlert deviceId={props.deviceId} />}
+        {props.deviceVariant === 'smartSwitch' && <SmartSwitchAlert deviceId={props.deviceId} />}
         <IconButton
           className={clsx(classes.expand, {
             [classes.expandOpen]: expanded,

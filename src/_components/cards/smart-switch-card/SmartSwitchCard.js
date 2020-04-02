@@ -92,7 +92,7 @@ const SmartSwitchCard = props => {
         </Typography>
       </CardContent>
       <div className={classes.grow} />
-      <CardActionFooter deviceId={props.deviceId} />
+      <CardActionFooter deviceId={props.deviceId} deviceVariant="smartSwitch" />
     </Card>
   );
 };
