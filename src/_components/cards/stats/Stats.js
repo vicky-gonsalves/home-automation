@@ -52,7 +52,7 @@ const Stats = props => {
                 </ListItemIcon>
               )}
               <Typography key={log.id} component="div" color="textPrimary" variant="caption">
-                {log.logDescription} by {log.triggeredByDevice ? 'system' : log.userName} <br /> -{' '}
+                {log.logDescription} - by {log.triggeredByDevice ? 'system' : log.userName} <br /> -{' '}
                 {moment(log.createdAt).format('MMMM Do YYYY, h:mm:ss A')}
               </Typography>
             </ListItem>
