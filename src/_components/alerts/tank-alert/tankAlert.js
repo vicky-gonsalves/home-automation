@@ -5,6 +5,7 @@ import CountDownTimer from '../../count-down-timer/CountDownTimer';
 import moment from 'moment';
 
 const TankAlert = props => {
+  const subDevices = useSelector(state => state.subDevice && state.subDevice.subDevices);
   const subDeviceParams = useSelector(state => state.subDeviceParam && state.subDeviceParam.subDeviceParams);
   const deviceSettings = useSelector(state => state.deviceSetting && state.deviceSetting.deviceSettings);
   const onlineDevices = useSelector(state => state.onlineDevice && state.onlineDevice.onlineDevices);
@@ -27,6 +28,12 @@ const TankAlert = props => {
   const thisOnlineDevice = onlineDevices.filter(
     onlineDevice => onlineDevice && onlineDevice.bindedTo && onlineDevice.bindedTo === props.deviceId
   )[0];
+
+  const getSubDeviceName = param => {
+    const subDevice = subDevices.filter(subDevice => subDevice.subDeviceId === param.subDeviceId)[0];
+    return subDevice ? subDevice.name : null;
+  };
+
   return (
     <div>
       {autoShutDownTime &&
@@ -35,7 +42,7 @@ const TankAlert = props => {
           <div key={param.id}>
             {thisOnlineDevice && (
               <Typography component="div" color="primary" variant="body2">
-                Motor will be turned off automatically &nbsp;
+                {getSubDeviceName(param)} will be turned off automatically &nbsp;
                 <strong>
                   <CountDownTimer endTime={getEndTime(param.updatedAt)} />
                 </strong>
