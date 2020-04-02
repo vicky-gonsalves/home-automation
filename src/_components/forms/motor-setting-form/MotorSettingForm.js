@@ -175,9 +175,15 @@ export const MotorSettingForm = withFormik({
   }),
   validationSchema: yup.object().shape({
     preferredSubDevice: yup.string().required('Please select preferred device'),
-    autoShutDownTime: yup.number().required('Please enter auto shutdown time in minutes'),
+    autoShutDownTime: yup
+      .number()
+      .min(0, 'Auto shutdown time cannot be negative')
+      .typeError('Please enter auto shutdown time in minutes (minutes must be a number)')
+      .required('Please enter auto shutdown time. `0` indicates no auto shutdown.'),
     waterLevelToStart: yup
       .number()
+      .min(0, 'water level value cannot be negative')
+      .typeError('Please enter water level value in number format')
       .required('Please enter water level value in percentage to start the motor automatically'),
   }),
   handleSubmit: (values, { props }) => {

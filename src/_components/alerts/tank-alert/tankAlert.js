@@ -15,6 +15,7 @@ const TankAlert = props => {
     setting =>
       setting.bindedTo === props.deviceId &&
       setting.paramName === 'autoShutDownTime' &&
+      setting.paramValue > 0 &&
       setting.type === 'device' &&
       setting.idType === 'deviceId'
   )[0];
