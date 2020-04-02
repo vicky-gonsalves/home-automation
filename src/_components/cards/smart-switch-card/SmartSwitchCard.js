@@ -87,9 +87,6 @@ const SmartSwitchCard = props => {
             </Grid>
           </Grid>
         </div>
-        <Typography component="div" color="textSecondary" variant="caption" className={classes.caption}>
-          Last update at: Feb 18, 2020, 11:49:51 AM
-        </Typography>
       </CardContent>
       <div className={classes.grow} />
       <CardActionFooter deviceId={props.deviceId} deviceVariant="smartSwitch" />
