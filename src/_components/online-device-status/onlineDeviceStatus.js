@@ -2,6 +2,7 @@ import green from '@material-ui/core/colors/green';
 import red from '@material-ui/core/colors/red';
 import Tooltip from '@material-ui/core/Tooltip';
 import WifiIcon from '@material-ui/icons/Wifi';
+import PropTypes from 'prop-types';
 import React from 'react';
 
 const OnlineDeviceStatus = props => {
@@ -14,6 +15,10 @@ const OnlineDeviceStatus = props => {
       <WifiIcon style={style} />
     </Tooltip>
   );
+};
+
+OnlineDeviceStatus.propTypes = {
+  isDeviceOnline: PropTypes.bool.isRequired,
 };
 
 export default OnlineDeviceStatus;

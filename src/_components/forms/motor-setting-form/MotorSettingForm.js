@@ -6,6 +6,7 @@ import Select from '@material-ui/core/Select';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import { withFormik } from 'formik';
+import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import * as yup from 'yup';
@@ -205,6 +206,15 @@ function mapStateToProps(state) {
 const actionCreators = {
   saveSettings: deviceSettingActions.saveDeviceSettings,
   close: settingDialogActions.close,
+};
+
+SimpleMotorSettingForm.propTypes = {
+  deviceId: PropTypes.string.isRequired,
+  subDevices: PropTypes.array.isRequired,
+  deviceSettings: PropTypes.array.isRequired,
+  isFetching: PropTypes.bool.isRequired,
+  saveSettings: PropTypes.func.isRequired,
+  close: PropTypes.func.isRequired,
 };
 
 export default connect(mapStateToProps, actionCreators)(MotorSettingForm);

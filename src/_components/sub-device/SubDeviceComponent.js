@@ -1,5 +1,6 @@
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
+import PropTypes from 'prop-types';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import SmartSwitch from '../switches/smart-switch/SmartSwitch';
@@ -57,6 +58,11 @@ const SubDeviceComponent = props => {
       </Grid>
     </React.Fragment>
   );
+};
+
+SubDeviceComponent.propTypes = {
+  deviceId: PropTypes.string,
+  all: PropTypes.string,
 };
 
 export default SubDeviceComponent;

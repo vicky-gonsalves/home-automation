@@ -5,6 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import SettingsIcon from '@material-ui/icons/Settings';
 import moment from 'moment';
+import PropTypes from 'prop-types';
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { settingDialogActions } from '../../../_actions/settingDialog.actions';
@@ -158,6 +159,11 @@ const TankCard = props => {
       <CardActionFooter deviceId={props.deviceId} deviceVariant="tank" />
     </Card>
   );
+};
+
+TankCard.propTypes = {
+  deviceId: PropTypes.string.isRequired,
+  deviceName: PropTypes.string.isRequired,
 };
 
 export default TankCard;

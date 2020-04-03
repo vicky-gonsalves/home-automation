@@ -26,7 +26,8 @@ class Footer extends Component {
 }
 
 Footer.propTypes = {
-  appName: PropTypes.string,
+  appName: PropTypes.string.isRequired,
+  'data-test': PropTypes.string.isRequired,
 };
 
 export default Footer;

@@ -1,11 +1,12 @@
 import IconButton from '@material-ui/core/IconButton';
 import Snackbar from '@material-ui/core/Snackbar';
 import CloseIcon from '@material-ui/icons/Close';
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { actions } from '../../_actions/user.actions';
 import { deviceSettingActions } from '../../_actions/deviceSetting.actions';
 import { subDeviceSettingActions } from '../../_actions/subDeviceSetting.actions';
+import { actions } from '../../_actions/user.actions';
 
 export class Toaster extends Component {
   constructor(props) {
@@ -85,5 +86,15 @@ const actionCreators = {
   clearSubDeviceSettingError: subDeviceSettingActions.setSubDeviceSettingError,
 };
 const connectedToaster = connect(mapState, actionCreators)(Toaster);
+
+Toaster.propTypes = {
+  'data-test': PropTypes.string.isRequired,
+  loginError: PropTypes.bool,
+  settingError: PropTypes.bool,
+  subDeviceSettingError: PropTypes.bool,
+  clearLoginError: PropTypes.func.isRequired,
+  clearDeviceSettingError: PropTypes.func.isRequired,
+  clearSubDeviceSettingError: PropTypes.func.isRequired,
+};
 
 export default connectedToaster;

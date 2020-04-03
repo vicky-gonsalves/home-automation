@@ -1,5 +1,6 @@
 import Typography from '@material-ui/core/Typography';
 import moment from 'moment';
+import PropTypes from 'prop-types';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import CountDownTimer from '../../count-down-timer/CountDownTimer';
@@ -71,10 +72,14 @@ const SmartSwitchAlert = props => {
   return (
     <div>
       {autoShutDownSettings &&
-        autoShutDownSettings.length &&
+        autoShutDownSettings.length > 0 &&
         thisSubDeviceParams.map(param => <div key={param.id}>{thisOnlineDevice && renderAlert(param)}</div>)}
     </div>
   );
+};
+
+SmartSwitchAlert.propTypes = {
+  deviceId: PropTypes.string.isRequired,
 };
 
 export default SmartSwitchAlert;

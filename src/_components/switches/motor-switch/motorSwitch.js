@@ -1,6 +1,7 @@
 import Grid from '@material-ui/core/Grid';
 import Switch from '@material-ui/core/Switch';
 import Typography from '@material-ui/core/Typography';
+import PropTypes from 'prop-types';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { subDeviceParamActions } from '../../../_actions';
@@ -50,6 +51,12 @@ const MotorSwitch = props => {
       )}
     </Typography>
   );
+};
+
+MotorSwitch.propTypes = {
+  deviceId: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  subDeviceId: PropTypes.string.isRequired,
 };
 
 export default MotorSwitch;

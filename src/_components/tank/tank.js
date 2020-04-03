@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import './tank.scss';
 
@@ -31,6 +32,10 @@ const Tank = props => {
       <h1 className="overlap">{props.waterLevel}%</h1>
     </div>
   );
+};
+
+Tank.propTypes = {
+  waterLevel: PropTypes.number,
 };
 
 export default Tank;

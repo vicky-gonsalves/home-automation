@@ -1,4 +1,5 @@
 import moment from 'moment';
+import PropTypes from 'prop-types';
 import React, { useEffect, useRef, useState } from 'react';
 
 const CountDownTimer = props => {
@@ -42,6 +43,10 @@ const CountDownTimer = props => {
 
   ref.current.endsAt = props.endTime.diff(moment(), 'milliseconds');
   return <React.Fragment>{getRemainingTime()}</React.Fragment>;
+};
+
+CountDownTimer.propTypes = {
+  endTime: PropTypes.object.isRequired,
 };
 
 export default CountDownTimer;

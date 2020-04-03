@@ -8,6 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import AdbIcon from '@material-ui/icons/Adb';
 import PermIdentityIcon from '@material-ui/icons/PermIdentity';
 import moment from 'moment';
+import PropTypes from 'prop-types';
 import React from 'react';
 import { useSelector } from 'react-redux';
 
@@ -60,6 +61,10 @@ const Stats = props => {
       </List>
     </CardContent>
   );
+};
+
+Stats.propTypes = {
+  deviceId: PropTypes.string.isRequired,
 };
 
 export default Stats;

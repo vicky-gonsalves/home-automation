@@ -18,4 +18,6 @@ const DeviceOfflineAlert = () => {
   );
 };
 
+DeviceOfflineAlert.propTypes = {};
+
 export default DeviceOfflineAlert;

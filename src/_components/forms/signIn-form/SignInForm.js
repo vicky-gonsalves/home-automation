@@ -4,6 +4,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import { withFormik } from 'formik';
+import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import * as yup from 'yup';
@@ -103,6 +104,11 @@ function mapStateToProps(state) {
 
 const actionCreators = {
   signIn: actions.signIn,
+};
+
+SimpleSignInForm.propTypes = {
+  isFetching: PropTypes.bool.isRequired,
+  signIn: PropTypes.func.isRequired,
 };
 
 export default connect(mapStateToProps, actionCreators)(SignInForm);

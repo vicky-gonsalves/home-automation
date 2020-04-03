@@ -87,10 +87,6 @@ export class HomePage extends Component {
   }
 }
 
-HomePage.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
 function mapState(state) {
   const { isLoggedIn, tokens, isAuthorized } = state.user;
   const { isSocketFetching, connected } = state.socket;
@@ -106,6 +102,38 @@ const actionCreators = {
   socketInit: socketActions.socketInit,
   myDevices: deviceActions.myDevices,
   removeAllDevices: deviceActions.removeAllDevices,
+};
+
+HomePage.propTypes = {
+  classes: PropTypes.shape({
+    root: PropTypes.string.isRequired,
+    footer: PropTypes.string.isRequired,
+  }),
+  history: PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired,
+  match: PropTypes.object.isRequired,
+  devices: PropTypes.array.isRequired,
+  connected: PropTypes.bool.isRequired,
+  isAuthorized: PropTypes.bool,
+  isLoggedIn: PropTypes.bool.isRequired,
+  isSocketFetching: PropTypes.bool.isRequired,
+  me: PropTypes.func.isRequired,
+  myDevices: PropTypes.func.isRequired,
+  removeAllDevices: PropTypes.func.isRequired,
+  sharedDevices: PropTypes.array.isRequired,
+  signIn: PropTypes.func.isRequired,
+  signOut: PropTypes.func.isRequired,
+  socketInit: PropTypes.func.isRequired,
+  tokens: PropTypes.shape({
+    access: PropTypes.shape({
+      expires: PropTypes.string.isRequired,
+      token: PropTypes.string.isRequired,
+    }),
+    refresh: PropTypes.shape({
+      expires: PropTypes.string.isRequired,
+      token: PropTypes.string.isRequired,
+    }),
+  }),
 };
 
 const connectedHomePage = connect(mapState, actionCreators)(HomePage);

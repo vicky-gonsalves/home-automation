@@ -34,4 +34,6 @@ const SettingDialog = () => {
   );
 };
 
+SettingDialog.propTypes = {};
+
 export default SettingDialog;

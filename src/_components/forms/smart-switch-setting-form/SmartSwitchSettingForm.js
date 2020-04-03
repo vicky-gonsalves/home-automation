@@ -3,6 +3,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import { FieldArray, getIn, withFormik } from 'formik';
+import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import * as yup from 'yup';
@@ -29,7 +30,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const SimpleMotorSettingForm = props => {
+const SimpleSmartSwitchSettingForm = props => {
   let thisSettings = [];
   const classes = useStyles();
   const {
@@ -179,7 +180,7 @@ export const SmartSwitchSettingForm = withFormik({
     props.saveSettings(allSettings);
   },
   displayName: 'motorSettingForm',
-})(SimpleMotorSettingForm);
+})(SimpleSmartSwitchSettingForm);
 
 function mapStateToProps(state) {
   const { subDevices } = state.subDevice;
@@ -190,6 +191,15 @@ function mapStateToProps(state) {
 const actionCreators = {
   saveSettings: subDeviceSettingActions.saveSubDeviceSettings,
   close: settingDialogActions.close,
+};
+
+SimpleSmartSwitchSettingForm.propTypes = {
+  deviceId: PropTypes.string.isRequired,
+  subDevices: PropTypes.array.isRequired,
+  subDeviceSettings: PropTypes.array.isRequired,
+  isFetching: PropTypes.bool.isRequired,
+  saveSettings: PropTypes.func.isRequired,
+  close: PropTypes.func.isRequired,
 };
 
 export default connect(mapStateToProps, actionCreators)(SmartSwitchSettingForm);

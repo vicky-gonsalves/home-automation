@@ -3,6 +3,7 @@ import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import { makeStyles } from '@material-ui/core/styles';
 import SettingsIcon from '@material-ui/icons/Settings';
+import PropTypes from 'prop-types';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { settingDialogActions } from '../../../_actions/settingDialog.actions';
@@ -91,6 +92,11 @@ const SmartSwitchCard = props => {
       <CardActionFooter deviceId={props.deviceId} deviceVariant="smartSwitch" />
     </Card>
   );
+};
+
+SmartSwitchCard.propTypes = {
+  deviceId: PropTypes.string.isRequired,
+  deviceName: PropTypes.string.isRequired,
 };
 
 export default SmartSwitchCard;

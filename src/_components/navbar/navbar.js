@@ -7,19 +7,20 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import BrightnessAutoIcon from '@material-ui/icons/BrightnessAuto';
+import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   actions,
   deviceActions,
+  deviceParamActions,
   deviceSettingActions,
+  logActions,
   onlineDeviceActions,
   socketActions,
   subDeviceActions,
   subDeviceParamActions,
-  deviceParamActions,
   subDeviceSettingActions,
-  logActions,
 } from '../../_actions';
 import { sharedDeviceActions } from '../../_actions/sharedDevice.actions';
 
@@ -102,3 +103,8 @@ export default function Navbar(props) {
     </AppBar>
   );
 }
+
+Navbar.propTypes = {
+  appName: PropTypes.string.isRequired,
+  'data-test': PropTypes.string.isRequired,
+};

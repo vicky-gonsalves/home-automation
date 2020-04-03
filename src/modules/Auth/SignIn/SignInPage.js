@@ -94,8 +94,22 @@ function mapState(state) {
 }
 
 const actionCreators = {
-  signOut: actions.signOut,
   signIn: actions.signIn,
+};
+
+SignInPage.propTypes = {
+  classes: PropTypes.shape({
+    paper: PropTypes.string.isRequired,
+    main: PropTypes.string.isRequired,
+    footer: PropTypes.string.isRequired,
+    avatar: PropTypes.string.isRequired,
+  }),
+  history: PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired,
+  match: PropTypes.object.isRequired,
+  isLoggedIn: PropTypes.bool.isRequired,
+  tokens: PropTypes.object,
+  signIn: PropTypes.func.isRequired,
 };
 
 const connectedSignInPage = connect(mapState, actionCreators)(SignInPage);

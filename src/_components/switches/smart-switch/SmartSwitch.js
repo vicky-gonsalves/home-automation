@@ -3,6 +3,7 @@ import Grid from '@material-ui/core/Grid';
 import Switch from '@material-ui/core/Switch';
 import Typography from '@material-ui/core/Typography';
 import EmojiObjectsIcon from '@material-ui/icons/EmojiObjects';
+import PropTypes from 'prop-types';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { subDeviceParamActions } from '../../../_actions';
@@ -104,6 +105,13 @@ const SmartSwitch = props => {
       </div>
     </React.Fragment>
   );
+};
+
+SmartSwitch.propTypes = {
+  name: PropTypes.string.isRequired,
+  deviceId: PropTypes.string.isRequired,
+  subDeviceId: PropTypes.string,
+  show: PropTypes.bool,
 };
 
 export default SmartSwitch;

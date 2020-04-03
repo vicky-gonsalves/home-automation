@@ -4,6 +4,7 @@ import IconButton from '@material-ui/core/IconButton';
 import { makeStyles } from '@material-ui/core/styles';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import clsx from 'clsx';
+import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import SmartSwitchAlert from '../../alerts/smart-switch-alert/smartSwitchAlert';
 import TankAlert from '../../alerts/tank-alert/tankAlert';
@@ -55,6 +56,11 @@ const CardActionFooter = props => {
       </Collapse>
     </React.Fragment>
   );
+};
+
+CardActionFooter.propTypes = {
+  deviceId: PropTypes.string.isRequired,
+  deviceVariant: PropTypes.string.isRequired,
 };
 
 export default CardActionFooter;

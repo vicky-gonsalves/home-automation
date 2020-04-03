@@ -29,4 +29,6 @@ const PreferredDevice = () => {
   );
 };
 
+PreferredDevice.propTypes = {};
+
 export default PreferredDevice;

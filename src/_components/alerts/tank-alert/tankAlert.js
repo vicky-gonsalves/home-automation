@@ -1,8 +1,9 @@
 import Typography from '@material-ui/core/Typography';
+import moment from 'moment';
+import PropTypes from 'prop-types';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import CountDownTimer from '../../count-down-timer/CountDownTimer';
-import moment from 'moment';
 
 const TankAlert = props => {
   const subDevices = useSelector(state => state.subDevice && state.subDevice.subDevices);
@@ -52,6 +53,10 @@ const TankAlert = props => {
         ))}
     </div>
   );
+};
+
+TankAlert.propTypes = {
+  deviceId: PropTypes.string.isRequired,
 };
 
 export default TankAlert;

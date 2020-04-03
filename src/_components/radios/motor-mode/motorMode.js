@@ -4,6 +4,7 @@ import FormLabel from '@material-ui/core/FormLabel';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import { makeStyles } from '@material-ui/core/styles';
+import PropTypes from 'prop-types';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { subDeviceParamActions } from '../../../_actions/sub-device-param.actions';
@@ -39,20 +40,8 @@ const MotorMode = props => {
   const handleRadioChange = event => {
     const _subDeviceParam = thisSubDeviceParams[0];
     _subDeviceParam.paramValue = event.target.value;
-    // const subDeviceParam = _subDeviceParam;
-    // subDeviceParam.paramValue = _subDeviceParam.paramValue === 'off' ? 'on' : 'off';
     dispatch(subDeviceParamActions.updateSubDeviceParamMode(_subDeviceParam));
   };
-
-  //
-  // const [state, setState] = useState({
-  //   mode: 'automatic',
-  // });
-  //
-  // const handleRadioChange = event => {
-  //   setState({ ...state, mode: event.target.value });
-  // };
-
   return (
     <React.Fragment>
       {thisSubDeviceParams && thisSubDeviceParams[0] && thisSubDeviceParams[0].paramValue && (
@@ -72,6 +61,12 @@ const MotorMode = props => {
       )}
     </React.Fragment>
   );
+};
+
+MotorMode.propTypes = {
+  deviceId: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  subDeviceId: PropTypes.string.isRequired,
 };
 
 export default MotorMode;
