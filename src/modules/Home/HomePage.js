@@ -29,6 +29,9 @@ const useStyles = theme => ({
 
 export class HomePage extends Component {
   componentDidMount() {
+    if (!this.props.isFetchingDevice && !this.props.connected) {
+      this.props.setDeviceFetching(true);
+    }
     if (
       this.props.isAuthorized &&
       this.props.isLoggedIn &&
@@ -113,6 +116,7 @@ const actionCreators = {
   me: actions.me,
   socketInit: socketActions.socketInit,
   myDevices: deviceActions.myDevices,
+  setDeviceFetching: deviceActions.setDeviceFetching,
   removeAllDevices: deviceActions.removeAllDevices,
 };
 
@@ -132,6 +136,7 @@ HomePage.propTypes = {
   isSocketFetching: PropTypes.bool.isRequired,
   me: PropTypes.func.isRequired,
   myDevices: PropTypes.func.isRequired,
+  setDeviceFetching: PropTypes.func.isRequired,
   removeAllDevices: PropTypes.func.isRequired,
   sharedDevices: PropTypes.array.isRequired,
   signIn: PropTypes.func.isRequired,

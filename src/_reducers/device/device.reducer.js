@@ -1,7 +1,7 @@
 import { deviceConstants } from '../../_constants';
 
 const initialState = {
-  isFetchingDevice: true,
+  isFetchingDevice: false,
   hasError: false,
   devices: [],
 };
@@ -11,7 +11,7 @@ const device = (state = initialState, action) => {
     case deviceConstants.DEVICE_UPDATE_FETCHING:
       return {
         ...state,
-        isFetchingDevice: true,
+        isFetchingDevice: action.payload,
       };
     case deviceConstants.DEVICE_STORE_ALL:
       return {

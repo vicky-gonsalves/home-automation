@@ -74,10 +74,14 @@ const setLogs = logs => {
   };
 };
 
-const myDevices = () => async dispatch => {
+const setDeviceFetching = flag => dispatch => {
   dispatch({
     type: deviceConstants.DEVICE_UPDATE_FETCHING,
+    payload: flag,
   });
+};
+
+const myDevices = () => async dispatch => {
   try {
     const data = await deviceService.getMyDevices();
     if (data && data.devices && data.devices.myDevices) {
@@ -125,4 +129,5 @@ const removeAllDevices = () => dispatch => {
 export const deviceActions = {
   myDevices,
   removeAllDevices,
+  setDeviceFetching,
 };
