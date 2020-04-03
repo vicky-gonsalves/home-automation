@@ -7,8 +7,8 @@ const AppSkeleton = () => {
   const items = [1, 2, 3, 4, 5];
   return (
     <Grid container spacing={3}>
-      {items.map(() => (
-        <Grid item xs={12} sm={12} md={6} xl={4}>
+      {items.map(item => (
+        <Grid key={`skeleton-${item}`} item xs={12} sm={12} md={6} xl={4}>
           <Card>
             <CardHeader>
               <Skeleton animation="wave" variant="rect" height={10} />

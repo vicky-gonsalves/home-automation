@@ -50,7 +50,8 @@ function App() {
   const isFetchingDevice = useSelector(state => state.device && state.device.isFetchingDevice);
   const isLoggedIn = currentUser.isLoggedIn && currentUser.tokens !== null;
   const dispatch = useDispatch();
-  const showProgress = currentUser.isFetching || isFetchingDevice;
+  const skipPath = ['/', '/signin'];
+  const showProgress = skipPath.indexOf(history.location.pathname) < 0 && (currentUser.isFetching || isFetchingDevice);
 
   const disconnect = () => {
     dispatch(actions.signOut());

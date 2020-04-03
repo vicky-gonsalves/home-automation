@@ -9,6 +9,13 @@ const handleResponse = response => {
   return Promise.reject(response);
 };
 
+const handleResponseForAll = response => {
+  if (response && response.status === 200) {
+    return Promise.resolve(response);
+  }
+  return Promise.reject(response);
+};
+
 const handleError = error => {
   let err;
   if (error && error.response) {
@@ -52,7 +59,7 @@ const updateAllSubDeviceParamStatus = async (deviceId, status) => {
     const response = await axios.patch(`${config.apiUrl}/devices/${deviceId}/sub-device-param-value/status`, {
       paramValue: status,
     });
-    return handleResponse(response);
+    return handleResponseForAll(response);
   } catch (error) {
     return handleError(error);
   }
