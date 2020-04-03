@@ -5,18 +5,18 @@ import { settingDialogActions } from './settingDialog.actions';
 
 const pickFilteredParams = setting => pick(setting, ['type', 'idType', 'parent', 'bindedTo', 'paramName', 'paramValue']);
 
-const setProgress = flag => dispatch => {
-  dispatch({
+const setProgress = flag => {
+  return {
     type: subDeviceSettingConstants.SET_PROGRESS,
     payload: flag,
-  });
+  };
 };
 
-const setSubDeviceSettingError = error => dispatch => {
-  dispatch({
+const setSubDeviceSettingError = error => {
+  return {
     type: subDeviceSettingConstants.SET_SUB_DEVICE_SETTING_ERROR,
     payload: { error },
-  });
+  };
 };
 
 const removeAllSettings = () => dispatch => {

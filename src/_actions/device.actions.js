@@ -11,67 +11,67 @@ import {
 import { deviceParamConstants } from '../_constants/deviecParam.constants';
 import { deviceService } from '../_services';
 
-const setDevices = devices => dispatch => {
-  dispatch({
+const setDevices = devices => {
+  return {
     type: deviceConstants.DEVICE_STORE_ALL,
     payload: devices,
-  });
+  };
 };
 
-const setSharedDevices = sharedDevices => dispatch => {
-  dispatch({
+const setSharedDevices = sharedDevices => {
+  return {
     type: sharedDeviceConstants.SHARED_DEVICE_STORE_ALL,
     payload: sharedDevices,
-  });
+  };
 };
 
-const setSubDevices = subDevices => dispatch => {
-  dispatch({
+const setSubDevices = subDevices => {
+  return {
     type: subDeviceConstants.SUB_DEVICE_STORE_ALL,
     payload: subDevices,
-  });
+  };
 };
 
-const setDeviceParams = deviceParams => dispatch => {
-  dispatch({
+const setDeviceParams = deviceParams => {
+  return {
     type: deviceParamConstants.DEVICE_PARAM_STORE_ALL,
     payload: deviceParams,
-  });
+  };
 };
 
-const setSubDeviceParams = subDeviceParams => dispatch => {
-  dispatch({
+const setSubDeviceParams = subDeviceParams => {
+  return {
     type: subDeviceParamConstants.SUB_DEVICE_PARAM_STORE_ALL,
     payload: subDeviceParams,
-  });
+  };
 };
 
-const setDeviceSettings = deviceSettings => dispatch => {
-  dispatch({
+const setDeviceSettings = deviceSettings => {
+  return {
     type: deviceSettingConstants.DEVICE_SETTING_STORE_ALL,
     payload: deviceSettings,
-  });
+  };
 };
 
-const setSubDeviceSettings = subDeviceSettings => dispatch => {
-  dispatch({
+const setSubDeviceSettings = subDeviceSettings => {
+  return {
     type: subDeviceSettingConstants.SUB_DEVICE_SETTING_STORE_ALL,
     payload: subDeviceSettings,
-  });
+  };
 };
 
-const setOnlineDevices = onlineDevices => dispatch => {
-  dispatch({
+const setOnlineDevices = onlineDevices => {
+  return {
     type: onlineDeviceConstants.ONLINE_DEVICE_STORE_ALL,
     payload: onlineDevices,
-  });
+  };
 };
 
-const setLogs = logs => dispatch => {
-  dispatch({
+const setLogs = logs => {
+  return {
     type: logConstants.LOG_STORE_ALL,
     payload: logs,
-  });
+  };
 };
 
 const myDevices = () => async dispatch => {

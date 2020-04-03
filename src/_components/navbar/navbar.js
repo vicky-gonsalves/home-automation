@@ -62,7 +62,7 @@ export default function Navbar(props) {
   };
 
   return (
-    <AppBar position="relative" data-test="navbar">
+    <AppBar position="fixed" data-test="navbar">
       <Toolbar data-test="toolbar">
         <BrightnessAutoIcon data-test="icon" />
         <Typography variant="h6" className={classes.title} color="inherit" noWrap data-test="appName">

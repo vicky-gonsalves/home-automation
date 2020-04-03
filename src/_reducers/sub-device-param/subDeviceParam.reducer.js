@@ -1,6 +1,8 @@
 import { subDeviceParamConstants } from '../../_constants';
 
 const initialState = {
+  isFetching: false,
+  subDeviceParamError: null,
   subDeviceParams: [],
 };
 
@@ -73,6 +75,18 @@ const subDeviceParam = (state = initialState, action) => {
       return {
         ...state,
         subDeviceParams,
+      };
+
+    case subDeviceParamConstants.SET_PROGRESS:
+      return {
+        ...state,
+        isFetching: action.payload,
+      };
+
+    case subDeviceParamConstants.SET_SUB_DEVICE_PARAM_ERROR:
+      return {
+        ...state,
+        subDeviceParamError: action.payload.error,
       };
 
     default:

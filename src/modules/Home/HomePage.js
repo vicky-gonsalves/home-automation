@@ -8,6 +8,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { actions, socketActions } from '../../_actions';
 import { deviceActions } from '../../_actions/device.actions';
+import AppSkeleton from '../../_components/app-skeleton/AppSkeleton';
 import SmartSwitchCard from '../../_components/cards/smart-switch-card/SmartSwitchCard';
 import TankCard from '../../_components/cards/tank-card/TankCard';
 import SettingDialog from '../../_components/dialogs/setting-dialog/settingDialog';
@@ -56,6 +57,7 @@ export class HomePage extends Component {
         <Navbar appName={config.appName} data-test="navbarComponent" />
         <Container disableGutters={true} maxWidth="xl">
           <div className={classes.root}>
+            {isFetchingDevice && <AppSkeleton />}
             {!isFetchingDevice && devices.length <= 0 && sharedDevices <= 0 && (
               <Alert severity="info">
                 <AlertTitle>No Devices</AlertTitle>

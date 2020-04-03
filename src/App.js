@@ -1,4 +1,5 @@
 import { Container } from '@material-ui/core';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios';
 import createAuthRefreshInterceptor from 'axios-auth-refresh';
@@ -37,13 +38,19 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'column',
     minHeight: '100vh',
   },
+  offset: theme.mixins.toolbar,
+  hidden: {
+    visibility: 'hidden',
+  },
 }));
 
 function App() {
   const classes = useStyles();
   const currentUser = useSelector(state => state.user);
+  const isFetchingDevice = useSelector(state => state.device && state.device.isFetchingDevice);
   const isLoggedIn = currentUser.isLoggedIn && currentUser.tokens !== null;
   const dispatch = useDispatch();
+  const showProgress = currentUser.isFetching || isFetchingDevice;
 
   const disconnect = () => {
     dispatch(actions.signOut());
@@ -113,6 +120,8 @@ function App() {
 
   return (
     <Container maxWidth={false} disableGutters={true} className={classes.root} data-test="appContainer">
+      <div className={classes.offset} />
+      <LinearProgress color="secondary" className={showProgress ? '' : classes.hidden} />
       <Router history={history} data-test="routerComponent">
         <Switch data-test="switchComponent">
           <Route path="/" component={PublicPage} exact data-test="publicRouterPath" />

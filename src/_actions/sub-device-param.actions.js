@@ -7,6 +7,20 @@ const removeAllSubDeviceParams = () => dispatch => {
   });
 };
 
+const setProgress = flag => {
+  return {
+    type: subDeviceParamConstants.SET_PROGRESS,
+    payload: flag,
+  };
+};
+
+const setSubDeviceParamError = error => {
+  return {
+    type: subDeviceParamConstants.SET_SUB_DEVICE_PARAM_ERROR,
+    payload: { error },
+  };
+};
+
 const updateSubDeviceParamStatus = subDeviceParam => async dispatch => {
   // Temporary update: actual data will be fetched through socket
   dispatch({
@@ -14,7 +28,9 @@ const updateSubDeviceParamStatus = subDeviceParam => async dispatch => {
     payload: subDeviceParam,
   });
   try {
+    dispatch(setProgress(true));
     await subDeviceParamService.updateSubDeviceParamStatus(subDeviceParam);
+    dispatch(setProgress(false));
   } catch (e) {
     const _subDeviceParam = subDeviceParam;
     _subDeviceParam.paramValue = subDeviceParam.paramValue === 'off' ? 'on' : 'off';
@@ -22,6 +38,8 @@ const updateSubDeviceParamStatus = subDeviceParam => async dispatch => {
       type: subDeviceParamConstants.SUB_DEVICE_PARAM_UPDATE_STATUS,
       payload: _subDeviceParam,
     });
+    dispatch(setProgress(false));
+    dispatch(setSubDeviceParamError(e));
   }
 };
 
@@ -32,7 +50,9 @@ const updateSubDeviceParamMode = subDeviceParam => async dispatch => {
     payload: subDeviceParam,
   });
   try {
+    dispatch(setProgress(true));
     await subDeviceParamService.updateSubDeviceParamMode(subDeviceParam);
+    dispatch(setProgress(false));
   } catch (e) {
     const _subDeviceParam = subDeviceParam;
     _subDeviceParam.paramValue = subDeviceParam.paramValue === 'manual' ? 'automatic' : 'manual';
@@ -40,19 +60,19 @@ const updateSubDeviceParamMode = subDeviceParam => async dispatch => {
       type: subDeviceParamConstants.SUB_DEVICE_PARAM_UPDATE_STATUS,
       payload: _subDeviceParam,
     });
+    dispatch(setProgress(false));
+    dispatch(setSubDeviceParamError(e));
   }
 };
 
 const updateAllSubDeviceParamStatus = (deviceId, status) => async dispatch => {
   try {
+    dispatch(setProgress(true));
     await subDeviceParamService.updateAllSubDeviceParamStatus(deviceId, status);
+    dispatch(setProgress(false));
   } catch (e) {
-    // const _subDeviceParam = subDeviceParam;
-    // _subDeviceParam.paramValue = subDeviceParam.paramValue === 'off' ? 'on' : 'off';
-    // dispatch({
-    //   type: subDeviceParamConstants.SUB_DEVICE_PARAM_UPDATE_STATUS,
-    //   payload: _subDeviceParam,
-    // });
+    dispatch(setProgress(false));
+    dispatch(setSubDeviceParamError(e));
   }
 };
 
@@ -61,4 +81,5 @@ export const subDeviceParamActions = {
   updateSubDeviceParamMode,
   updateAllSubDeviceParamStatus,
   removeAllSubDeviceParams,
+  setSubDeviceParamError,
 };
