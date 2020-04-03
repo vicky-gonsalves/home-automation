@@ -86,10 +86,10 @@ const subDeviceSetting = (state = initialState, action) => {
         isFetching: action.payload,
       };
 
-    case subDeviceSettingConstants.SET_DEVICE_SETTING_ERROR:
+    case subDeviceSettingConstants.SET_SUB_DEVICE_SETTING_ERROR:
       return {
         ...state,
-        subDeviceSettingError: action.payload,
+        subDeviceSettingError: action.payload.error,
       };
 
     default:

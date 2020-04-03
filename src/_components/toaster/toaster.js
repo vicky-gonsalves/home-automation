@@ -3,6 +3,9 @@ import Snackbar from '@material-ui/core/Snackbar';
 import CloseIcon from '@material-ui/icons/Close';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { actions } from '../../_actions/user.actions';
+import { deviceSettingActions } from '../../_actions/deviceSetting.actions';
+import { subDeviceSettingActions } from '../../_actions/subDeviceSetting.actions';
 
 export class Toaster extends Component {
   constructor(props) {
@@ -24,11 +27,27 @@ export class Toaster extends Component {
   }
 
   handleClose() {
+    const {
+      loginError,
+      settingError,
+      subDeviceSettingError,
+      clearLoginError,
+      clearDeviceSettingError,
+      clearSubDeviceSettingError,
+    } = this.props;
+    const { open } = this.state;
+    if (loginError && open) {
+      clearLoginError(null);
+    } else if (settingError && open) {
+      clearDeviceSettingError(null);
+    } else if (subDeviceSettingError && open) {
+      clearSubDeviceSettingError(null);
+    }
     this.setState({ open: false });
   }
 
   render() {
-    const { loginError } = this.props;
+    const { loginError, settingError, subDeviceSettingError } = this.props;
     const { open } = this.state;
     return (
       <Snackbar
@@ -40,7 +59,7 @@ export class Toaster extends Component {
         open={open}
         autoHideDuration={6000}
         onClose={this.handleClose}
-        message={loginError}
+        message={loginError || settingError || subDeviceSettingError}
         action={
           <React.Fragment>
             <IconButton size="small" aria-label="close" color="inherit" onClick={this.handleClose} data-test="closeButton">
@@ -60,7 +79,11 @@ function mapState(state) {
   return { loginError, settingError, subDeviceSettingError };
 }
 
-const actionCreators = {};
+const actionCreators = {
+  clearLoginError: actions.setLoginError,
+  clearDeviceSettingError: deviceSettingActions.setDeviceSettingError,
+  clearSubDeviceSettingError: subDeviceSettingActions.setSubDeviceSettingError,
+};
 const connectedToaster = connect(mapState, actionCreators)(Toaster);
 
 export default connectedToaster;

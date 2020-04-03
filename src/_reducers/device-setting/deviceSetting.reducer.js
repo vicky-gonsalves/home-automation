@@ -72,7 +72,7 @@ const deviceSetting = (state = initialState, action) => {
     case deviceSettingConstants.SET_DEVICE_SETTING_ERROR:
       return {
         ...state,
-        settingError: action.payload,
+        settingError: action.payload.error,
       };
 
     default:

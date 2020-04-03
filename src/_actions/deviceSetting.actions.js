@@ -43,4 +43,5 @@ const saveDeviceSettings = settings => async dispatch => {
 export const deviceSettingActions = {
   saveDeviceSettings,
   removeAllSettings,
+  setDeviceSettingError,
 };

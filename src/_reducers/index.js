@@ -1,5 +1,4 @@
 import { combineReducers } from 'redux';
-import alert from './alert/alert.reducer';
 import deviceParam from './device-param/deviceParam.reducer';
 import deviceSetting from './device-setting/deviceSetting.reducer';
 import device from './device/device.reducer';
@@ -15,7 +14,6 @@ import user from './user/user.reducer';
 
 const rootReducer = combineReducers({
   user,
-  alert,
   socket,
   device,
   subDevice,
