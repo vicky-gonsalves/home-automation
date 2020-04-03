@@ -1,7 +1,7 @@
 import { deviceConstants } from '../../_constants';
 
 const initialState = {
-  isFetchingDevice: false,
+  isFetchingDevice: true,
   hasError: false,
   devices: [],
 };

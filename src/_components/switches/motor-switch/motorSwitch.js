@@ -1,6 +1,7 @@
 import Grid from '@material-ui/core/Grid';
 import Switch from '@material-ui/core/Switch';
 import Typography from '@material-ui/core/Typography';
+import Alert from '@material-ui/lab/Alert';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -15,12 +16,8 @@ const MotorSwitch = props => {
 
   const filterSubDeviceParams = () =>
     subDeviceParams.filter(
-      subDeviceParam =>
-        subDeviceParam.paramName &&
-        subDeviceParam.paramValue &&
-        subDeviceParam.deviceId === props.deviceId &&
-        subDeviceParam.subDeviceId === props.subDeviceId &&
-        subDeviceParam.paramName === 'status'
+      ({ deviceId, paramName, paramValue, subDeviceId }) =>
+        paramName && paramValue && deviceId === props.deviceId && subDeviceId === props.subDeviceId && paramName === 'status'
     );
 
   if (props.deviceId && props.subDeviceId) {
@@ -35,6 +32,9 @@ const MotorSwitch = props => {
 
   return (
     <Typography component="div">
+      {thisSubDeviceParams && thisSubDeviceParams.length <= 0 && (
+        <Alert severity="error">It seems there is some issue with device. Please contact administrator!</Alert>
+      )}
       {thisSubDeviceParams && thisSubDeviceParams.length > 0 && (
         <Grid component="label" container alignItems="center" spacing={1}>
           <Grid item>{props.name} OFF</Grid>

@@ -25,12 +25,8 @@ const MotorMode = props => {
 
   const filterSubDeviceParams = () =>
     subDeviceParams.filter(
-      subDeviceParam =>
-        subDeviceParam.paramName &&
-        subDeviceParam.paramValue &&
-        subDeviceParam.deviceId === props.deviceId &&
-        subDeviceParam.subDeviceId === props.subDeviceId &&
-        subDeviceParam.paramName === 'mode'
+      ({ deviceId, paramName, paramValue, subDeviceId }) =>
+        paramName && paramValue && deviceId === props.deviceId && subDeviceId === props.subDeviceId && paramName === 'mode'
     );
 
   if (props.deviceId && props.subDeviceId) {

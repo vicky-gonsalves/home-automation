@@ -3,19 +3,20 @@ import Grid from '@material-ui/core/Grid';
 import Switch from '@material-ui/core/Switch';
 import Typography from '@material-ui/core/Typography';
 import EmojiObjectsIcon from '@material-ui/icons/EmojiObjects';
+import Alert from '@material-ui/lab/Alert';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { subDeviceParamActions } from '../../../_actions';
 
-const SmartSwitch = props => {
+const SmartSwitch = ({ deviceId, name, show, subDeviceId }) => {
   let thisSubDeviceParams;
   const dispatch = useDispatch();
   const subDeviceParams = useSelector(state =>
     state && state.subDeviceParam && state.subDeviceParam.subDeviceParams ? state.subDeviceParam.subDeviceParams : []
   );
   const allSubDeviceParams = subDeviceParams.filter(
-    subDeviceParam => subDeviceParam.deviceId === props.deviceId && subDeviceParam.paramName === 'status'
+    subDeviceParam => subDeviceParam.deviceId === deviceId && subDeviceParam.paramName === 'status'
   );
   const allStatus = allSubDeviceParams.filter(subDeviceParam => subDeviceParam.paramValue === 'on');
 
@@ -24,12 +25,12 @@ const SmartSwitch = props => {
       subDeviceParam =>
         subDeviceParam.paramName &&
         subDeviceParam.paramValue &&
-        subDeviceParam.deviceId === props.deviceId &&
-        subDeviceParam.subDeviceId === props.subDeviceId &&
+        subDeviceParam.deviceId === deviceId &&
+        subDeviceParam.subDeviceId === subDeviceId &&
         subDeviceParam.paramName === 'status'
     );
 
-  if (props.deviceId && props.subDeviceId) {
+  if (deviceId && subDeviceId) {
     thisSubDeviceParams = filterSubDeviceParams();
   }
 
@@ -46,22 +47,24 @@ const SmartSwitch = props => {
     if (!isAllOn()) {
       status = 'on';
     }
-    dispatch(subDeviceParamActions.updateAllSubDeviceParamStatus(props.deviceId, status));
+    dispatch(subDeviceParamActions.updateAllSubDeviceParamStatus(deviceId, status));
   };
 
   const renderSwitch =
-    (props.show && props.name === 'All' && allSubDeviceParams.length > 1) ||
-    (props.name !== 'All' && props.deviceId && props.subDeviceId);
+    (show && name === 'All' && allSubDeviceParams.length > 1) || (name !== 'All' && deviceId && subDeviceId);
 
   return (
     <React.Fragment>
+      {name !== 'All' && thisSubDeviceParams && thisSubDeviceParams.length <= 0 && (
+        <Alert severity="error">It seems there is some issue with device. Please contact administrator!</Alert>
+      )}
       {renderSwitch && (
         <div>
           <EmojiObjectsIcon
             fontSize="large"
             color={
-              (props.name === 'All' && props.deviceId && isAllOn()) ||
-              (props.name !== 'All' &&
+              (name === 'All' && deviceId && isAllOn()) ||
+              (name !== 'All' &&
                 thisSubDeviceParams &&
                 thisSubDeviceParams.length > 0 &&
                 thisSubDeviceParams[0].paramValue === 'on')
@@ -85,17 +88,17 @@ const SmartSwitch = props => {
                       onChange={handleChange(thisSubDeviceParams[0])}
                     />
                   }
-                  label={props.name}
+                  label={name}
                   labelPlacement="bottom"
                 />
               </Grid>
             )}
-            {props.name === 'All' && renderSwitch && (
+            {name === 'All' && renderSwitch && (
               <Grid item xs={12}>
                 <FormControlLabel
                   value="true"
                   control={<Switch color="primary" checked={isAllOn()} onChange={handleAllChange} />}
-                  label={props.name}
+                  label={name}
                   labelPlacement="bottom"
                 />
               </Grid>

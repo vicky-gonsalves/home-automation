@@ -2,6 +2,7 @@ import Button from '@material-ui/core/Button';
 import InputLabel from '@material-ui/core/InputLabel';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
+import Alert from '@material-ui/lab/Alert';
 import { FieldArray, getIn, withFormik } from 'formik';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -28,6 +29,9 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     justifyContent: 'space-between',
   },
+  extraMargin: {
+    marginBottom: theme.spacing(4),
+  },
 }));
 
 const SimpleSmartSwitchSettingForm = props => {
@@ -51,10 +55,11 @@ const SimpleSmartSwitchSettingForm = props => {
   if (deviceId && subDevices && subDevices.length && subDeviceSettings && subDeviceSettings.length) {
     subDeviceSettings.forEach(setting => {
       subDevices.forEach(subDevice => {
+        const { idType, type, bindedTo } = setting;
         if (
-          subDevice.subDeviceId === setting.bindedTo &&
-          setting.type === 'subDevice' &&
-          setting.idType === 'subDeviceId' &&
+          subDevice.subDeviceId === bindedTo &&
+          type === 'subDevice' &&
+          idType === 'subDeviceId' &&
           subDevice.deviceId === deviceId &&
           subDevice.type === 'switch'
         ) {
@@ -68,7 +73,7 @@ const SimpleSmartSwitchSettingForm = props => {
     close();
   };
 
-  const renderTextFields = arrayHelpers => () => (
+  const renderTextFields = () => () => (
     <React.Fragment>
       {values.settings.map((item, index) => {
         const fieldName = `settings[${index}].setting.paramValue`;
@@ -99,10 +104,14 @@ const SimpleSmartSwitchSettingForm = props => {
       })}
     </React.Fragment>
   );
-
   return (
     <React.Fragment>
-      {thisSettings && thisSettings.length && (
+      {values.settings <= 0 && (
+        <Alert className={classes.extraMargin} severity="info">
+          It seems there are no settings available for this device.
+        </Alert>
+      )}
+      {thisSettings && thisSettings.length > 0 && (
         <form className={classes.form} onSubmit={typeof onSubmit === 'function' ? onSubmit : handleSubmit} noValidate>
           <InputLabel shrink id="autoShutDownTimeLabel">
             Automatic shutdown time (0 means no auto shutdown)
@@ -140,11 +149,12 @@ const getAutoShutDownTimeSettings = (deviceId, subDevices, subDeviceSettings) =>
   if (deviceId && subDevices && subDevices.length && subDeviceSettings && subDeviceSettings.length) {
     subDeviceSettings.forEach(setting => {
       subDevices.forEach(subDevice => {
+        const { paramName, idType, type, bindedTo } = setting;
         if (
-          subDevice.subDeviceId === setting.bindedTo &&
-          setting.type === 'subDevice' &&
-          setting.paramName === 'autoShutDownTime' &&
-          setting.idType === 'subDeviceId' &&
+          subDevice.subDeviceId === bindedTo &&
+          type === 'subDevice' &&
+          paramName === 'autoShutDownTime' &&
+          idType === 'subDeviceId' &&
           subDevice.deviceId === deviceId &&
           subDevice.type === 'switch'
         ) {
@@ -158,10 +168,10 @@ const getAutoShutDownTimeSettings = (deviceId, subDevices, subDeviceSettings) =>
 
 export const SmartSwitchSettingForm = withFormik({
   enableReinitialize: true,
-  mapPropsToValues: props => ({
-    settings: getAutoShutDownTimeSettings(props.deviceId, props.subDevices, props.subDeviceSettings),
+  mapPropsToValues: ({ deviceId, subDeviceSettings, subDevices }) => ({
+    settings: getAutoShutDownTimeSettings(deviceId, subDevices, subDeviceSettings),
   }),
-  validationSchema: props =>
+  validationSchema: () =>
     yup.object().shape({
       settings: yup.array().of(
         yup.object().shape({
@@ -175,9 +185,9 @@ export const SmartSwitchSettingForm = withFormik({
         })
       ),
     }),
-  handleSubmit: (values, { props }) => {
-    const allSettings = values.settings.map(subdeviceSettings => subdeviceSettings.setting);
-    props.saveSettings(allSettings);
+  handleSubmit: (values, { props: { saveSettings } }) => {
+    const allSettings = values.settings.map(({ setting }) => setting);
+    saveSettings(allSettings);
   },
   displayName: 'motorSettingForm',
 })(SimpleSmartSwitchSettingForm);

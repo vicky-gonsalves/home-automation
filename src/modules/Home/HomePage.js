@@ -1,6 +1,8 @@
 import { CssBaseline, withStyles } from '@material-ui/core';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
+import Alert from '@material-ui/lab/Alert';
+import AlertTitle from '@material-ui/lab/AlertTitle';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
@@ -47,15 +49,21 @@ export class HomePage extends Component {
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, isFetchingDevice, devices, sharedDevices } = this.props;
     return (
       <React.Fragment>
         <CssBaseline />
         <Navbar appName={config.appName} data-test="navbarComponent" />
         <Container disableGutters={true} maxWidth="xl">
           <div className={classes.root}>
+            {!isFetchingDevice && devices.length <= 0 && sharedDevices <= 0 && (
+              <Alert severity="info">
+                <AlertTitle>No Devices</AlertTitle>
+                Hi! it seems you don't have any smart home devices yet!
+              </Alert>
+            )}
             <Grid container spacing={3}>
-              {this.props.devices.map(device => (
+              {devices.map(device => (
                 <Grid key={device.deviceId} item xs={12} sm={12} md={6} xl={4}>
                   {device.variant && device.variant === 'tank' && (
                     <TankCard deviceName={device.name} deviceId={device.deviceId} />
@@ -65,9 +73,11 @@ export class HomePage extends Component {
                   )}
                 </Grid>
               ))}
-              {this.props.sharedDevices.map(device => (
+              {sharedDevices.map(device => (
                 <Grid key={device.deviceId} item xs={12} sm={12} md={6} xl={4}>
-                  {device.variant && device.variant === 'tank' && <TankCard deviceName={device.name} />}
+                  {device.variant && device.variant === 'tank' && (
+                    <TankCard deviceName={device.name} deviceId={device.deviceId} />
+                  )}
                   {device.variant && device.variant === 'smartSwitch' && (
                     <SmartSwitchCard deviceName={device.name} deviceId={device.deviceId} />
                   )}
@@ -90,9 +100,9 @@ export class HomePage extends Component {
 function mapState(state) {
   const { isLoggedIn, tokens, isAuthorized } = state.user;
   const { isSocketFetching, connected } = state.socket;
-  const { devices } = state.device;
+  const { devices, isFetchingDevice } = state.device;
   const { sharedDevices } = state.sharedDevice;
-  return { isLoggedIn, tokens, isSocketFetching, isAuthorized, connected, devices, sharedDevices };
+  return { isLoggedIn, tokens, isSocketFetching, isAuthorized, connected, devices, sharedDevices, isFetchingDevice };
 }
 
 const actionCreators = {
@@ -116,6 +126,7 @@ HomePage.propTypes = {
   connected: PropTypes.bool.isRequired,
   isAuthorized: PropTypes.bool,
   isLoggedIn: PropTypes.bool.isRequired,
+  isFetchingDevice: PropTypes.bool.isRequired,
   isSocketFetching: PropTypes.bool.isRequired,
   me: PropTypes.func.isRequired,
   myDevices: PropTypes.func.isRequired,

@@ -7,6 +7,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 import AdbIcon from '@material-ui/icons/Adb';
 import PermIdentityIcon from '@material-ui/icons/PermIdentity';
+import Alert from '@material-ui/lab/Alert';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -33,9 +34,10 @@ const Stats = props => {
   const thisLogs = allLogs.filter(log => log.deviceId === props.deviceId);
   return (
     <CardContent className={classes.cardContent}>
+      {thisLogs.length <= 0 && <Alert severity="info">It seems there are no logs yet.</Alert>}
       <List className={classes.root} subheader={<li />}>
         {thisLogs &&
-          thisLogs.length &&
+          thisLogs.length > 0 &&
           thisLogs.map((log, index) => (
             <ListItem key={`${props.deviceId}-log-${index}`}>
               {log.triggeredByDevice && (
