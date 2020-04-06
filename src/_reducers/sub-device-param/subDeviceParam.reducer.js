@@ -1,3 +1,4 @@
+import { find, orderBy } from 'lodash';
 import { subDeviceParamConstants } from '../../_constants';
 
 const initialState = {
@@ -21,11 +22,17 @@ const subDeviceParam = (state = initialState, action) => {
       };
 
     case subDeviceParamConstants.SUB_DEVICE_PARAM_UPDATED:
+      const updateSubDeviceParams = state.subDeviceParams.map(subDeviceParam =>
+        subDeviceParam.id === action.payload.id ? { ...action.payload } : subDeviceParam
+      );
+      let activeSubDeviceParams = updateSubDeviceParams.filter(subDeviceParam => !subDeviceParam.isDisabled);
+      if (!action.payload.isDisabled && !find(activeSubDeviceParams, { id: action.payload.id })) {
+        activeSubDeviceParams.push(action.payload);
+        activeSubDeviceParams = [...orderBy(activeSubDeviceParams, ['createdAt', 'name'], ['asc', 'asc'])];
+      }
       return {
         ...state,
-        subDeviceParams: state.subDeviceParams.map(subDeviceParam =>
-          subDeviceParam.id === action.payload.id ? { ...action.payload } : subDeviceParam
-        ),
+        subDeviceParams: activeSubDeviceParams,
       };
 
     case subDeviceParamConstants.SUB_DEVICE_PARAM_DELETED:
@@ -49,7 +56,7 @@ const subDeviceParam = (state = initialState, action) => {
       };
 
     case subDeviceParamConstants.SUB_DEVICE_MULTI_STATUS_UPDATED:
-      const params = state.subDeviceParams.map(subDeviceParam => {
+      const _updateSubDeviceParams = state.subDeviceParams.map(subDeviceParam => {
         action.payload.forEach(payload => {
           if (payload.id === subDeviceParam.id) {
             subDeviceParam = payload;
@@ -57,9 +64,14 @@ const subDeviceParam = (state = initialState, action) => {
         });
         return subDeviceParam;
       });
+      let _activeSubDeviceParams = _updateSubDeviceParams.filter(subDeviceParam => !subDeviceParam.isDisabled);
+      if (!action.payload.isDisabled && !find(_activeSubDeviceParams, { id: action.payload.id })) {
+        _activeSubDeviceParams.push(action.payload);
+        _activeSubDeviceParams = [...orderBy(_activeSubDeviceParams, ['createdAt', 'name'], ['asc', 'asc'])];
+      }
       return {
         ...state,
-        subDeviceParams: params,
+        subDeviceParams: _activeSubDeviceParams,
       };
 
     case subDeviceParamConstants.PARENT_DEVICE_DELETED_FOR_SUB_DEVICE_PARAM:

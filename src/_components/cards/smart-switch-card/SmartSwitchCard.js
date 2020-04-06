@@ -83,8 +83,9 @@ const SmartSwitchCard = props => {
         title={props.deviceName}
         titleTypographyProps={{ align: 'center', variant: 'h6', color: 'primary', gutterBottom: false }}
       />
-      {!thisSubDevices && (
+      {(!thisSubDevices || (thisSubDevices && !thisSubDevices.length)) && (
         <CardContent className={classes.cardContent}>
+          {!isDeviceOnline && <DeviceOfflineAlert />}
           <Alert severity="info">It seems devices are not yet added. Please contact administrator!</Alert>
         </CardContent>
       )}

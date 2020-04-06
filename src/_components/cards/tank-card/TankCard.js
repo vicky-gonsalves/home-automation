@@ -126,12 +126,13 @@ const TankCard = ({ deviceId, deviceName }) => {
         title={deviceName}
         titleTypographyProps={{ align: 'center', variant: 'h6', color: 'primary', gutterBottom: false }}
       />
-      {!thisSubDevices && (
+      {(!thisSubDevices || (thisSubDevices && !thisSubDevices.length)) && (
         <CardContent className={classes.cardContent}>
+          {!isDeviceOnline && <DeviceOfflineAlert />}
           <Alert severity="info">It seems devices are not yet added. Please contact administrator!</Alert>
         </CardContent>
       )}
-      {thisSubDevices && thisSubDevices.length > 1 && (
+      {thisSubDevices && thisSubDevices.length > 0 && (
         <React.Fragment>
           <CardContent className={classes.cardContent}>
             {!isDeviceOnline && <DeviceOfflineAlert />}

@@ -1,3 +1,4 @@
+import { find, orderBy } from 'lodash';
 import { deviceSettingConstants } from '../../_constants';
 
 const initialState = {
@@ -21,11 +22,23 @@ const deviceSetting = (state = initialState, action) => {
       };
 
     case deviceSettingConstants.DEVICE_SETTING_UPDATED:
+      const updateDeviceSettings = state.deviceSettings.map(deviceSetting =>
+        deviceSetting.id === action.payload.id ? { ...action.payload } : deviceSetting
+      );
+      let activeDeviceSettings = updateDeviceSettings.filter(deviceSetting => !deviceSetting.isDisabled);
+      if (!action.payload.isDisabled && !find(activeDeviceSettings, { id: action.payload.id })) {
+        activeDeviceSettings.push(action.payload);
+        activeDeviceSettings = [...orderBy(activeDeviceSettings, ['createdAt', 'name'], ['asc', 'asc'])];
+      }
       return {
         ...state,
-        deviceSettings: state.deviceSettings.map(deviceSetting =>
-          deviceSetting.id === action.payload.id ? { ...action.payload } : deviceSetting
-        ),
+        deviceSettings: activeDeviceSettings,
+      };
+
+    case deviceSettingConstants.DEVICE_SETTING_DELETED:
+      return {
+        ...state,
+        deviceSettings: state.deviceSettings.filter(deviceSetting => deviceSetting.id !== action.payload.id),
       };
 
     case deviceSettingConstants.DEVICE_SETTING_CREATED:
@@ -35,15 +48,55 @@ const deviceSetting = (state = initialState, action) => {
       };
 
     case deviceSettingConstants.DEVICE_SETTING_UPDATE_STATUS:
+      const updateStatus = state.deviceSettings.map(deviceSetting =>
+        deviceSetting.id === action.payload.id ? { ...action.payload } : deviceSetting
+      );
+      let _activeStatus = updateStatus.filter(deviceSetting => !deviceSetting.isDisabled);
+      if (!action.payload.isDisabled && !find(_activeStatus, { id: action.payload.id })) {
+        _activeStatus.push(action.payload);
+        _activeStatus = [...orderBy(_activeStatus, ['createdAt', 'name'], ['asc', 'asc'])];
+      }
       return {
         ...state,
-        deviceSettings: state.deviceSettings.map(deviceSetting =>
-          deviceSetting.id === action.payload.id ? { ...action.payload } : deviceSetting
-        ),
+        deviceSettings: _activeStatus,
       };
 
     case deviceSettingConstants.DEVICE_MULTI_STATUS_UPDATED:
-      const params = state.deviceSettings.map(deviceSetting => {
+      const _updateDeviceSettings = state.deviceSettings.map(deviceSetting => {
+        action.payload.forEach(payload => {
+          if (payload.id === deviceSetting.id) {
+            deviceSetting = payload;
+          }
+        });
+        return deviceSetting;
+      });
+      let _activeDeviceSettings = _updateDeviceSettings.filter(deviceSetting => !deviceSetting.isDisabled);
+      if (!action.payload.isDisabled && !find(_activeDeviceSettings, { id: action.payload.id })) {
+        _activeDeviceSettings.push(action.payload);
+        _activeDeviceSettings = [...orderBy(_activeDeviceSettings, ['createdAt', 'name'], ['asc', 'asc'])];
+      }
+      return {
+        ...state,
+        deviceSettings: _activeDeviceSettings,
+      };
+
+    case deviceSettingConstants.DEVICE_MULTI_SETTING_DELETED:
+      const _params = [];
+      state.deviceSettings.forEach(deviceSetting => {
+        action.payload.forEach(payload => {
+          if (deviceSetting.id !== payload.id) {
+            _params.push(deviceSetting);
+          }
+        });
+      });
+
+      return {
+        ...state,
+        deviceSettings: _params,
+      };
+
+    case deviceSettingConstants.DEVICE_MULTI_SETTING_UPDATED:
+      const _updateDeviceSettings2 = state.deviceSettings.map(deviceSetting => {
         action.payload.forEach(payload => {
           if (payload.id === deviceSetting.id) {
             deviceSetting = payload;
@@ -52,9 +105,15 @@ const deviceSetting = (state = initialState, action) => {
         return deviceSetting;
       });
 
+      let _activeDeviceSettings2 = _updateDeviceSettings2.filter(deviceSetting => !deviceSetting.isDisabled);
+      if (!action.payload.isDisabled && !find(_activeDeviceSettings2, { id: action.payload.id })) {
+        _activeDeviceSettings2.push(action.payload);
+        _activeDeviceSettings2 = [...orderBy(_activeDeviceSettings2, ['createdAt', 'name'], ['asc', 'asc'])];
+      }
+
       return {
         ...state,
-        deviceSettings: params,
+        deviceSettings: _activeDeviceSettings2,
       };
 
     case deviceSettingConstants.PARENT_DEVICE_DELETED_FOR_DEVICE_SETTING:

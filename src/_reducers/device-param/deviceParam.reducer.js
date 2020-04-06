@@ -1,3 +1,4 @@
+import { find, orderBy } from 'lodash';
 import { deviceParamConstants } from '../../_constants';
 
 const initialState = {
@@ -19,11 +20,17 @@ const deviceParam = (state = initialState, action) => {
       };
 
     case deviceParamConstants.DEVICE_PARAM_UPDATED:
+      const updateDeviceParams = state.deviceParams.map(deviceParam =>
+        deviceParam.id === action.payload.id ? { ...action.payload } : deviceParam
+      );
+      let activeDeviceParams = updateDeviceParams.filter(deviceParam => !deviceParam.isDisabled);
+      if (!action.payload.isDisabled && !find(activeDeviceParams, { id: action.payload.id })) {
+        activeDeviceParams.push(action.payload);
+        activeDeviceParams = [...orderBy(activeDeviceParams, ['createdAt', 'name'], ['asc', 'asc'])];
+      }
       return {
         ...state,
-        deviceParams: state.deviceParams.map(deviceParam =>
-          deviceParam.id === action.payload.id ? { ...action.payload } : deviceParam
-        ),
+        deviceParams: activeDeviceParams,
       };
 
     case deviceParamConstants.DEVICE_PARAM_DELETED:

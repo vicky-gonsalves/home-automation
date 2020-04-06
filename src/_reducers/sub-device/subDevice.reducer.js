@@ -1,4 +1,5 @@
 import { subDeviceConstants } from '../../_constants';
+import { find, orderBy } from 'lodash';
 
 const initialState = {
   subDevices: [],
@@ -19,13 +20,19 @@ const subDevice = (state = initialState, action) => {
       };
 
     case subDeviceConstants.SUB_DEVICE_UPDATED:
+      const updateSubDevices = state.subDevices.map(subDevice =>
+        subDevice.deviceId === action.payload.deviceId && subDevice.subDeviceId === action.payload.subDeviceId
+          ? { ...action.payload }
+          : subDevice
+      );
+      let activeSubDevices = updateSubDevices.filter(subDevice => !subDevice.isDisabled);
+      if (!action.payload.isDisabled && !find(activeSubDevices, { id: action.payload.id })) {
+        activeSubDevices.push(action.payload);
+        activeSubDevices = [...orderBy(activeSubDevices, ['createdAt', 'name'], ['asc', 'asc'])];
+      }
       return {
         ...state,
-        subDevices: state.subDevices.map(subDevice =>
-          subDevice.deviceId === action.payload.deviceId && subDevice.subDeviceId === action.payload.subDeviceId
-            ? { ...action.payload }
-            : subDevice
-        ),
+        subDevices: activeSubDevices,
       };
 
     case subDeviceConstants.SUB_DEVICE_DELETED:

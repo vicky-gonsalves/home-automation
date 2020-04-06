@@ -132,10 +132,6 @@ const socketInit = accessToken => dispatch => {
       payload: data,
     });
     dispatch({
-      type: subDeviceSettingConstants.PARENT_SUB_DEVICE_DELETED_FOR_SUB_DEVICE_SETTING,
-      payload: data,
-    });
-    dispatch({
       type: logConstants.PARENT_SUB_DEVICE_DELETED_FOR_LOG,
       payload: data,
     });
@@ -294,6 +290,28 @@ const socketInit = accessToken => dispatch => {
     });
   });
 
+  socket.on('DEVICE_SETTING_DELETED', function(data) {
+    // eslint-disable-next-line no-console
+    console.log('ON DEVICE_SETTING_DELETED: ');
+    // eslint-disable-next-line no-console
+    console.log(data);
+    dispatch({
+      type: deviceSettingConstants.DEVICE_SETTING_DELETED,
+      payload: data,
+    });
+  });
+
+  socket.on('DEVICE_MULTI_SETTING_DELETED', function(data) {
+    // eslint-disable-next-line no-console
+    console.log('ON DEVICE_MULTI_SETTING_DELETED: ');
+    // eslint-disable-next-line no-console
+    console.log(data);
+    dispatch({
+      type: deviceSettingConstants.DEVICE_MULTI_SETTING_DELETED,
+      payload: data,
+    });
+  });
+
   // Sub-Device Settings--------------------------------------------------------------------------------------
 
   socket.on('SUB_DEVICE_SETTING_CREATED', function(data) {
@@ -314,6 +332,28 @@ const socketInit = accessToken => dispatch => {
     console.log(data);
     dispatch({
       type: subDeviceSettingConstants.SUB_DEVICE_SETTING_UPDATED,
+      payload: data,
+    });
+  });
+
+  socket.on('SUB_DEVICE_MULTI_SETTING_DELETED', function(data) {
+    // eslint-disable-next-line no-console
+    console.log('ON SUB_DEVICE_MULTI_SETTING_DELETED: ');
+    // eslint-disable-next-line no-console
+    console.log(data);
+    dispatch({
+      type: subDeviceSettingConstants.SUB_DEVICE_MULTI_SETTING_DELETED,
+      payload: data,
+    });
+  });
+
+  socket.on('SUB_DEVICE_MULTI_SETTING_UPDATED', function(data) {
+    // eslint-disable-next-line no-console
+    console.log('ON SUB_DEVICE_MULTI_SETTING_UPDATED: ');
+    // eslint-disable-next-line no-console
+    console.log(data);
+    dispatch({
+      type: subDeviceSettingConstants.SUB_DEVICE_MULTI_SETTING_UPDATED,
       payload: data,
     });
   });

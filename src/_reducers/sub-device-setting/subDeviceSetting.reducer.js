@@ -1,3 +1,4 @@
+import { find, orderBy } from 'lodash';
 import { subDeviceSettingConstants } from '../../_constants';
 
 const initialState = {
@@ -21,11 +22,17 @@ const subDeviceSetting = (state = initialState, action) => {
       };
 
     case subDeviceSettingConstants.SUB_DEVICE_SETTING_UPDATED:
+      const updateSubDeviceSettings = state.subDeviceSettings.map(subDeviceSetting =>
+        subDeviceSetting.id === action.payload.id ? { ...action.payload } : subDeviceSetting
+      );
+      let activeSubDeviceSettings = updateSubDeviceSettings.filter(subDeviceSetting => !subDeviceSetting.isDisabled);
+      if (!action.payload.isDisabled && !find(activeSubDeviceSettings, { id: action.payload.id })) {
+        activeSubDeviceSettings.push(action.payload);
+        activeSubDeviceSettings = [...orderBy(activeSubDeviceSettings, ['createdAt', 'name'], ['asc', 'asc'])];
+      }
       return {
         ...state,
-        subDeviceSettings: state.subDeviceSettings.map(subDeviceSetting =>
-          subDeviceSetting.id === action.payload.id ? { ...action.payload } : subDeviceSetting
-        ),
+        subDeviceSettings: activeSubDeviceSettings,
       };
 
     case subDeviceSettingConstants.SUB_DEVICE_SETTING_DELETED:
@@ -41,15 +48,21 @@ const subDeviceSetting = (state = initialState, action) => {
       };
 
     case subDeviceSettingConstants.SUB_DEVICE_SETTING_UPDATE_STATUS:
+      const updateSubDeviceSettings2 = state.subDeviceSettings.map(subDeviceSetting =>
+        subDeviceSetting.id === action.payload.id ? { ...action.payload } : subDeviceSetting
+      );
+      let activeSubDeviceSettings2 = updateSubDeviceSettings2.filter(subDeviceSetting => !subDeviceSetting.isDisabled);
+      if (!action.payload.isDisabled && !find(activeSubDeviceSettings2, { id: action.payload.id })) {
+        activeSubDeviceSettings2.push(action.payload);
+        activeSubDeviceSettings2 = [...orderBy(activeSubDeviceSettings2, ['createdAt', 'name'], ['asc', 'asc'])];
+      }
       return {
         ...state,
-        subDeviceSettings: state.subDeviceSettings.map(subDeviceSetting =>
-          subDeviceSetting.id === action.payload.id ? { ...action.payload } : subDeviceSetting
-        ),
+        subDeviceSettings: activeSubDeviceSettings2,
       };
 
     case subDeviceSettingConstants.SUB_DEVICE_MULTI_STATUS_UPDATED:
-      const params = state.subDeviceSettings.map(subDeviceSetting => {
+      const _updateSubDeviceSettings = state.subDeviceSettings.map(subDeviceSetting => {
         action.payload.forEach(payload => {
           if (payload.id === subDeviceSetting.id) {
             subDeviceSetting = payload;
@@ -57,10 +70,15 @@ const subDeviceSetting = (state = initialState, action) => {
         });
         return subDeviceSetting;
       });
+      let _activeSubDeviceSettings = _updateSubDeviceSettings.filter(subDeviceSetting => !subDeviceSetting.isDisabled);
+      if (!action.payload.isDisabled && !find(_activeSubDeviceSettings, { id: action.payload.id })) {
+        _activeSubDeviceSettings.push(action.payload);
+        _activeSubDeviceSettings = [...orderBy(_activeSubDeviceSettings, ['createdAt', 'name'], ['asc', 'asc'])];
+      }
 
       return {
         ...state,
-        subDeviceSettings: params,
+        subDeviceSettings: _activeSubDeviceSettings,
       };
 
     case subDeviceSettingConstants.PARENT_DEVICE_DELETED_FOR_SUB_DEVICE_SETTING:
@@ -71,13 +89,39 @@ const subDeviceSetting = (state = initialState, action) => {
         ),
       };
 
-    case subDeviceSettingConstants.PARENT_SUB_DEVICE_DELETED_FOR_SUB_DEVICE_SETTING:
-      const subDeviceSettings = state.subDeviceSettings.filter(
-        subDeviceSetting => subDeviceSetting.bindedTo !== action.payload.subDeviceId
-      );
+    case subDeviceSettingConstants.SUB_DEVICE_MULTI_SETTING_DELETED:
+      const _params = [];
+      state.subDeviceSettings.forEach(subDeviceSetting => {
+        action.payload.forEach(payload => {
+          if (subDeviceSetting.id !== payload.id) {
+            _params.push(subDeviceSetting);
+          }
+        });
+      });
+
       return {
         ...state,
-        subDeviceSettings,
+        subDeviceSettings: _params,
+      };
+
+    case subDeviceSettingConstants.SUB_DEVICE_MULTI_SETTING_UPDATED:
+      const _updateSubDeviceSettings2 = state.subDeviceSettings.map(subDeviceSetting => {
+        action.payload.forEach(payload => {
+          if (payload.id === subDeviceSetting.id) {
+            subDeviceSetting = payload;
+          }
+        });
+        return subDeviceSetting;
+      });
+      let _activeSubDeviceSettings2 = _updateSubDeviceSettings2.filter(subDeviceSetting => !subDeviceSetting.isDisabled);
+      if (!action.payload.isDisabled && !find(_activeSubDeviceSettings2, { id: action.payload.id })) {
+        _activeSubDeviceSettings2.push(action.payload);
+        _activeSubDeviceSettings2 = [...orderBy(_activeSubDeviceSettings2, ['createdAt', 'name'], ['asc', 'asc'])];
+      }
+
+      return {
+        ...state,
+        subDeviceSettings: _activeSubDeviceSettings2,
       };
 
     case subDeviceSettingConstants.SET_PROGRESS:
