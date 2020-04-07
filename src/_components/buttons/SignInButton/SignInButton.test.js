@@ -4,12 +4,16 @@ import { history } from '../../../_helpers/history';
 import { clickButton, findByDataAttr } from '../../../_utils';
 import SignInButton from './SignInButton';
 
+const props = {
+  'data-test': '',
+};
+
 describe('SignInButton', () => {
   describe('Components Testing', () => {
     let wrapper;
     beforeEach(() => {
       history.push = jest.fn();
-      wrapper = shallow(<SignInButton />);
+      wrapper = shallow(<SignInButton {...props} />);
     });
     afterEach(() => {
       wrapper.unmount();

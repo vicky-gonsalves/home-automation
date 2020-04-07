@@ -3,15 +3,23 @@ import React from 'react';
 import { findByDataAttr } from '../../_utils';
 import { Toaster } from './toaster';
 
-const props = {};
+const props = {
+  'data-test': '',
+  loginError: '',
+  settingError: '',
+  subDeviceSettingError: '',
+  subDeviceParamError: '',
+  clearLoginError: jest.fn(),
+  clearDeviceSettingError: jest.fn(),
+  clearSubDeviceSettingError: jest.fn(),
+  clearSubDeviceParamError: jest.fn(),
+};
 
 describe('Toaster Component', () => {
   describe('Store checks', () => {
     let wrapper;
-    let setLoginErrorMock;
     beforeEach(() => {
-      setLoginErrorMock = jest.fn();
-      wrapper = shallow(<Toaster {...props} setLoginError={setLoginErrorMock} />);
+      wrapper = shallow(<Toaster {...props} />);
     });
 
     it('should render without error', () => {
@@ -20,15 +28,17 @@ describe('Toaster Component', () => {
     });
 
     it('should set state open true', () => {
-      wrapper.setProps({ loginError: true, open: false });
+      wrapper.setProps({ loginError: 'Error', open: false });
       wrapper.instance().componentDidUpdate();
       // eslint-disable-next-line security/detect-non-literal-fs-filename
       expect(wrapper.props().open).toBe(true);
     });
 
     it('should call setLoginError and set state open to false', () => {
+      wrapper.setState({ open: true });
+      wrapper.setProps({ loginError: 'Error' });
       wrapper.instance().handleClose();
-      expect(setLoginErrorMock).toHaveBeenCalled();
+      expect(props.clearLoginError).toHaveBeenCalled();
       // eslint-disable-next-line security/detect-non-literal-fs-filename
       expect(wrapper.props().open).toBe(false);
     });

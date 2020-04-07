@@ -4,18 +4,15 @@ import { checkProps, findByDataAttr } from '../../_utils';
 import config from '../../config';
 import Footer from './footer';
 
-const setUp = (props = {}) => {
-  return shallow(<Footer {...props} />);
+const props = {
+  appName: config.appName,
+  'data-test': '',
 };
 
 describe('Footer Component', () => {
   describe('Checking PropTypes', () => {
     it('should not throw a warning', () => {
-      const expectedPropTypes = {
-        appName: 'Home Automation',
-      };
-
-      const propsErr = checkProps(Footer, expectedPropTypes);
+      const propsErr = checkProps(Footer, props);
       expect(propsErr).toBeUndefined();
     });
   });
@@ -23,10 +20,7 @@ describe('Footer Component', () => {
   describe('Have props', () => {
     let component;
     beforeEach(() => {
-      const props = {
-        appName: config.appName,
-      };
-      component = setUp(props);
+      component = shallow(<Footer {...props} />);
     });
 
     it('should render without error', () => {

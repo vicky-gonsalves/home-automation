@@ -7,7 +7,7 @@ import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { userConstants } from './_constants';
 import { history } from './_helpers/history';
-import { findByDataAttr, findByDataAttrWhenMounted } from './_utils';
+import { initialState, findByDataAttr, findByDataAttrWhenMounted } from './_utils';
 import App from './App';
 
 const mockStore = configureStore([thunk]);
@@ -19,22 +19,12 @@ describe('App', () => {
     let component;
     let store;
     beforeEach(() => {
-      const props = {
-        classes: { root: 'someprop' },
-      };
-      const initialState = {
-        user: {
-          loginError: null,
-        },
-      };
       store = mockStore(initialState);
       component = mount(
         <Provider store={store}>
-          <App {...props} />
+          <App />
         </Provider>
       );
-      // clear SIGN_OUT
-      store.clearActions();
     });
 
     afterEach(() => {
@@ -63,19 +53,11 @@ describe('App', () => {
     let wrapper;
     let store;
     beforeEach(() => {
-      const props = {
-        classes: { root: 'someprop' },
-      };
-      const initialState = {
-        user: {
-          loginError: null,
-        },
-      };
       store = mockStore(initialState);
       wrapper = mount(
         <Provider store={store}>
           <Router history={history}>
-            <App {...props} />
+            <App />
           </Router>
         </Provider>
       );

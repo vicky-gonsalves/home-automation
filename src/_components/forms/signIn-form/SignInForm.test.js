@@ -5,21 +5,17 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { checkProps, findByDataAttr, submitFormikForm, updateFormikField } from '../../../_utils';
+import { checkProps, findByDataAttr, initialState, submitFormikForm, updateFormikField } from '../../../_utils';
 import DefaultSignInForm, { SignInForm } from './SignInForm';
 
 const mockStore = configureStore([thunk]);
-const initialState = {
-  user: {
-    loginError: null,
-  },
-};
-
 const store = mockStore(initialState);
 
-let props = {
-  classes: { form: 'someprop' },
+const props = {
+  isFetching: false,
+  signIn: jest.fn(),
 };
+
 const email = faker.internet.email();
 const password = faker.internet.password();
 
@@ -35,7 +31,6 @@ describe('SignInForm Component', () => {
     let wrapper;
     beforeEach(() => {
       const shallow = createShallow({ untilSelector: 'TextField' });
-      props = { classes: { paper: 'someprop' } };
       wrapper = shallow(<SignInForm {...props} />);
     });
 

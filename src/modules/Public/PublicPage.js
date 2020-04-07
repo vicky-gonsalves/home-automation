@@ -93,7 +93,7 @@ PublicPage.propTypes = {
   match: PropTypes.object.isRequired,
   isFetching: PropTypes.bool.isRequired,
   isLoggedIn: PropTypes.bool.isRequired,
-  tokens: PropTypes.object.isRequired,
+  tokens: PropTypes.object,
 };
 
 const connectedPublicPage = connect(mapStateToProps, null)(PublicPage);

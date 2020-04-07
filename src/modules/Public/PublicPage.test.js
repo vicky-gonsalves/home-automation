@@ -5,13 +5,27 @@ import { Router } from 'react-router';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { history } from '../../_helpers/history';
-import { checkProps, findByDataAttr } from '../../_utils';
+import { initialState, checkProps, findByDataAttr } from '../../_utils';
 import config from '../../config';
 import DefaultPublicPage, { PublicPage } from './PublicPage';
 
 const mockStore = configureStore([thunk]);
 
-let props = { classes: { main: 'someprop' } };
+const props = {
+  classes: {
+    main: '',
+    icon: '',
+    heroContent: '',
+    heroButtons: '',
+    footer: '',
+  },
+  history,
+  location: {},
+  match: {},
+  isFetching: false,
+  isLoggedIn: false,
+  tokens: {},
+};
 
 describe('Public Page', () => {
   describe('Checking PropTypes', () => {
@@ -75,17 +89,11 @@ describe('Public Page', () => {
     let wrapper;
     let store;
     beforeEach(() => {
-      props = {
-        classes: { main: 'someprop' },
+      const _initialState = {
+        ...initialState,
       };
-      const initialState = {
-        user: {
-          isFetching: false,
-          isLoggedIn: true,
-          tokens: { access_tokens: 'sometoken' },
-        },
-      };
-      store = mockStore(initialState);
+      _initialState.user.tokens = { access_tokens: 'sometoken' };
+      store = mockStore(_initialState);
       wrapper = mount(
         <Provider store={store}>
           <Router history={history}>
@@ -102,10 +110,10 @@ describe('Public Page', () => {
       store.clearActions();
     });
 
-    it('should dispatch SET_USER', () => {
+    it('should have store', () => {
       const component = wrapper.find('PublicPage');
       expect(component.props().isFetching).toEqual(false);
-      expect(component.props().isLoggedIn).toEqual(true);
+      expect(component.props().isLoggedIn).toEqual(false);
       expect(component.props().tokens).toEqual({ access_tokens: 'sometoken' });
     });
   });

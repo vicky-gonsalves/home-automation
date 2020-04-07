@@ -7,6 +7,64 @@ import rootReducer from '../_reducers';
 
 jest.mock('axios');
 
+const initialState = {
+  user: {
+    name: null,
+    email: null,
+    remember: null,
+    isLoggedIn: false,
+    isFetching: false,
+    tokens: null,
+    loginError: null,
+    isAuthorized: false,
+  },
+  socket: {
+    isSocketFetching: false,
+    connected: false,
+  },
+  device: {
+    isFetchingDevice: false,
+    hasError: false,
+    devices: [],
+  },
+  subDevice: {
+    subDevices: [],
+  },
+  sharedDevice: {
+    sharedDevices: [],
+  },
+  subDeviceParam: {
+    isFetching: false,
+    subDeviceParamError: null,
+    subDeviceParams: [],
+  },
+  settingDialog: {
+    dialogType: null,
+    open: false,
+    deviceId: null,
+    title: null,
+  },
+  deviceSetting: {
+    isFetching: false,
+    settingError: null,
+    deviceSettings: [],
+  },
+  subDeviceSetting: {
+    isFetching: false,
+    subDeviceSettingError: null,
+    subDeviceSettings: [],
+  },
+  onlineDevice: {
+    onlineDevices: [],
+  },
+  deviceParam: {
+    deviceParams: [],
+  },
+  log: {
+    logs: [],
+  },
+};
+
 const findByDataAttr = (component, attr) => {
   return component.find(`[data-test='${attr}']`);
 };
@@ -91,6 +149,7 @@ const mockErrorResponse = (status = 400, method = 'GET', returnBody = {}) =>
   axios[method.toLowerCase()].mockRejectedValue({ response: { status, data: returnBody } });
 
 module.exports = {
+  initialState,
   findByDataAttr,
   checkProps,
   testStore,
