@@ -1,4 +1,5 @@
 import { logConstants } from '../../_constants';
+import { groupBy, orderBy, map, flatten } from 'lodash';
 
 const initialState = {
   logs: [],
@@ -19,17 +20,13 @@ const log = (state = initialState, action) => {
       };
 
     case logConstants.LOG_CREATED:
-      let thisLogs;
-      let thisDeviceLogs = state.logs.filter(log => action.payload.deviceId === log.deviceId);
-      let remainingLogs = state.logs.filter(log => action.payload.deviceId !== log.deviceId);
-      if (thisDeviceLogs.length >= 5) {
-        thisLogs = thisDeviceLogs.slice(0, 4);
-      } else {
-        thisLogs = thisDeviceLogs;
-      }
+      const allLogs = [...state.logs, action.payload];
+      const groupedLogs = groupBy(orderBy(allLogs, ['createdAt'], ['desc']), 'deviceId');
+      const limitedLogs = map(groupedLogs, group => group.slice(0, 5));
+      const finalLogs = flatten(limitedLogs);
       return {
         ...state,
-        logs: [action.payload, ...thisLogs, ...remainingLogs],
+        logs: finalLogs,
       };
 
     case logConstants.PARENT_DEVICE_DELETED_FOR_LOG:

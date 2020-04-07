@@ -17,6 +17,7 @@ const logOne = {
   isDevLog: false,
   createdBy: email4,
   triggeredByDevice: false,
+  createdAt: '2020-04-07T15:54:30.719Z',
 };
 
 const logTwo = {
@@ -28,6 +29,7 @@ const logTwo = {
   isDevLog: false,
   createdBy: email4,
   triggeredByDevice: false,
+  createdAt: '2020-04-07T16:54:30.719Z',
 };
 
 const logThree = {
