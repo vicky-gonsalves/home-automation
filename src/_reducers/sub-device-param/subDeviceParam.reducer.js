@@ -64,11 +64,15 @@ const subDeviceParam = (state = initialState, action) => {
         });
         return subDeviceParam;
       });
-      let _activeSubDeviceParams = _updateSubDeviceParams.filter(subDeviceParam => !subDeviceParam.isDisabled);
-      if (!action.payload.isDisabled && !find(_activeSubDeviceParams, { id: action.payload.id })) {
-        _activeSubDeviceParams.push(action.payload);
-        _activeSubDeviceParams = [...orderBy(_activeSubDeviceParams, ['createdAt', 'name'], ['asc', 'asc'])];
-      }
+      let _activeSubDeviceParams = _updateSubDeviceParams.filter(
+        subDeviceParam => subDeviceParam && !subDeviceParam.isDisabled
+      );
+      action.payload.forEach(payload => {
+        if (!payload.isDisabled && !find(_activeSubDeviceParams, { id: payload.id })) {
+          _activeSubDeviceParams.push(payload);
+        }
+      });
+      _activeSubDeviceParams = [...orderBy(_activeSubDeviceParams, ['createdAt', 'paramName'], ['asc', 'asc'])];
       return {
         ...state,
         subDeviceParams: _activeSubDeviceParams,
@@ -77,12 +81,14 @@ const subDeviceParam = (state = initialState, action) => {
     case subDeviceParamConstants.PARENT_DEVICE_DELETED_FOR_SUB_DEVICE_PARAM:
       return {
         ...state,
-        subDeviceParams: state.subDeviceParams.filter(subDeviceParam => subDeviceParam.deviceId !== action.payload.deviceId),
+        subDeviceParams: state.subDeviceParams.filter(
+          subDeviceParam => subDeviceParam && subDeviceParam.deviceId !== action.payload.deviceId
+        ),
       };
 
     case subDeviceParamConstants.PARENT_SUB_DEVICE_DELETED_FOR_SUB_DEVICE_PARAM:
       const subDeviceParams = state.subDeviceParams.filter(
-        subDeviceParam => subDeviceParam.subDeviceId !== action.payload.subDeviceId
+        subDeviceParam => subDeviceParam && subDeviceParam.subDeviceId !== action.payload.subDeviceId
       );
       return {
         ...state,

@@ -35,11 +35,11 @@ const log = (state = initialState, action) => {
     case logConstants.PARENT_DEVICE_DELETED_FOR_LOG:
       return {
         ...state,
-        logs: state.logs.filter(log => log.deviceId !== action.payload.deviceId),
+        logs: state.logs.filter(log => log && log.deviceId !== action.payload.deviceId),
       };
 
     case logConstants.PARENT_SUB_DEVICE_DELETED_FOR_LOG:
-      const logs = state.logs.filter(log => log.subDeviceId !== action.payload.subDeviceId);
+      const logs = state.logs.filter(log => log && log.subDeviceId !== action.payload.subDeviceId);
       return {
         ...state,
         logs,

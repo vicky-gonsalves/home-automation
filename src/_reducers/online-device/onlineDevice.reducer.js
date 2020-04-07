@@ -15,7 +15,9 @@ const onlineDevice = (state = initialState, action) => {
     case onlineDeviceConstants.ONLINE_DEVICE_DELETED:
       return {
         ...state,
-        onlineDevices: state.onlineDevices.filter(onlineDevice => onlineDevice.bindedTo !== action.payload.bindedTo),
+        onlineDevices: state.onlineDevices.filter(
+          onlineDevice => onlineDevice && onlineDevice.bindedTo !== action.payload.bindedTo
+        ),
       };
 
     case onlineDeviceConstants.ONLINE_DEVICE_REMOVE_ALL:
@@ -33,7 +35,9 @@ const onlineDevice = (state = initialState, action) => {
     case onlineDeviceConstants.PARENT_DEVICE_DELETED_FOR_ONLINE_DEVICE:
       return {
         ...state,
-        onlineDevices: state.onlineDevices.filter(onlineDevice => onlineDevice.bindedTo !== action.payload.bindedTo),
+        onlineDevices: state.onlineDevices.filter(
+          onlineDevice => onlineDevice && onlineDevice.bindedTo !== action.payload.bindedTo
+        ),
       };
 
     default:

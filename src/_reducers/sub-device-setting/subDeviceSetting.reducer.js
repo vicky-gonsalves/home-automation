@@ -70,11 +70,15 @@ const subDeviceSetting = (state = initialState, action) => {
         });
         return subDeviceSetting;
       });
-      let _activeSubDeviceSettings = _updateSubDeviceSettings.filter(subDeviceSetting => !subDeviceSetting.isDisabled);
-      if (!action.payload.isDisabled && !find(_activeSubDeviceSettings, { id: action.payload.id })) {
-        _activeSubDeviceSettings.push(action.payload);
-        _activeSubDeviceSettings = [...orderBy(_activeSubDeviceSettings, ['createdAt', 'name'], ['asc', 'asc'])];
-      }
+      let _activeSubDeviceSettings = _updateSubDeviceSettings.filter(
+        subDeviceSetting => subDeviceSetting && !subDeviceSetting.isDisabled
+      );
+      action.payload.forEach(payload => {
+        if (!payload.isDisabled && !find(_activeSubDeviceSettings, { id: payload.id })) {
+          _activeSubDeviceSettings.push(payload);
+        }
+      });
+      _activeSubDeviceSettings = [...orderBy(_activeSubDeviceSettings, ['createdAt', 'paramName'], ['asc', 'asc'])];
 
       return {
         ...state,
@@ -85,19 +89,17 @@ const subDeviceSetting = (state = initialState, action) => {
       return {
         ...state,
         subDeviceSettings: state.subDeviceSettings.filter(
-          subDeviceSetting => subDeviceSetting.parent !== action.payload.deviceId
+          subDeviceSetting =>
+            subDeviceSetting.type === 'subDevice' &&
+            subDeviceSetting.idType === 'subDeviceId' &&
+            subDeviceSetting.parent !== action.payload.deviceId
         ),
       };
 
     case subDeviceSettingConstants.SUB_DEVICE_MULTI_SETTING_DELETED:
-      const _params = [];
-      state.subDeviceSettings.forEach(subDeviceSetting => {
-        action.payload.forEach(payload => {
-          if (subDeviceSetting.id !== payload.id) {
-            _params.push(subDeviceSetting);
-          }
-        });
-      });
+      const _params = action.payload.reduce((acc, b) => {
+        return acc.filter(({ id }) => id !== b.id);
+      }, state.subDeviceSettings);
 
       return {
         ...state,
@@ -105,7 +107,7 @@ const subDeviceSetting = (state = initialState, action) => {
       };
 
     case subDeviceSettingConstants.SUB_DEVICE_MULTI_SETTING_UPDATED:
-      const _updateSubDeviceSettings2 = state.subDeviceSettings.map(subDeviceSetting => {
+      const allUpdateSubDeviceSettings = state.subDeviceSettings.map(subDeviceSetting => {
         action.payload.forEach(payload => {
           if (payload.id === subDeviceSetting.id) {
             subDeviceSetting = payload;
@@ -113,15 +115,22 @@ const subDeviceSetting = (state = initialState, action) => {
         });
         return subDeviceSetting;
       });
-      let _activeSubDeviceSettings2 = _updateSubDeviceSettings2.filter(subDeviceSetting => !subDeviceSetting.isDisabled);
-      if (!action.payload.isDisabled && !find(_activeSubDeviceSettings2, { id: action.payload.id })) {
-        _activeSubDeviceSettings2.push(action.payload);
-        _activeSubDeviceSettings2 = [...orderBy(_activeSubDeviceSettings2, ['createdAt', 'name'], ['asc', 'asc'])];
-      }
+      let activeUpdatedSubDeviceSettings = allUpdateSubDeviceSettings.filter(
+        subDeviceSetting => subDeviceSetting && !subDeviceSetting.isDisabled
+      );
+
+      action.payload.forEach(payload => {
+        if (!payload.isDisabled && !find(activeUpdatedSubDeviceSettings, { id: payload.id })) {
+          activeUpdatedSubDeviceSettings.push(payload);
+        }
+      });
+      activeUpdatedSubDeviceSettings = [
+        ...orderBy(activeUpdatedSubDeviceSettings, ['createdAt', 'paramName'], ['asc', 'asc']),
+      ];
 
       return {
         ...state,
-        subDeviceSettings: _activeSubDeviceSettings2,
+        subDeviceSettings: activeUpdatedSubDeviceSettings,
       };
 
     case subDeviceSettingConstants.SET_PROGRESS:
