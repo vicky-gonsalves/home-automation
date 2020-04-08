@@ -57,11 +57,12 @@ const TankCard = ({ deviceId, deviceName }) => {
   const classes = useStyles();
   const [updatedAt, setUpdatedAt] = useState();
   const ref = useRef(null);
-  let thisSubDevices;
+  let thisSubDevices = [];
   let waterLevel = 0;
   let isDeviceOnline = false;
   let preferredDevice;
 
+  // noinspection JSValidateTypes
   ref.current = { updatedAt, setUpdatedAt };
 
   const socketIds = useSelector(state => state.onlineDevice);
@@ -97,15 +98,18 @@ const TankCard = ({ deviceId, deviceName }) => {
   );
 
   if (deviceId && subDevices.length && deviceSettings.length) {
-    const [first] = deviceSettings.filter(
+    preferredDevice = deviceSettings.filter(
       ({ bindedTo, idType, paramName, type }) =>
         bindedTo === deviceId && type === 'device' && idType === 'deviceId' && paramName === 'preferredSubDevice'
-    );
-    preferredDevice = first;
+    )[0];
   }
 
+  const { paramValue } = waterLevel;
+
+  // noinspection JSUnresolvedVariable
   useEffect(() => {
     const updatedAtInterval = setInterval(() => {
+      // noinspection JSUnresolvedVariable,JSUnresolvedFunction
       ref.current.setUpdatedAt(moment(waterLevel.updatedAt).fromNow());
     }, 1000);
     return () => {
@@ -113,8 +117,66 @@ const TankCard = ({ deviceId, deviceName }) => {
     };
   }, [waterLevel.updatedAt]);
 
+  const renderOfflineAlert = () => {
+    if (!isDeviceOnline) {
+      return <DeviceOfflineAlert data-test="tankOfflineAlertContainer" />;
+    }
+  };
+
+  const renderSubDeviceAlert = () => {
+    if (!thisSubDevices.length) {
+      return (
+        <CardContent className={classes.cardContent} data-test="tankCardNoSubDeviceAlertContainer">
+          {renderOfflineAlert()}
+          <Alert severity="info">It seems devices are not yet added. Please contact administrator!</Alert>
+        </CardContent>
+      );
+    }
+  };
+
+  const renderPreferredSubDevices = subDevice => {
+    if (thisSubDevices.length > 1 && preferredDevice && preferredDevice.paramValue === subDevice.subDeviceId) {
+      return <PreferredDevice data-test="preferredDeviceContainer" />;
+    }
+  };
+
+  const renderLastUpdated = () => {
+    const { updatedAt: lastUpdated } = ref.current;
+    return (
+      <Typography
+        component="div"
+        color="textSecondary"
+        variant="caption"
+        className={classes.update}
+        data-test="tankUpdateContainer"
+      >
+        {`Updated ${lastUpdated}`}
+      </Typography>
+    );
+  };
+
+  const renderButtonGroups = subDevice => {
+    return (
+      <div key={subDevice.subDeviceId} className={classes.items}>
+        {renderPreferredSubDevices(subDevice)}
+        <MotorSwitch
+          name={subDevice.name}
+          deviceId={deviceId}
+          subDeviceId={subDevice.subDeviceId}
+          data-test="MotorSwitchContainer"
+        />
+        <MotorMode
+          name={subDevice.name}
+          deviceId={deviceId}
+          subDeviceId={subDevice.subDeviceId}
+          data-test="MotorModeContainer"
+        />
+      </div>
+    );
+  };
+
   return (
-    <Card className={classes.default}>
+    <Card className={classes.default} data-test="tankCardContainer">
       <CardHeader
         className={classes.cardHeader}
         avatar={<OnlineDeviceStatus isDeviceOnline={isDeviceOnline} />}
@@ -126,40 +188,24 @@ const TankCard = ({ deviceId, deviceName }) => {
         title={deviceName}
         titleTypographyProps={{ align: 'center', variant: 'h6', color: 'primary', gutterBottom: false }}
       />
-      {(!thisSubDevices || (thisSubDevices && !thisSubDevices.length)) && (
-        <CardContent className={classes.cardContent}>
-          {!isDeviceOnline && <DeviceOfflineAlert />}
-          <Alert severity="info">It seems devices are not yet added. Please contact administrator!</Alert>
-        </CardContent>
-      )}
-      {thisSubDevices && thisSubDevices.length > 0 && (
+      {renderSubDeviceAlert()}
+      {thisSubDevices.length > 0 && (
         <React.Fragment>
-          <CardContent className={classes.cardContent}>
-            {!isDeviceOnline && <DeviceOfflineAlert />}
+          <CardContent className={classes.cardContent} data-test="tankCardContentContainer">
+            {renderOfflineAlert()}
             <div className={classes.root}>
               <Grid container spacing={1}>
                 <Grid item xs={5} sm={4} md={5} lg={3}>
-                  <Tank waterLevel={waterLevel.paramValue} />
-                  <Typography component="div" color="textSecondary" variant="caption" className={classes.update}>
-                    Updated {ref.current.updatedAt}
-                  </Typography>
+                  <Tank waterLevel={paramValue} data-test="tankContainer" />
+                  {renderLastUpdated()}
                 </Grid>
                 <Grid item xs={7} sm={8} md={7} lg={9} className={classes.buttonsGrp}>
-                  {thisSubDevices &&
-                    thisSubDevices.map(subDevice => (
-                      <div key={subDevice.subDeviceId} className={classes.items}>
-                        {thisSubDevices.length > 1 &&
-                          preferredDevice &&
-                          preferredDevice.paramValue === subDevice.subDeviceId && <PreferredDevice />}
-                        <MotorSwitch name={subDevice.name} deviceId={deviceId} subDeviceId={subDevice.subDeviceId} />
-                        <MotorMode name={subDevice.name} deviceId={deviceId} subDeviceId={subDevice.subDeviceId} />
-                      </div>
-                    ))}
+                  {thisSubDevices && thisSubDevices.map(subDevice => renderButtonGroups(subDevice))}
                 </Grid>
               </Grid>
             </div>
           </CardContent>
-          <CardActionFooter deviceId={deviceId} deviceVariant="tank" />
+          <CardActionFooter deviceId={deviceId} deviceVariant="tank" data-test="tankCardActionFooterContainer" />
         </React.Fragment>
       )}
     </Card>
