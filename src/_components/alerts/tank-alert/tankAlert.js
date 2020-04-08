@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 import CountDownTimer from '../../count-down-timer/CountDownTimer';
 
 const TankAlert = props => {
+  let autoShutDownTime;
   const subDevices = useSelector(state => state.subDevice && state.subDevice.subDevices);
   const subDeviceParams = useSelector(state => state.subDeviceParam && state.subDeviceParam.subDeviceParams);
   const deviceSettings = useSelector(state => state.deviceSetting && state.deviceSetting.deviceSettings);
@@ -13,14 +14,17 @@ const TankAlert = props => {
   const thisDeviceParams = subDeviceParams.filter(
     param => param.deviceId === props.deviceId && param.paramName === 'status' && param.paramValue === 'on'
   );
-  const autoShutDownTime = deviceSettings.filter(
-    setting =>
-      setting.bindedTo === props.deviceId &&
-      setting.paramName === 'autoShutDownTime' &&
-      setting.paramValue > 0 &&
-      setting.type === 'device' &&
-      setting.idType === 'deviceId'
-  )[0];
+  autoShutDownTime = deviceSettings.filter(setting => {
+    const { paramValue, idType, paramName, bindedTo, type } = setting;
+    return (
+      bindedTo === props.deviceId &&
+      paramName === 'autoShutDownTime' &&
+      paramValue > 0 &&
+      type === 'device' &&
+      idType === 'deviceId'
+    );
+  })[0];
+
   const getEndTime = startTime => {
     if (autoShutDownTime && autoShutDownTime.paramValue) {
       return moment(startTime).add(autoShutDownTime.paramValue, 'minutes');
@@ -36,13 +40,13 @@ const TankAlert = props => {
   };
 
   return (
-    <div>
+    <div data-test="alertContainer">
       {autoShutDownTime &&
         autoShutDownTime.paramValue &&
         thisDeviceParams.map(param => (
           <div key={param.id}>
             {thisOnlineDevice && (
-              <Typography component="div" color="primary" variant="body2">
+              <Typography component="div" color="primary" variant="body2" data-test="alertComponent">
                 {getSubDeviceName(param)} will be turned off automatically &nbsp;
                 <strong>
                   <CountDownTimer endTime={getEndTime(param.updatedAt)} />
