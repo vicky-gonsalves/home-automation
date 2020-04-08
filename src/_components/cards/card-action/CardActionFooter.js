@@ -28,7 +28,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const CardActionFooter = props => {
+const CardActionFooter = ({ deviceId, deviceVariant }) => {
   const classes = useStyles();
   const [expanded, setExpanded] = useState(false);
 
@@ -37,9 +37,9 @@ const CardActionFooter = props => {
   };
   return (
     <React.Fragment>
-      <CardActions className={classes.cardAction}>
-        {props.deviceVariant === 'tank' && <TankAlert deviceId={props.deviceId} />}
-        {props.deviceVariant === 'smartSwitch' && <SmartSwitchAlert deviceId={props.deviceId} />}
+      <CardActions className={classes.cardAction} data-test="cardActionFooterContainer">
+        {deviceVariant === 'tank' && <TankAlert deviceId={deviceId} data-test="tankAlertComponent" />}
+        {deviceVariant === 'smartSwitch' && <SmartSwitchAlert deviceId={deviceId} data-test="smartSwitchAlertComponent" />}
         <IconButton
           className={clsx(classes.expand, {
             [classes.expandOpen]: expanded,
@@ -47,12 +47,13 @@ const CardActionFooter = props => {
           onClick={handleExpandClick}
           aria-expanded={expanded}
           aria-label="show stats"
+          data-test="collapseButtonComponent"
         >
           <ExpandMoreIcon />
         </IconButton>
       </CardActions>
-      <Collapse in={expanded} timeout="auto" unmountOnExit>
-        <Stats deviceId={props.deviceId} />
+      <Collapse in={expanded} timeout="auto" unmountOnExit data-test="collapseComponent">
+        {deviceId && <Stats deviceId={deviceId} data-test="statsAlertComponent" />}
       </Collapse>
     </React.Fragment>
   );
