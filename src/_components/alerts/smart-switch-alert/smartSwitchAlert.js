@@ -43,7 +43,6 @@ const SmartSwitchAlert = props => {
     if (autoShutDownTime && autoShutDownTime.paramValue && autoShutDownTime.paramValue > 0) {
       return moment(param.updatedAt).add(autoShutDownTime.paramValue, 'minutes');
     }
-    return false;
   };
   const thisOnlineDevice = onlineDevices.filter(
     onlineDevice => onlineDevice && onlineDevice.bindedTo && onlineDevice.bindedTo === props.deviceId
@@ -61,7 +60,7 @@ const SmartSwitchAlert = props => {
     const subDevice = subDevices.filter(subDevice => param && subDevice.subDeviceId === param.subDeviceId)[0];
     if (autoShutDownTime && autoShutDownTime.paramValue && autoShutDownTime.paramValue > 0) {
       return (
-        <Typography component="div" color="primary" variant="body2">
+        <Typography component="div" color="primary" variant="body2" data-test="alertComponent">
           {subDevice.name} will be turned off automatically &nbsp;
           <strong>{renderCountdown(param)}</strong>
         </Typography>
@@ -70,7 +69,7 @@ const SmartSwitchAlert = props => {
   };
 
   return (
-    <div>
+    <div data-test="alertContainer">
       {autoShutDownSettings &&
         autoShutDownSettings.length > 0 &&
         thisSubDeviceParams.map(param => <div key={param.id}>{thisOnlineDevice && renderAlert(param)}</div>)}
