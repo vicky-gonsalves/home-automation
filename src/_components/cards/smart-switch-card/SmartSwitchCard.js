@@ -48,30 +48,70 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const SmartSwitchCard = props => {
-  let thisSubDevices;
+const SmartSwitchCard = ({ deviceId, deviceName }) => {
+  let thisSubDevices = [];
   const classes = useStyles();
   const dispatch = useDispatch();
   let isDeviceOnline = false;
   const subDevices = useSelector(state =>
     state && state.subDevice && state.subDevice.subDevices ? state.subDevice.subDevices : []
   );
-  if (props.deviceId && subDevices && subDevices.length) {
-    thisSubDevices = subDevices.filter(subDevice => subDevice.deviceId === props.deviceId);
+  if (deviceId && subDevices && subDevices.length) {
+    thisSubDevices = subDevices.filter(subDevice => subDevice.deviceId === deviceId);
   }
 
   const socketIds = useSelector(state => state.onlineDevice);
 
-  if (socketIds && socketIds.onlineDevices && socketIds.onlineDevices.length && props.deviceId) {
+  if (socketIds && socketIds.onlineDevices && socketIds.onlineDevices.length && deviceId) {
     isDeviceOnline =
-      socketIds.onlineDevices.filter(onlineDevice => onlineDevice.bindedTo && onlineDevice.bindedTo === props.deviceId)
-        .length > 0;
+      socketIds.onlineDevices.filter(onlineDevice => onlineDevice.bindedTo && onlineDevice.bindedTo === deviceId).length > 0;
   }
 
-  const handleSettingDialog = () => dispatch(settingDialogActions.open(props.deviceName, props.deviceId, 'smartSwitch'));
+  const handleSettingDialog = () => dispatch(settingDialogActions.open(deviceName, deviceId, 'smartSwitch'));
+
+  const renderDeviceOfflineAlert = () => {
+    if (!isDeviceOnline) {
+      return <DeviceOfflineAlert data-test="offlineAlertContainer" />;
+    }
+  };
+
+  const renderAlert = () => {
+    if (!thisSubDevices.length) {
+      return (
+        <CardContent className={classes.cardContent} data-test="offlineAlertCardContainer">
+          {renderDeviceOfflineAlert()}
+          <Alert severity="info">It seems devices are not yet added. Please contact administrator!</Alert>
+        </CardContent>
+      );
+    }
+  };
+
+  const renderCards = () => {
+    if (thisSubDevices.length > 0) {
+      return (
+        <React.Fragment>
+          <CardContent className={classes.cardContent} data-test="cardContentContainer">
+            {renderDeviceOfflineAlert()}
+            <div className={classes.root}>
+              <Grid container spacing={1}>
+                <Grid item xs={9} sm={9} md={9} lg={9}>
+                  <SubDeviceComponent deviceId={deviceId} />
+                </Grid>
+                <Grid item xs={3} sm={3} md={3} lg={3} className={classes.buttonsGrp}>
+                  <SubDeviceComponent all={deviceId} />
+                </Grid>
+              </Grid>
+            </div>
+          </CardContent>
+          <div className={classes.grow} />
+          <CardActionFooter deviceId={deviceId} deviceVariant="smartSwitch" data-test="cardActionFooterContainer" />
+        </React.Fragment>
+      );
+    }
+  };
 
   return (
-    <Card className={classes.default}>
+    <Card className={classes.default} data-test="smartSwitchCardContainer">
       <CardHeader
         className={classes.cardHeader}
         avatar={<OnlineDeviceStatus isDeviceOnline={isDeviceOnline} />}
@@ -80,34 +120,11 @@ const SmartSwitchCard = props => {
             <SettingsIcon />
           </IconButton>
         }
-        title={props.deviceName}
+        title={deviceName}
         titleTypographyProps={{ align: 'center', variant: 'h6', color: 'primary', gutterBottom: false }}
       />
-      {(!thisSubDevices || (thisSubDevices && !thisSubDevices.length)) && (
-        <CardContent className={classes.cardContent}>
-          {!isDeviceOnline && <DeviceOfflineAlert />}
-          <Alert severity="info">It seems devices are not yet added. Please contact administrator!</Alert>
-        </CardContent>
-      )}
-      {thisSubDevices && thisSubDevices.length > 0 && (
-        <React.Fragment>
-          <CardContent className={classes.cardContent}>
-            {!isDeviceOnline && <DeviceOfflineAlert />}
-            <div className={classes.root}>
-              <Grid container spacing={1}>
-                <Grid item xs={9} sm={9} md={9} lg={9}>
-                  <SubDeviceComponent deviceId={props.deviceId} />
-                </Grid>
-                <Grid item xs={3} sm={3} md={3} lg={3} className={classes.buttonsGrp}>
-                  <SubDeviceComponent all={props.deviceId} />
-                </Grid>
-              </Grid>
-            </div>
-          </CardContent>
-          <div className={classes.grow} />
-          <CardActionFooter deviceId={props.deviceId} deviceVariant="smartSwitch" />
-        </React.Fragment>
-      )}
+      {renderAlert()}
+      {renderCards()}
     </Card>
   );
 };
