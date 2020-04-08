@@ -2,14 +2,16 @@ import moment from 'moment';
 import PropTypes from 'prop-types';
 import React, { useEffect, useRef, useState } from 'react';
 
-const CountDownTimer = props => {
+const CountDownTimer = ({ endTime }) => {
   const ref = useRef(null);
   const [endsAt, setEndsAt] = useState();
+  // noinspection JSValidateTypes
   ref.current = { endsAt, setEndsAt };
 
   const getRemainingTime = () => {
     let remainingTime = '';
-    const time = moment.duration(ref.current.endsAt);
+    const { endsAt: endsAtTime } = ref.current;
+    const time = moment.duration(endsAtTime);
     const generateTimeString = (timeEntity, timeName) => {
       remainingTime += remainingTime === '' ? '' : ', ';
       remainingTime += `${timeEntity} ${timeEntity > 1 ? timeName + 's' : timeName}`;
@@ -34,15 +36,16 @@ const CountDownTimer = props => {
 
   useEffect(() => {
     const endsAtInterval = setInterval(() => {
-      ref.current.setEndsAt(props.endTime.diff(moment(), 'milliseconds'));
+      // noinspection JSUnresolvedFunction
+      ref.current.setEndsAt(endTime.diff(moment(), 'milliseconds'));
     }, 1000);
     return () => {
       clearInterval(endsAtInterval);
     };
-  }, [props.endTime]);
+  }, [endTime]);
 
-  ref.current.endsAt = props.endTime.diff(moment(), 'milliseconds');
-  return <React.Fragment>{getRemainingTime()}</React.Fragment>;
+  ref.current.endsAt = endTime.diff(moment(), 'milliseconds');
+  return <span data-test="countDownTimerComponent">{getRemainingTime()}</span>;
 };
 
 CountDownTimer.propTypes = {
