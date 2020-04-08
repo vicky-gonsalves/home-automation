@@ -54,12 +54,11 @@ describe('CountDownTimer', () => {
       const _initialState = initialState;
       wrapper = setupWrapper(_initialState);
       const component = findByDataAttr(wrapper, 'countDownTimerComponent').first();
-      expect(component.text()).toBe('in 29 minutes, 59 seconds');
       act(() => {
         jest.runOnlyPendingTimers();
       });
       expect(setInterval).toHaveBeenLastCalledWith(expect.any(Function), 1000);
-      expect(component.text()).toBe('in 29 minutes, 59 seconds');
+      expect(component.text()).toMatch(/^(in 29 minutes, 59 seconds)|(in 30 minutes)$/);
     });
 
     it('should update countdown in hours, minutes and seconds', () => {
@@ -70,12 +69,11 @@ describe('CountDownTimer', () => {
       const _initialState = initialState;
       wrapper = setupWrapper(_initialState, _props);
       const component = findByDataAttr(wrapper, 'countDownTimerComponent').first();
-      expect(component.text()).toBe('in 21 hours, 59 minutes, 59 seconds');
       act(() => {
         jest.runOnlyPendingTimers();
       });
       expect(setInterval).toHaveBeenLastCalledWith(expect.any(Function), 1000);
-      expect(component.text()).toBe('in 21 hours, 59 minutes, 59 seconds');
+      expect(component.text()).toMatch(/^(in 21 hours, 59 minutes, 59 seconds)|(in 22 hours)$/);
     });
 
     it('should update countdown in days, hours, minutes and seconds', () => {
@@ -86,12 +84,11 @@ describe('CountDownTimer', () => {
       const _initialState = initialState;
       wrapper = setupWrapper(_initialState, _props);
       const component = findByDataAttr(wrapper, 'countDownTimerComponent').first();
-      expect(component.text()).toBe('in 21 days, 23 hours, 59 minutes, 59 seconds');
       act(() => {
         jest.runOnlyPendingTimers();
       });
       expect(setInterval).toHaveBeenLastCalledWith(expect.any(Function), 1000);
-      expect(component.text()).toBe('in 21 days, 23 hours, 59 minutes, 59 seconds');
+      expect(component.text()).toMatch(/^(in 21 days, 23 hours, 59 minutes, 59 seconds)|(in 22 days)$/);
     });
 
     it('should update countdown in months, days, hours, minutes and seconds', () => {
@@ -102,12 +99,11 @@ describe('CountDownTimer', () => {
       const _initialState = initialState;
       wrapper = setupWrapper(_initialState, _props);
       const component = findByDataAttr(wrapper, 'countDownTimerComponent').first();
-      expect(component.text()).toBe('in 4 months, 30 days, 23 hours, 59 minutes, 59 seconds');
       act(() => {
         jest.runOnlyPendingTimers();
       });
       expect(setInterval).toHaveBeenLastCalledWith(expect.any(Function), 1000);
-      expect(component.text()).toBe('in 4 months, 30 days, 23 hours, 59 minutes, 59 seconds');
+      expect(component.text()).toMatch(/^(in 4 months, 30 days, 23 hours, 59 minutes, 59 seconds)|(in 5 months)$/);
     });
 
     it('should update countdown in years, months, days, hours, minutes and seconds', () => {
@@ -118,12 +114,13 @@ describe('CountDownTimer', () => {
       const _initialState = initialState;
       wrapper = setupWrapper(_initialState, _props);
       const component = findByDataAttr(wrapper, 'countDownTimerComponent').first();
-      expect(component.text()).toBe('in 98 years, 11 months, 28 days, 23 hours, 59 minutes, 59 seconds');
       act(() => {
         jest.runOnlyPendingTimers();
       });
       expect(setInterval).toHaveBeenLastCalledWith(expect.any(Function), 1000);
-      expect(component.text()).toBe('in 98 years, 11 months, 28 days, 23 hours, 59 minutes, 59 seconds');
+      expect(component.text()).toMatch(
+        /^(in 98 years, 11 months, 28 days, 23 hours, 59 minutes, 59 seconds)|(in 99 years)$/
+      );
     });
   });
 });
