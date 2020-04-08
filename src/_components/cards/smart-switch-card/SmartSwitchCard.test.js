@@ -66,7 +66,7 @@ describe('SmartSwitchCard', () => {
       expect(component.length).toBe(0);
     });
 
-    it('should render cardActionFooterContainer if no subDevices', () => {
+    it('should render cardActionFooterContainer if has subDevices', () => {
       const _initialState = initialState;
       _initialState.subDevice.subDevices = [subDeviceThree];
       wrapper = setupWrapper(initialState);
