@@ -61,6 +61,36 @@ describe('CountDownTimer', () => {
       expect(component.text()).toMatch(/^(in 29 minutes, 59 seconds)|(in 30 minutes)$/);
     });
 
+    it('should update countdown in second or in few moments', () => {
+      const _props = {
+        endTime: moment().add(1, 'seconds'),
+      };
+      jest.useFakeTimers();
+      const _initialState = initialState;
+      wrapper = setupWrapper(_initialState, _props);
+      const component = findByDataAttr(wrapper, 'countDownTimerComponent').first();
+      act(() => {
+        jest.runOnlyPendingTimers();
+      });
+      expect(setInterval).toHaveBeenLastCalledWith(expect.any(Function), 1000);
+      expect(component.text()).toMatch(/^(in few moments)|(in 1 second)$/);
+    });
+
+    it('should update countdown in second', () => {
+      const _props = {
+        endTime: moment().add(2, 'seconds'),
+      };
+      jest.useFakeTimers();
+      const _initialState = initialState;
+      wrapper = setupWrapper(_initialState, _props);
+      const component = findByDataAttr(wrapper, 'countDownTimerComponent').first();
+      act(() => {
+        jest.runOnlyPendingTimers();
+      });
+      expect(setInterval).toHaveBeenLastCalledWith(expect.any(Function), 1000);
+      expect(component.text()).toMatch(/^(in 1 second)|(in 2 seconds)$/);
+    });
+
     it('should update countdown in hours, minutes and seconds', () => {
       const _props = {
         endTime: moment().add(22, 'hours'),
