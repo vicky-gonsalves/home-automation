@@ -52,17 +52,17 @@ describe('SmartSwitchCard', () => {
       expect(component.length).toBe(0);
     });
 
-    it('should render offlineAlertCardContainer if no subDevices', () => {
+    it('should render noSubDeviceAlertCardContainer if no subDevices', () => {
       wrapper = setupWrapper(initialState);
-      const component = findByDataAttr(wrapper, 'offlineAlertCardContainer').first();
+      const component = findByDataAttr(wrapper, 'noSubDeviceAlertCardContainer').first();
       expect(component.length).toBe(1);
     });
 
-    it('should not render offlineAlertCardContainer if has subDevices', async () => {
+    it('should not render noSubDeviceAlertCardContainer if has subDevices', async () => {
       const _initialState = initialState;
       _initialState.subDevice.subDevices = [subDeviceThree];
       wrapper = setupWrapper(_initialState);
-      const component = findByDataAttr(wrapper, 'offlineAlertCardContainer').first();
+      const component = findByDataAttr(wrapper, 'noSubDeviceAlertCardContainer').first();
       expect(component.length).toBe(0);
     });
 

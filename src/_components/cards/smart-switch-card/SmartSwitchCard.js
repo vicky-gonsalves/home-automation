@@ -78,7 +78,7 @@ const SmartSwitchCard = ({ deviceId, deviceName }) => {
   const renderAlert = () => {
     if (!thisSubDevices.length) {
       return (
-        <CardContent className={classes.cardContent} data-test="offlineAlertCardContainer">
+        <CardContent className={classes.cardContent} data-test="noSubDeviceAlertCardContainer">
           {renderDeviceOfflineAlert()}
           <Alert severity="info">It seems devices are not yet added. Please contact administrator!</Alert>
         </CardContent>
