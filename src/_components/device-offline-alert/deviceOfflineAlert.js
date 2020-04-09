@@ -11,8 +11,8 @@ const useStyles = makeStyles(theme => ({
 const DeviceOfflineAlert = () => {
   const classes = useStyles();
   return (
-    <Alert severity="warning" className={classes.alert}>
-      <AlertTitle>Warning</AlertTitle>
+    <Alert severity="warning" className={classes.alert} data-test="deviceOfflineAlertComponent">
+      <AlertTitle data-test="deviceOfflineAlertTitleComponent">Warning</AlertTitle>
       This device is currently offline. All new actions/settings will be applied once device comes back online.
     </Alert>
   );
