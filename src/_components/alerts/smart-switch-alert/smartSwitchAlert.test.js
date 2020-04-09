@@ -8,7 +8,7 @@ import { deviceTwo } from '../../../_utils/fixtures/device.fixture';
 import { socketIdSix } from '../../../_utils/fixtures/socketId.fixture';
 import { subDeviceThree } from '../../../_utils/fixtures/subDevice.fixture';
 import { subDeviceParamFour } from '../../../_utils/fixtures/subDeviceParam.fixture';
-import { subDeviceSettingOne } from '../../../_utils/fixtures/subDeviceSetting.fixture';
+import { subDeviceSettingFive, subDeviceSettingOne } from '../../../_utils/fixtures/subDeviceSetting.fixture';
 import SmartSwitchAlert from './smartSwitchAlert';
 
 let store;
@@ -138,6 +138,63 @@ describe('SmartSwitchAlert', () => {
       wrapper = setupWrapper(_initialState);
       const component = findByDataAttr(wrapper, 'alertComponent').first();
       expect(component.length).toBe(1);
+    });
+
+    it('should not render alertComponent if has a fake subDeviceSetting and onlineDevices and subDevices and subDeviceParams and subDeviceParamValue is on and autoshutDownTime is greater than zero', async () => {
+      const _initialState = { ...initialState };
+      _initialState.subDevice.subDevices = [subDeviceThree];
+      _initialState.subDeviceSetting.subDeviceSettings = [subDeviceSettingFive];
+      _initialState.onlineDevice.onlineDevices = [{ id: socketIdSix.id, bindedTo: socketIdSix.bindedTo }];
+      const subDeviceParam = { ...subDeviceParamFour };
+      subDeviceParam.paramValue = 'on';
+      subDeviceParam.updatedAt = new Date();
+      _initialState.subDeviceParam.subDeviceParams = [subDeviceParam];
+      wrapper = setupWrapper(_initialState);
+      const component = findByDataAttr(wrapper, 'alertComponent').first();
+      expect(component.length).toBe(0);
+    });
+
+    it('should not render alertComponent if has subDeviceSetting and onlineDevices and subDevices and subDeviceParams and subDeviceParamValue is on and autoshutDownTime is zero', async () => {
+      const _initialState = { ...initialState };
+      _initialState.subDevice.subDevices = [subDeviceThree];
+      const invalidAutoShutdownSetting = { ...subDeviceSettingOne };
+      invalidAutoShutdownSetting.paramValue = 0;
+      _initialState.subDeviceSetting.subDeviceSettings = [invalidAutoShutdownSetting];
+      _initialState.onlineDevice.onlineDevices = [{ id: socketIdSix.id, bindedTo: socketIdSix.bindedTo }];
+      const subDeviceParam = { ...subDeviceParamFour };
+      subDeviceParam.paramValue = 'on';
+      subDeviceParam.updatedAt = new Date();
+      _initialState.subDeviceParam.subDeviceParams = [subDeviceParam];
+      wrapper = setupWrapper(_initialState);
+      const component = findByDataAttr(wrapper, 'alertComponent').first();
+      expect(component.length).toBe(0);
+    });
+
+    it('should not render alertComponent if has subDeviceSetting and onlineDevices and subDevices and subDeviceParams and subDeviceParamValue is on and subDeviceParamValue has no updatedAt', async () => {
+      const _initialState = { ...initialState };
+      _initialState.subDevice.subDevices = [subDeviceThree];
+      _initialState.subDeviceSetting.subDeviceSettings = [subDeviceSettingOne];
+      _initialState.onlineDevice.onlineDevices = [{ id: socketIdSix.id, bindedTo: socketIdSix.bindedTo }];
+      const subDeviceParam = { ...subDeviceParamFour };
+      subDeviceParam.paramValue = 'on';
+      _initialState.subDeviceParam.subDeviceParams = [subDeviceParam];
+      wrapper = setupWrapper(_initialState);
+      const component = findByDataAttr(wrapper, 'alertComponent').first();
+      expect(component.length).toBe(0);
+    });
+
+    it('should not render alertComponent if has subDeviceSetting and onlineDevices and subDevices and subDeviceParams and subDeviceParamValue is on and subDeviceParamValue and updatedAt is invalid', async () => {
+      const _initialState = { ...initialState };
+      _initialState.subDevice.subDevices = [subDeviceThree];
+      _initialState.subDeviceSetting.subDeviceSettings = [subDeviceSettingOne];
+      _initialState.onlineDevice.onlineDevices = [{ id: socketIdSix.id, bindedTo: socketIdSix.bindedTo }];
+      const subDeviceParam = { ...subDeviceParamFour };
+      subDeviceParam.paramValue = 'on';
+      subDeviceParam.updatedAt = 'invalid';
+      _initialState.subDeviceParam.subDeviceParams = [subDeviceParam];
+      wrapper = setupWrapper(_initialState);
+      const component = findByDataAttr(wrapper, 'alertComponent').first();
+      expect(component.length).toBe(0);
     });
   });
 });

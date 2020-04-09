@@ -59,9 +59,23 @@ const subDeviceSettingFour = {
   updatedBy: email1,
 };
 
+const subDeviceSettingFive = {
+  id: uniqid(),
+  type: subDeviceSettingType[1],
+  idType: idType[1],
+  bindedTo: subDeviceThree.subDeviceId,
+  parent: deviceTwo.deviceId,
+  paramName: 'someFakeSetting',
+  paramValue: 30,
+  isDisabled: false,
+  createdBy: email1,
+  updatedBy: email1,
+};
+
 module.exports = {
   subDeviceSettingOne,
   subDeviceSettingTwo,
   subDeviceSettingThree,
   subDeviceSettingFour,
+  subDeviceSettingFive,
 };

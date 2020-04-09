@@ -36,32 +36,33 @@ const SmartSwitchAlert = ({ deviceId }) => {
       }
     });
   });
-  const getEndTime = param => {
-    const autoShutDownTime = autoShutDownSettings.filter(setting => param && setting.bindedTo === param.subDeviceId)[0];
-    if (autoShutDownTime && autoShutDownTime.paramValue && autoShutDownTime.paramValue > 0) {
-      return moment(param.updatedAt).add(autoShutDownTime.paramValue, 'minutes');
-    }
+
+  const getEndTime = (updatedAt, minutes) => {
+    return moment(updatedAt).add(minutes, 'minutes');
   };
+
   const thisOnlineDevice = onlineDevices.filter(
     onlineDevice => onlineDevice && onlineDevice.bindedTo && onlineDevice.bindedTo === deviceId
   )[0];
 
-  const renderCountdown = param => {
-    const remainingTime = getEndTime(param);
-    if (remainingTime) {
-      return <CountDownTimer endTime={getEndTime(param)} />;
-    }
+  const renderCountdown = (updatedAt, minutes) => {
+    const remainingTime = getEndTime(updatedAt, minutes);
+    return <CountDownTimer endTime={remainingTime} />;
   };
 
-  const renderAlert = param => {
-    const autoShutDownTime = autoShutDownSettings.filter(setting => param && setting.bindedTo === param.subDeviceId)[0];
-    const subDevice = subDevices.filter(subDevice => param && subDevice.subDeviceId === param.subDeviceId)[0];
-    const { paramValue } = autoShutDownTime;
-    if (autoShutDownTime && paramValue && paramValue > 0) {
+  const renderAlert = ({ updatedAt, subDeviceId }) => {
+    const autoShutDownTime = autoShutDownSettings.filter(setting => subDeviceId && setting.bindedTo === subDeviceId)[0];
+    const subDevice = subDevices.filter(subDevice => subDeviceId && subDevice.subDeviceId === subDeviceId)[0];
+    const { paramValue: minutes } = autoShutDownTime;
+    const isValidDate = d => {
+      return d instanceof Date && !isNaN(d);
+    };
+    const isValidUpdatedAt = updatedAt && isValidDate(new Date(updatedAt));
+    if (autoShutDownTime && !isNaN(minutes) && minutes > 0 && isValidUpdatedAt) {
       return (
         <Typography component="div" color="primary" variant="body2" data-test="alertComponent">
           {subDevice.name} will be turned off automatically &nbsp;
-          <strong>{renderCountdown(param)}</strong>
+          <strong>{renderCountdown(updatedAt, minutes)}</strong>
         </Typography>
       );
     }
