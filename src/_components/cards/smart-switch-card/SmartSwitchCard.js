@@ -50,9 +50,7 @@ const SmartSwitchCard = ({ deviceId, deviceName }) => {
   let thisSubDevices = [];
   const classes = useStyles();
   let isDeviceOnline = false;
-  const subDevices = useSelector(state =>
-    state && state.subDevice && state.subDevice.subDevices ? state.subDevice.subDevices : []
-  );
+  const subDevices = useSelector(state => state && state.subDevice && state.subDevice.subDevices);
   if (deviceId && subDevices && subDevices.length) {
     thisSubDevices = subDevices.filter(subDevice => subDevice.deviceId === deviceId);
   }
