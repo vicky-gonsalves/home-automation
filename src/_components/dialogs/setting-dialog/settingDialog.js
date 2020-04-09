@@ -15,28 +15,58 @@ const SettingDialog = () => {
   const isFetchingSubDeviceSetting = useSelector(state => state.subDeviceSetting && state.subDeviceSetting.isFetching);
   const handleClose = () => dispatch(settingDialogActions.close());
   const handleExit = () => dispatch(settingDialogActions.reset());
-  const showProgress = isFetchingDeviceSetting || isFetchingSubDeviceSetting;
 
-  return (
-    <div>
-      <Dialog
-        fullWidth={true}
-        open={settingDialog.open}
-        onClose={handleClose}
-        onExited={handleExit}
-        aria-labelledby={settingDialog.title}
-      >
-        <DialogTitle id={settingDialog.deviceId + '_setting'}>{settingDialog.title} Settings</DialogTitle>
-        <DialogContent>
-          {settingDialog && settingDialog.dialogType === 'tank' && <MotorSettingForm deviceId={settingDialog.deviceId} />}
-          {settingDialog && settingDialog.dialogType === 'smartSwitch' && (
-            <SmartSwitchSettingForm deviceId={settingDialog.deviceId} />
-          )}
-        </DialogContent>
-        {showProgress && <LinearProgress color="secondary" />}
-      </Dialog>
-    </div>
-  );
+  const renderProgress = () => {
+    if (isFetchingDeviceSetting || isFetchingSubDeviceSetting) {
+      return <LinearProgress color="secondary" data-test="linearProgressComponent" />;
+    }
+  };
+
+  const renderDialogTitle = () => {
+    if (settingDialog && settingDialog.deviceId && settingDialog.title) {
+      return (
+        <DialogTitle id={settingDialog.deviceId + '_setting'} data-test="dialogTitleComponent">
+          {settingDialog.title} Settings
+        </DialogTitle>
+      );
+    }
+  };
+
+  const motorSettingForm = () => {
+    if (settingDialog && settingDialog.dialogType === 'tank' && settingDialog.deviceId) {
+      return <MotorSettingForm deviceId={settingDialog.deviceId} data-test="motorSettingFormComponent" />;
+    }
+  };
+
+  const smartSwitchSettingForm = () => {
+    if (settingDialog && settingDialog.dialogType === 'smartSwitch' && settingDialog.deviceId) {
+      return <SmartSwitchSettingForm deviceId={settingDialog.deviceId} data-test="smartSwitchSettingFormComponent" />;
+    }
+  };
+
+  const renderDialog = () => {
+    if (settingDialog && settingDialog.open && settingDialog.title) {
+      return (
+        <Dialog
+          fullWidth={true}
+          open={settingDialog.open}
+          onClose={handleClose}
+          onExited={handleExit}
+          aria-labelledby={settingDialog.title}
+          data-test="settingDialogComponent"
+        >
+          {renderDialogTitle()}
+          <DialogContent>
+            {motorSettingForm()}
+            {smartSwitchSettingForm()}
+          </DialogContent>
+          {renderProgress()}
+        </Dialog>
+      );
+    }
+  };
+
+  return <div data-test="settingDialogContainer">{renderDialog()}</div>;
 };
 
 SettingDialog.propTypes = {};
