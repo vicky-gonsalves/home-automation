@@ -1,13 +1,11 @@
 import { Card, CardContent, CardHeader } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
-import IconButton from '@material-ui/core/IconButton';
 import { makeStyles } from '@material-ui/core/styles';
-import SettingsIcon from '@material-ui/icons/Settings';
 import Alert from '@material-ui/lab/Alert';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { settingDialogActions } from '../../../_actions/settingDialog.actions';
+import { useSelector } from 'react-redux';
+import SettingIconButton from '../../buttons/SettingIconButton/SettingIconButton';
 import DeviceOfflineAlert from '../../device-offline-alert/deviceOfflineAlert';
 import OnlineDeviceStatus from '../../online-device-status/onlineDeviceStatus';
 import SubDeviceComponent from '../../sub-device/SubDeviceComponent';
@@ -51,7 +49,6 @@ const useStyles = makeStyles(theme => ({
 const SmartSwitchCard = ({ deviceId, deviceName }) => {
   let thisSubDevices = [];
   const classes = useStyles();
-  const dispatch = useDispatch();
   let isDeviceOnline = false;
   const subDevices = useSelector(state =>
     state && state.subDevice && state.subDevice.subDevices ? state.subDevice.subDevices : []
@@ -66,8 +63,6 @@ const SmartSwitchCard = ({ deviceId, deviceName }) => {
     isDeviceOnline =
       socketIds.onlineDevices.filter(onlineDevice => onlineDevice.bindedTo && onlineDevice.bindedTo === deviceId).length > 0;
   }
-
-  const handleSettingDialog = () => dispatch(settingDialogActions.open(deviceName, deviceId, 'smartSwitch'));
 
   const renderDeviceOfflineAlert = () => {
     if (!isDeviceOnline) {
@@ -115,11 +110,7 @@ const SmartSwitchCard = ({ deviceId, deviceName }) => {
       <CardHeader
         className={classes.cardHeader}
         avatar={<OnlineDeviceStatus isDeviceOnline={isDeviceOnline} />}
-        action={
-          <IconButton aria-label="settings" onClick={handleSettingDialog}>
-            <SettingsIcon />
-          </IconButton>
-        }
+        action={<SettingIconButton deviceName={deviceName} deviceId={deviceId} dialogType={'smartSwitch'} />}
         title={deviceName}
         titleTypographyProps={{ align: 'center', variant: 'h6', color: 'primary', gutterBottom: false }}
       />
