@@ -1,15 +1,13 @@
 import { Card, CardContent, CardHeader } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
-import IconButton from '@material-ui/core/IconButton';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import SettingsIcon from '@material-ui/icons/Settings';
 import Alert from '@material-ui/lab/Alert';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React, { useEffect, useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { settingDialogActions } from '../../../_actions/settingDialog.actions';
+import { useSelector } from 'react-redux';
+import SettingIconButton from '../../buttons/SettingIconButton/SettingIconButton';
 import DeviceOfflineAlert from '../../device-offline-alert/deviceOfflineAlert';
 import OnlineDeviceStatus from '../../online-device-status/onlineDeviceStatus';
 import PreferredDevice from '../../preferred-device/preferredDevice';
@@ -53,7 +51,6 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const TankCard = ({ deviceId, deviceName }) => {
-  const dispatch = useDispatch();
   const classes = useStyles();
   const [updatedAt, setUpdatedAt] = useState();
   const ref = useRef(null);
@@ -70,15 +67,9 @@ const TankCard = ({ deviceId, deviceName }) => {
     isDeviceOnline = socketIds.onlineDevices.filter(({ bindedTo }) => bindedTo && bindedTo === deviceId).length > 0;
   }
 
-  const subDevices = useSelector(state =>
-    state && state.subDevice && state.subDevice.subDevices ? state.subDevice.subDevices : []
-  );
-
-  const deviceParams = useSelector(state =>
-    state && state.deviceParam && state.deviceParam.deviceParams ? state.deviceParam.deviceParams : []
-  );
-
-  const handleSettingDialog = () => dispatch(settingDialogActions.open(deviceName, deviceId, 'tank'));
+  const subDevices = useSelector(state => state && state.subDevice && state.subDevice.subDevices);
+  const deviceSettings = useSelector(state => state && state.deviceSetting && state.deviceSetting.deviceSettings);
+  const deviceParams = useSelector(state => state && state.deviceParam && state.deviceParam.deviceParams);
 
   if (deviceParams && deviceParams.length) {
     const wLevel = deviceParams.filter(({ paramName }) => paramName === 'waterLevel');
@@ -92,10 +83,6 @@ const TankCard = ({ deviceId, deviceName }) => {
   if (deviceId && subDevices.length) {
     thisSubDevices = subDevices.filter(subDevice => subDevice.deviceId === deviceId && subDevice.type === 'motorSwitch');
   }
-
-  const deviceSettings = useSelector(state =>
-    state && state.deviceSetting && state.deviceSetting.deviceSettings ? state.deviceSetting.deviceSettings : []
-  );
 
   if (deviceId && subDevices.length && deviceSettings.length) {
     preferredDevice = deviceSettings.filter(
@@ -180,11 +167,7 @@ const TankCard = ({ deviceId, deviceName }) => {
       <CardHeader
         className={classes.cardHeader}
         avatar={<OnlineDeviceStatus isDeviceOnline={isDeviceOnline} />}
-        action={
-          <IconButton aria-label="settings" onClick={handleSettingDialog}>
-            <SettingsIcon />
-          </IconButton>
-        }
+        action={<SettingIconButton deviceName={deviceName} deviceId={deviceId} dialogType={'tank'} />}
         title={deviceName}
         titleTypographyProps={{ align: 'center', variant: 'h6', color: 'primary', gutterBottom: false }}
       />

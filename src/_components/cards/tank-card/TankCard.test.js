@@ -6,7 +6,7 @@ import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { findByDataAttr, initialState } from '../../../_utils';
 import { deviceOne } from '../../../_utils/fixtures/device.fixture';
-import { deviceParamOne } from '../../../_utils/fixtures/deviceParam.fixture';
+import { deviceParamOne, deviceParamTwo } from '../../../_utils/fixtures/deviceParam.fixture';
 import { deviceSettingOne } from '../../../_utils/fixtures/deviceSetting.fixture';
 import { socketIdOne } from '../../../_utils/fixtures/socketId.fixture';
 import { subDeviceOne, subDeviceThree, subDeviceTwo } from '../../../_utils/fixtures/subDevice.fixture';
@@ -231,6 +231,15 @@ describe('TankCard', () => {
       const _initialState = { ...initialState };
       _initialState.subDevice.subDevices = [subDeviceOne, subDeviceTwo];
       _initialState.deviceParam.deviceParams = [deviceParamOne];
+      wrapper = setupWrapper(_initialState);
+      const component = findByDataAttr(wrapper, 'tankContainer').first();
+      expect(component.length).toBe(1);
+    });
+
+    it('should render tankContainer if has subDevices and water level deviceParams is missing', async () => {
+      const _initialState = { ...initialState };
+      _initialState.subDevice.subDevices = [subDeviceOne, subDeviceTwo];
+      _initialState.deviceParam.deviceParams = [deviceParamTwo];
       wrapper = setupWrapper(_initialState);
       const component = findByDataAttr(wrapper, 'tankContainer').first();
       expect(component.length).toBe(1);
