@@ -8,12 +8,19 @@ import thunk from 'redux-thunk';
 import { checkProps, findByDataAttr, initialState, submitFormikForm, updateFormikField } from '../../../_utils';
 import DefaultSignInForm, { SignInForm } from './SignInForm';
 
-const mockStore = configureStore([thunk]);
-const store = mockStore(initialState);
-
+let store;
 const props = {
   isFetching: false,
   signIn: jest.fn(),
+};
+const mockStore = configureStore([thunk]);
+const setupWrapper = _initialState => {
+  store = mockStore(_initialState);
+  return mount(
+    <Provider store={store}>
+      <DefaultSignInForm {...props} />
+    </Provider>
+  );
 };
 
 const email = faker.internet.email();
@@ -61,92 +68,72 @@ describe('SignInForm Component', () => {
   });
 
   describe('Component Testing', () => {
-    let component;
-
+    let wrapper;
     beforeEach(() => {
-      component = mount(
-        <Provider store={store}>
-          <DefaultSignInForm {...props} />
-        </Provider>
-      );
+      const _initialState = { ...initialState };
+      wrapper = setupWrapper(_initialState);
     });
 
     afterEach(() => {
-      component.unmount();
+      wrapper.unmount();
       store.clearActions();
     });
 
     it('should error if filled invaild value in email input', async () => {
-      const emailInput = component.find(`input[name="email"]`).first();
+      const emailInput = wrapper.find(`input[name="email"]`).first();
       await updateFormikField(emailInput, 'email', 'invalidEmail');
       emailInput.update();
-      const formikEmailInput = findByDataAttr(component, 'emailInput').first();
+      const formikEmailInput = findByDataAttr(wrapper, 'emailInput').first();
       expect(formikEmailInput.props().error).toBe(true);
       expect(formikEmailInput.props().helperText).toEqual('email must be a valid email');
     });
 
     it('should error if empty value in email input', async () => {
-      const emailInput = component.find(`input[name="email"]`).first();
+      const emailInput = wrapper.find(`input[name="email"]`).first();
       await updateFormikField(emailInput, 'email', '');
       emailInput.update();
-      const formikEmailInput = findByDataAttr(component, 'emailInput').first();
+      const formikEmailInput = findByDataAttr(wrapper, 'emailInput').first();
       expect(formikEmailInput.props().error).toBe(true);
       expect(formikEmailInput.props().helperText).toEqual('Please enter email address');
     });
 
     it('should not have error if valid email value', async () => {
-      const emailInput = component.find(`input[name="email"]`).first();
+      const emailInput = wrapper.find(`input[name="email"]`).first();
       await updateFormikField(emailInput, 'email', email);
       emailInput.update();
-      const formikEmailInput = findByDataAttr(component, 'emailInput').first();
+      const formikEmailInput = findByDataAttr(wrapper, 'emailInput').first();
       expect(formikEmailInput.props().error).toBeUndefined();
     });
 
     it('should error if password input is empty', async () => {
-      const passInput = component.find(`input[name="password"]`).first();
+      const passInput = wrapper.find(`input[name="password"]`).first();
       await updateFormikField(passInput, 'password', '');
       passInput.update();
-      const formikPassInput = findByDataAttr(component, 'passwordInput').first();
+      const formikPassInput = findByDataAttr(wrapper, 'passwordInput').first();
       expect(formikPassInput.props().error).toBe(true);
       expect(formikPassInput.props().helperText).toEqual('Please enter password');
     });
-  });
 
-  describe('Form Submit tests', () => {
-    let component;
-    const onLogin = jest.fn();
-    beforeEach(() => {
-      component = mount(
-        <Provider store={store}>
-          <SignInForm {...props} onSubmit={onLogin} />
-        </Provider>
-      );
-    });
-
-    afterEach(() => {
-      component.unmount();
-      onLogin.mockClear();
-    });
     it('should not submit form if email and password are invalid', async () => {
-      const form = component.find(`form`).first();
-      const emailInput = component.find(`input[name="email"]`).first();
-      const passInput = component.find(`input[name="password"]`).first();
+      const form = wrapper.find(`form`).first();
+      const emailInput = wrapper.find(`input[name="email"]`).first();
+      const passInput = wrapper.find(`input[name="password"]`).first();
       await updateFormikField(emailInput, 'email', '');
       await updateFormikField(passInput, 'password', '');
       emailInput.update();
       passInput.update();
       await submitFormikForm(form);
-      const formikEmailInput = findByDataAttr(component, 'emailInput').first();
-      const formikPassInput = findByDataAttr(component, 'passwordInput').first();
-      expect(onLogin).toHaveBeenCalledTimes(1);
+      const formikEmailInput = findByDataAttr(wrapper, 'emailInput').first();
+      const formikPassInput = findByDataAttr(wrapper, 'passwordInput').first();
+      expect(store.getActions().length).toBe(0);
       expect(formikEmailInput.props().error).toBe(true);
       expect(formikPassInput.props().error).toBe(true);
     });
 
     it('should submit form if email and password are valid', async () => {
-      const form = component.find(`form`).first();
+      const form = wrapper.find(`form`).first();
       await submitFormikForm(form, { elements: { email, password } });
-      expect(onLogin).toHaveBeenCalledTimes(1);
+      expect(store.getActions()).toEqual([{ type: 'SIGN_IN' }, { type: 'SET_LOGIN_ERROR', payload: { error: undefined } }]);
     });
   });
 });

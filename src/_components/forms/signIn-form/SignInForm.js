@@ -22,10 +22,10 @@ const useStyles = makeStyles(theme => ({
 
 const SimpleSignInForm = props => {
   const classes = useStyles();
-  const { touched, errors, handleChange, handleBlur, isFetching, handleSubmit, onSubmit } = props;
+  const { touched, errors, handleChange, handleBlur, isFetching, handleSubmit } = props;
 
   return (
-    <form className={classes.form} onSubmit={typeof onSubmit === 'function' ? onSubmit : handleSubmit} noValidate>
+    <form className={classes.form} onSubmit={handleSubmit} noValidate>
       <TextField
         variant="outlined"
         margin="normal"
