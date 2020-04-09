@@ -14,7 +14,7 @@ import {
 } from '../../../_utils/fixtures/deviceSetting.fixture';
 import { subDeviceOne, subDeviceTwo } from '../../../_utils/fixtures/subDevice.fixture';
 import { SimpleMotorSettingForm } from './MotorSettingForm';
-import MotorSettingForm from './motorSettingForm';
+import MotorSettingForm from './MotorSettingForm';
 
 let wrapper;
 let store;
