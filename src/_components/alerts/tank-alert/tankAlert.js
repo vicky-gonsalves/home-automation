@@ -25,11 +25,8 @@ const TankAlert = props => {
     );
   })[0];
 
-  const getEndTime = startTime => {
-    if (autoShutDownTime && autoShutDownTime.paramValue) {
-      return moment(startTime).add(autoShutDownTime.paramValue, 'minutes');
-    }
-  };
+  const getEndTime = startTime => moment(startTime).add(autoShutDownTime.paramValue, 'minutes');
+
   const thisOnlineDevice = onlineDevices.filter(
     onlineDevice => onlineDevice && onlineDevice.bindedTo && onlineDevice.bindedTo === props.deviceId
   )[0];
@@ -39,24 +36,29 @@ const TankAlert = props => {
     return subDevice ? subDevice.name : null;
   };
 
-  return (
-    <div data-test="alertContainer">
-      {autoShutDownTime &&
-        autoShutDownTime.paramValue &&
-        thisDeviceParams.map(param => (
-          <div key={param.id}>
-            {thisOnlineDevice && (
-              <Typography component="div" color="primary" variant="body2" data-test="alertComponent">
-                {getSubDeviceName(param)} will be turned off automatically &nbsp;
-                <strong>
-                  <CountDownTimer endTime={getEndTime(param.updatedAt)} />
-                </strong>
-              </Typography>
-            )}
-          </div>
-        ))}
-    </div>
-  );
+  const renderCountdown = param => {
+    const subDeviceName = getSubDeviceName(param);
+    if (thisOnlineDevice && subDeviceName) {
+      return (
+        <Typography component="div" color="primary" variant="body2" data-test="alertComponent">
+          {subDeviceName} will be turned off automatically &nbsp;
+          <strong>
+            <CountDownTimer endTime={getEndTime(param.updatedAt)} />
+          </strong>
+        </Typography>
+      );
+    }
+  };
+
+  const renderAlert = () => {
+    return (
+      autoShutDownTime &&
+      autoShutDownTime.paramValue &&
+      thisDeviceParams.map(param => <div key={param.id}>{renderCountdown(param)}</div>)
+    );
+  };
+
+  return <div data-test="alertContainer">{renderAlert()}</div>;
 };
 
 TankAlert.propTypes = {

@@ -138,5 +138,46 @@ describe('TankAlert', () => {
       const component = findByDataAttr(wrapper, 'alertComponent').first();
       expect(component.length).toBe(1);
     });
+
+    it('should not render alertComponent if has deviceSettings and onlineDevices and subDeviceParams and subDeviceParamValue is on and autoshutDownTime is greater than zero and has no subDevices', async () => {
+      const _initialState = { ...initialState };
+      _initialState.subDevice.subDevices = [];
+      _initialState.deviceSetting.deviceSettings = [deviceSettingTwo];
+      _initialState.onlineDevice.onlineDevices = [{ id: socketIdOne.id, bindedTo: socketIdOne.bindedTo }];
+      const subDeviceParam = { ...subDeviceParamThree };
+      subDeviceParam.paramValue = 'on';
+      subDeviceParam.updatedAt = new Date();
+      _initialState.subDeviceParam.subDeviceParams = [subDeviceParam];
+      wrapper = setupWrapper(_initialState);
+      const component = findByDataAttr(wrapper, 'alertComponent').first();
+      expect(component.length).toBe(0);
+    });
+
+    it('should not render alertComponent if has deviceSettings  and subDevices and subDeviceParams and subDeviceParamValue is on and autoshutDownTime is greater than zero and has no onlineDevices', async () => {
+      const _initialState = { ...initialState };
+      _initialState.subDevice.subDevices = [subDeviceOne];
+      _initialState.deviceSetting.deviceSettings = [deviceSettingTwo];
+      _initialState.onlineDevice.onlineDevices = [];
+      const subDeviceParam = { ...subDeviceParamThree };
+      subDeviceParam.paramValue = 'on';
+      subDeviceParam.updatedAt = new Date();
+      _initialState.subDeviceParam.subDeviceParams = [subDeviceParam];
+      wrapper = setupWrapper(_initialState);
+      const component = findByDataAttr(wrapper, 'alertComponent').first();
+      expect(component.length).toBe(0);
+    });
+
+    it('should not render alertComponent if has deviceSettings and onlineDevices and subDevices and subDeviceParams and subDeviceParamValue is on and paramValue is missing', async () => {
+      const _initialState = { ...initialState };
+      _initialState.subDevice.subDevices = [subDeviceOne];
+      _initialState.deviceSetting.deviceSettings = [deviceSettingTwo];
+      _initialState.onlineDevice.onlineDevices = [{ id: socketIdOne.id, bindedTo: socketIdOne.bindedTo }];
+      const subDeviceParam = { ...subDeviceParamThree };
+      delete subDeviceParam.paramValue;
+      _initialState.subDeviceParam.subDeviceParams = [subDeviceParam];
+      wrapper = setupWrapper(_initialState);
+      const component = findByDataAttr(wrapper, 'alertComponent').first();
+      expect(component.length).toBe(0);
+    });
   });
 });
