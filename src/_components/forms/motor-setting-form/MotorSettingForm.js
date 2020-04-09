@@ -76,61 +76,68 @@ const getSettingValue = (deviceSettings, deviceId, paramName) => {
   return '';
 };
 
-const SimpleMotorSettingForm = props => {
+export const SimpleMotorSettingForm = props => {
   let thisSubDevices;
   const classes = useStyles();
-  const {
-    values,
-    touched,
-    errors,
-    handleChange,
-    handleBlur,
-    isFetching,
-    handleSubmit,
-    onSubmit,
-    subDevices,
-    close,
-    deviceId,
-  } = props;
+  const { values, touched, errors, handleChange, handleBlur, isFetching, handleSubmit, subDevices, close, deviceId } = props;
   if (deviceId && subDevices && subDevices.length) {
     thisSubDevices = subDevices.filter(subDevice => subDevice.deviceId === deviceId && subDevice.type === 'motorSwitch');
   }
   const handleClose = () => {
     close('tank');
   };
-  return (
-    <React.Fragment>
-      {values.preferredSubDevice === '' && values.autoShutDownTime === '' && values.waterLevelToStart === '' && (
-        <Alert className={classes.extraMargin} severity="info">
+
+  const renderMotorSettingAlert = () => {
+    if (values.preferredSubDevice === '' && values.autoShutDownTime === '' && values.waterLevelToStart === '') {
+      return (
+        <Alert className={classes.extraMargin} severity="info" data-test="motorSettingAlert">
           It seems there are no settings available for this device.
         </Alert>
-      )}
-      {values.preferredSubDevice !== '' && values.autoShutDownTime !== '' && values.waterLevelToStart !== '' && (
-        <form className={classes.form} onSubmit={typeof onSubmit === 'function' ? onSubmit : handleSubmit} noValidate>
-          {thisSubDevices && thisSubDevices.length > 0 && (
-            <FormControl fullWidth className={classes.formControl}>
-              <InputLabel shrink id="preferredSubDeviceLabel">
-                Preferred device for automatic mode
-              </InputLabel>
-              <Select
-                variant="outlined"
-                id="preferredSubDevice"
-                name="preferredSubDevice"
-                value={values.preferredSubDevice}
-                onChange={handleChange}
-                className={classes.selectEmpty}
-                disabled={isFetching}
-              >
-                {thisSubDevices &&
-                  thisSubDevices.length &&
-                  thisSubDevices.map(subDevice => (
-                    <MenuItem key={subDevice.subDeviceId} value={subDevice.subDeviceId}>
-                      {subDevice.name}
-                    </MenuItem>
-                  ))}
-              </Select>
-            </FormControl>
-          )}
+      );
+    }
+  };
+
+  const renderMenuItems = () => {
+    return (
+      thisSubDevices &&
+      thisSubDevices.length &&
+      thisSubDevices.map(subDevice => (
+        <MenuItem key={subDevice.subDeviceId} value={subDevice.subDeviceId} data-test="motorPreferredSubDeviceSelectOption">
+          {subDevice.name}
+        </MenuItem>
+      ))
+    );
+  };
+
+  const renderPreferredSubDevice = () => {
+    if (thisSubDevices && thisSubDevices.length > 0) {
+      return (
+        <FormControl fullWidth className={classes.formControl}>
+          <InputLabel shrink id="preferredSubDeviceLabel">
+            Preferred device for automatic mode
+          </InputLabel>
+          <Select
+            variant="outlined"
+            id="preferredSubDevice"
+            name="preferredSubDevice"
+            value={values.preferredSubDevice}
+            onChange={handleChange}
+            className={classes.selectEmpty}
+            disabled={isFetching}
+            data-test="motorPreferredSubDeviceSelect"
+          >
+            {renderMenuItems()}
+          </Select>
+        </FormControl>
+      );
+    }
+  };
+
+  const renderForm = () => {
+    if (values.preferredSubDevice !== '' && values.autoShutDownTime !== '' && values.waterLevelToStart) {
+      return (
+        <form className={classes.form} onSubmit={handleSubmit} noValidate data-test="motorSettingFormComponent">
+          {renderPreferredSubDevice()}
           <TextField
             variant="outlined"
             margin="normal"
@@ -145,7 +152,7 @@ const SimpleMotorSettingForm = props => {
             disabled={isFetching}
             error={errors && errors.autoShutDownTime && touched.autoShutDownTime}
             helperText={errors && errors.autoShutDownTime && touched && touched.autoShutDownTime && errors.autoShutDownTime}
-            data-test="autoShutDownTimeInput"
+            data-test="motorAutoShutDownTimeInput"
             value={values.autoShutDownTime}
           />
           <TextField
@@ -162,7 +169,7 @@ const SimpleMotorSettingForm = props => {
             disabled={isFetching}
             error={errors && errors.waterLevelToStart && touched.waterLevelToStart}
             helperText={errors && touched && touched.waterLevelToStart && errors.waterLevelToStart}
-            data-test="waterLevelToStartInput"
+            data-test="motorWaterLevelToStartInput"
             value={values.waterLevelToStart}
           />
           <div className={classes.dialogAction}>
@@ -172,7 +179,7 @@ const SimpleMotorSettingForm = props => {
               color="primary"
               className={classes.submit}
               disabled={isFetching}
-              data-test="submitButton"
+              data-test="motorSettingSubmitButton"
             >
               Save Settings
             </Button>
@@ -180,14 +187,21 @@ const SimpleMotorSettingForm = props => {
               type="button"
               className={classes.submit}
               disabled={isFetching}
-              data-test="cancelButton"
               onClick={handleClose}
+              data-test="motorSettingCancelButton"
             >
               Cancel
             </Button>
           </div>
         </form>
-      )}
+      );
+    }
+  };
+
+  return (
+    <React.Fragment>
+      {renderMotorSettingAlert()}
+      {renderForm()}
     </React.Fragment>
   );
 };
@@ -207,7 +221,7 @@ export const MotorSettingForm = withFormik({
       .required('Please enter auto shutdown time. `0` indicates no auto shutdown.'),
     waterLevelToStart: yup
       .number()
-      .min(0, 'water level value cannot be negative')
+      .min(0, 'Water level value cannot be negative')
       .typeError('Please enter water level value in number format')
       .required('Please enter water level value in percentage to start the motor automatically'),
   }),

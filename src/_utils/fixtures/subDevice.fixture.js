@@ -72,6 +72,17 @@ const subDeviceSix = {
   updatedBy: email1,
 };
 
+const subDeviceSeven = {
+  id: uniqid(),
+  deviceId: deviceOne.deviceId,
+  subDeviceId: uniqid(),
+  name: 'FSomeMore',
+  type: type1,
+  isDisabled: false,
+  createdBy: email1,
+  updatedBy: email1,
+};
+
 module.exports = {
   subDeviceOne,
   subDeviceTwo,
@@ -79,4 +90,5 @@ module.exports = {
   subDeviceFour,
   subDeviceFive,
   subDeviceSix,
+  subDeviceSeven,
 };

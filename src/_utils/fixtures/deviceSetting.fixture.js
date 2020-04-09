@@ -79,6 +79,18 @@ const deviceSettingSix = {
   updatedBy: email1,
 };
 
+const deviceSettingSeven = {
+  id: uniqid(),
+  type: deviceSettingType[0],
+  idType: idType[0],
+  bindedTo: deviceOne.deviceId,
+  paramName: 'someFakeSetting',
+  paramValue: 0,
+  isDisabled: false,
+  createdBy: email1,
+  updatedBy: email1,
+};
+
 module.exports = {
   deviceSettingOne,
   deviceSettingTwo,
@@ -86,4 +98,5 @@ module.exports = {
   deviceSettingFour,
   deviceSettingFive,
   deviceSettingSix,
+  deviceSettingSeven,
 };
