@@ -118,6 +118,20 @@ describe('Sub Device Param Reducer', () => {
     expect(newState).toEqual(currentSubDeviceParam);
   });
 
+  it('should return old state if SUB_DEVICE_PARAM_UPDATE_STATUS', () => {
+    const _initialState = {
+      subDeviceParams: [subDeviceParamOne],
+    };
+    const currentSubDeviceParam = {
+      subDeviceParams: [subDeviceParamOne],
+    };
+    const newState = subDeviceParam(_initialState, {
+      type: subDeviceParamConstants.SUB_DEVICE_PARAM_UPDATE_STATUS,
+      payload: [],
+    });
+    expect(newState).toEqual(currentSubDeviceParam);
+  });
+
   it('should return new state if SUB_DEVICE_MULTI_STATUS_UPDATED', () => {
     const _initialState = {
       subDeviceParams: [subDeviceParamOne, subDeviceParamTwo],
