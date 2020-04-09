@@ -63,7 +63,7 @@ describe('Stats', () => {
     });
 
     it('should not render StatsListItemDeviceIconComponent if has logs but not triggered by device', () => {
-      const _initialState = initialState;
+      const _initialState = { ...initialState };
       _initialState.log.logs = [logOne, logTwo, logThree, logFour];
       wrapper = setupWrapper(_initialState);
       const component = findByDataAttr(wrapper, 'StatsListItemDeviceIconComponent').first();
@@ -71,7 +71,7 @@ describe('Stats', () => {
     });
 
     it('should not render StatsListItemManualIconComponent if has logs but not triggered by user', () => {
-      const _initialState = initialState;
+      const _initialState = { ...initialState };
       _initialState.log.logs = [logFive, logSix];
       wrapper = setupWrapper(_initialState);
       const component = findByDataAttr(wrapper, 'StatsListItemManualIconComponent').first();
@@ -79,7 +79,7 @@ describe('Stats', () => {
     });
 
     it('should render StatsListItemDeviceIconComponent if has logs and triggered by device', () => {
-      const _initialState = initialState;
+      const _initialState = { ...initialState };
       _initialState.log.logs = [logFive, logSix];
       wrapper = setupWrapper(_initialState);
       const component = findByDataAttr(wrapper, 'StatsListItemDeviceIconComponent').first();
@@ -87,7 +87,7 @@ describe('Stats', () => {
     });
 
     it('should not render StatsListItemManualIconComponent if has logs but not triggered by user', () => {
-      const _initialState = initialState;
+      const _initialState = { ...initialState };
       _initialState.log.logs = [logOne, logTwo, logThree, logFour];
       wrapper = setupWrapper(_initialState);
       const component = findByDataAttr(wrapper, 'StatsListItemManualIconComponent').first();

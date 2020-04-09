@@ -73,7 +73,7 @@ describe('SmartSwitchAlert', () => {
     });
 
     it('should not render alertComponent if has subDeviceSettings but has no onlineDevices', async () => {
-      const _initialState = initialState;
+      const _initialState = { ...initialState };
       _initialState.subDeviceSetting.subDeviceSettings = [subDeviceSettingOne];
       wrapper = setupWrapper(_initialState);
       const component = findByDataAttr(wrapper, 'alertComponent').first();
@@ -81,7 +81,7 @@ describe('SmartSwitchAlert', () => {
     });
 
     it('should not render alertComponent if has subDeviceSettings and onlineDevices but has no subDevice', async () => {
-      const _initialState = initialState;
+      const _initialState = { ...initialState };
       _initialState.subDeviceSetting.subDeviceSettings = [subDeviceSettingOne];
       _initialState.onlineDevice.onlineDevices = [{ id: socketIdSix.id, bindedTo: socketIdSix.bindedTo }];
       wrapper = setupWrapper(_initialState);
@@ -90,7 +90,7 @@ describe('SmartSwitchAlert', () => {
     });
 
     it('should not render alertComponent if has subDeviceSettings and onlineDevices and subDevices but has no subDeviceParams', async () => {
-      const _initialState = initialState;
+      const _initialState = { ...initialState };
       _initialState.subDevice.subDevices = [subDeviceThree];
       _initialState.subDeviceSetting.subDeviceSettings = [subDeviceSettingOne];
       _initialState.onlineDevice.onlineDevices = [{ id: socketIdSix.id, bindedTo: socketIdSix.bindedTo }];
@@ -100,7 +100,7 @@ describe('SmartSwitchAlert', () => {
     });
 
     it('should not render alertComponent if has subDeviceSettings and onlineDevices and subDevices and subDeviceParams but subDeviceParamValue is off', async () => {
-      const _initialState = initialState;
+      const _initialState = { ...initialState };
       _initialState.subDevice.subDevices = [subDeviceThree];
       _initialState.subDeviceSetting.subDeviceSettings = [subDeviceSettingOne];
       _initialState.onlineDevice.onlineDevices = [{ id: socketIdSix.id, bindedTo: socketIdSix.bindedTo }];
@@ -111,7 +111,7 @@ describe('SmartSwitchAlert', () => {
     });
 
     it('should not render alertComponent if has subDeviceSettings and onlineDevices and subDevices and subDeviceParams and subDeviceParamValue is on but autoShutDownTime is zero', async () => {
-      const _initialState = initialState;
+      const _initialState = { ...initialState };
       _initialState.subDevice.subDevices = [subDeviceThree];
       const setting = { ...subDeviceSettingOne };
       setting.paramValue = 0;
@@ -127,7 +127,7 @@ describe('SmartSwitchAlert', () => {
     });
 
     it('should render alertComponent if has subDeviceSettings and onlineDevices and subDevices and subDeviceParams and subDeviceParamValue is on and autoshutDownTime is greater than zero', async () => {
-      const _initialState = initialState;
+      const _initialState = { ...initialState };
       _initialState.subDevice.subDevices = [subDeviceThree];
       _initialState.subDeviceSetting.subDeviceSettings = [subDeviceSettingOne];
       _initialState.onlineDevice.onlineDevices = [{ id: socketIdSix.id, bindedTo: socketIdSix.bindedTo }];

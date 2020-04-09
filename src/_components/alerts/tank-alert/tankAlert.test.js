@@ -72,7 +72,7 @@ describe('TankAlert', () => {
     });
 
     it('should not render alertComponent if has deviceSettings but has no onlineDevices', async () => {
-      const _initialState = initialState;
+      const _initialState = { ...initialState };
       _initialState.deviceSetting.deviceSettings = [deviceSettingTwo];
       wrapper = setupWrapper(_initialState);
       const component = findByDataAttr(wrapper, 'alertComponent').first();
@@ -80,7 +80,7 @@ describe('TankAlert', () => {
     });
 
     it('should not render alertComponent if has deviceSettings and onlineDevices but has no subDevice', async () => {
-      const _initialState = initialState;
+      const _initialState = { ...initialState };
       _initialState.deviceSetting.deviceSettings = [deviceSettingTwo];
       _initialState.onlineDevice.onlineDevices = [{ id: socketIdOne.id, bindedTo: socketIdOne.bindedTo }];
       wrapper = setupWrapper(_initialState);
@@ -89,7 +89,7 @@ describe('TankAlert', () => {
     });
 
     it('should not render alertComponent if has deviceSettings and onlineDevices and subDevices but has no subDeviceParams', async () => {
-      const _initialState = initialState;
+      const _initialState = { ...initialState };
       _initialState.subDevice.subDevices = [subDeviceOne];
       _initialState.deviceSetting.deviceSettings = [deviceSettingTwo];
       _initialState.onlineDevice.onlineDevices = [{ id: socketIdOne.id, bindedTo: socketIdOne.bindedTo }];
@@ -99,7 +99,7 @@ describe('TankAlert', () => {
     });
 
     it('should not render alertComponent if has deviceSettings and onlineDevices and subDevices and subDeviceParams but subDeviceParamValue is off', async () => {
-      const _initialState = initialState;
+      const _initialState = { ...initialState };
       _initialState.subDevice.subDevices = [subDeviceOne];
       _initialState.deviceSetting.deviceSettings = [deviceSettingTwo];
       _initialState.onlineDevice.onlineDevices = [{ id: socketIdOne.id, bindedTo: socketIdOne.bindedTo }];
@@ -110,7 +110,7 @@ describe('TankAlert', () => {
     });
 
     it('should not render alertComponent if has deviceSettings and onlineDevices and subDevices and subDeviceParams and subDeviceParamValue is on but autoShutDownTime is zero', async () => {
-      const _initialState = initialState;
+      const _initialState = { ...initialState };
       _initialState.subDevice.subDevices = [subDeviceOne];
       const setting = { ...deviceSettingTwo };
       setting.paramValue = 0;
@@ -126,7 +126,7 @@ describe('TankAlert', () => {
     });
 
     it('should render alertComponent if has deviceSettings and onlineDevices and subDevices and subDeviceParams and subDeviceParamValue is on and autoshutDownTime is greater than zero', async () => {
-      const _initialState = initialState;
+      const _initialState = { ...initialState };
       _initialState.subDevice.subDevices = [subDeviceOne];
       _initialState.deviceSetting.deviceSettings = [deviceSettingTwo];
       _initialState.onlineDevice.onlineDevices = [{ id: socketIdOne.id, bindedTo: socketIdOne.bindedTo }];

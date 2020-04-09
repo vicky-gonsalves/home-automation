@@ -51,7 +51,7 @@ describe('CountDownTimer', () => {
 
     it('should update countdown in minutes and seconds', () => {
       jest.useFakeTimers();
-      const _initialState = initialState;
+      const _initialState = { ...initialState };
       wrapper = setupWrapper(_initialState);
       const component = findByDataAttr(wrapper, 'countDownTimerComponent').first();
       act(() => {
@@ -66,7 +66,7 @@ describe('CountDownTimer', () => {
         endTime: moment().add(1, 'seconds'),
       };
       jest.useFakeTimers();
-      const _initialState = initialState;
+      const _initialState = { ...initialState };
       wrapper = setupWrapper(_initialState, _props);
       const component = findByDataAttr(wrapper, 'countDownTimerComponent').first();
       act(() => {
@@ -81,7 +81,7 @@ describe('CountDownTimer', () => {
         endTime: moment().add(2, 'seconds'),
       };
       jest.useFakeTimers();
-      const _initialState = initialState;
+      const _initialState = { ...initialState };
       wrapper = setupWrapper(_initialState, _props);
       const component = findByDataAttr(wrapper, 'countDownTimerComponent').first();
       act(() => {
@@ -96,7 +96,7 @@ describe('CountDownTimer', () => {
         endTime: moment().add(22, 'hours'),
       };
       jest.useFakeTimers();
-      const _initialState = initialState;
+      const _initialState = { ...initialState };
       wrapper = setupWrapper(_initialState, _props);
       const component = findByDataAttr(wrapper, 'countDownTimerComponent').first();
       act(() => {
@@ -111,7 +111,7 @@ describe('CountDownTimer', () => {
         endTime: moment().add(22, 'days'),
       };
       jest.useFakeTimers();
-      const _initialState = initialState;
+      const _initialState = { ...initialState };
       wrapper = setupWrapper(_initialState, _props);
       const component = findByDataAttr(wrapper, 'countDownTimerComponent').first();
       act(() => {
@@ -126,7 +126,7 @@ describe('CountDownTimer', () => {
         endTime: moment().add(5, 'months'),
       };
       jest.useFakeTimers();
-      const _initialState = initialState;
+      const _initialState = { ...initialState };
       wrapper = setupWrapper(_initialState, _props);
       const component = findByDataAttr(wrapper, 'countDownTimerComponent').first();
       act(() => {
@@ -141,7 +141,7 @@ describe('CountDownTimer', () => {
         endTime: moment().add(99, 'years'),
       };
       jest.useFakeTimers();
-      const _initialState = initialState;
+      const _initialState = { ...initialState };
       wrapper = setupWrapper(_initialState, _props);
       const component = findByDataAttr(wrapper, 'countDownTimerComponent').first();
       act(() => {

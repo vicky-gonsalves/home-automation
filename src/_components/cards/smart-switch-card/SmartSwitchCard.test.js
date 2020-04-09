@@ -59,7 +59,7 @@ describe('SmartSwitchCard', () => {
     });
 
     it('should not render noSubDeviceAlertCardContainer if has subDevices', async () => {
-      const _initialState = initialState;
+      const _initialState = { ...initialState };
       _initialState.subDevice.subDevices = [subDeviceThree];
       wrapper = setupWrapper(_initialState);
       const component = findByDataAttr(wrapper, 'noSubDeviceAlertCardContainer').first();
@@ -67,7 +67,7 @@ describe('SmartSwitchCard', () => {
     });
 
     it('should render cardActionFooterContainer if has subDevices', () => {
-      const _initialState = initialState;
+      const _initialState = { ...initialState };
       _initialState.subDevice.subDevices = [subDeviceThree];
       wrapper = setupWrapper(initialState);
       const component = findByDataAttr(wrapper, 'cardActionFooterContainer').first();
@@ -75,7 +75,7 @@ describe('SmartSwitchCard', () => {
     });
 
     it('should not render cardContentContainer if no subDevices', async () => {
-      const _initialState = initialState;
+      const _initialState = { ...initialState };
       _initialState.subDevice.subDevices = [];
       wrapper = setupWrapper(_initialState);
       const component = findByDataAttr(wrapper, 'cardContentContainer').first();
@@ -83,7 +83,7 @@ describe('SmartSwitchCard', () => {
     });
 
     it('should render cardContentContainer if has subDevices', async () => {
-      const _initialState = initialState;
+      const _initialState = { ...initialState };
       _initialState.subDevice.subDevices = [subDeviceThree];
       wrapper = setupWrapper(_initialState);
       const component = findByDataAttr(wrapper, 'cardContentContainer').first();
@@ -91,7 +91,7 @@ describe('SmartSwitchCard', () => {
     });
 
     it('should render offlineAlertContainer if has subDevices but no online devices', async () => {
-      const _initialState = initialState;
+      const _initialState = { ...initialState };
       _initialState.subDevice.subDevices = [subDeviceThree];
       _initialState.onlineDevice.onlineDevices = [];
       wrapper = setupWrapper(_initialState);
@@ -100,7 +100,7 @@ describe('SmartSwitchCard', () => {
     });
 
     it('should render offlineAlertContainer if has no subDevices but no online devices', async () => {
-      const _initialState = initialState;
+      const _initialState = { ...initialState };
       _initialState.subDevice.subDevices = [];
       _initialState.onlineDevice.onlineDevices = [];
       wrapper = setupWrapper(_initialState);
@@ -109,7 +109,7 @@ describe('SmartSwitchCard', () => {
     });
 
     it('should not render offlineAlertContainer if has subDevices and online devices', async () => {
-      const _initialState = initialState;
+      const _initialState = { ...initialState };
       _initialState.subDevice.subDevices = [subDeviceThree];
       _initialState.onlineDevice.onlineDevices = [{ id: socketIdSix.id, bindedTo: socketIdSix.bindedTo }];
       wrapper = setupWrapper(_initialState);
