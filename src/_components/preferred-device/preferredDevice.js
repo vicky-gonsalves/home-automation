@@ -19,9 +19,18 @@ const useStyles = makeStyles(theme => ({
 const PreferredDevice = () => {
   const classes = useStyles();
   return (
-    <Typography variant="body2" className={classes.typo}>
-      <Tooltip title="Preferred device for automatic start/stop mode" placement="top">
-        <InfoIcon fontSize="small" style={{ color: green[500] }} className={classes.icon} />
+    <Typography variant="body2" className={classes.typo} data-test="preferredDeviceContainer">
+      <Tooltip
+        title="Preferred device for automatic start/stop mode"
+        placement="top"
+        data-test="preferredDeviceTitleComponent"
+      >
+        <InfoIcon
+          fontSize="small"
+          style={{ color: green[500] }}
+          className={classes.icon}
+          data-test="preferredDeviceInfoIconComponent"
+        />
       </Tooltip>
       &nbsp;
       <strong>Preferred Device</strong>
