@@ -61,6 +61,46 @@ export default function Navbar(props) {
     dispatch(logActions.removeAllLogs());
   };
 
+  const renderLoggedInMenu = () => {
+    if (isLoggedIn) {
+      return (
+        <div data-test="loggedInMenuContainer">
+          <IconButton
+            aria-label="account of current user"
+            aria-controls="menu-appbar"
+            aria-haspopup="true"
+            onClick={handleMenu}
+            color="inherit"
+            data-test="MenuOpenerButtonIconComponent"
+          >
+            <AccountCircle />
+          </IconButton>
+          <Menu
+            id="menu-appbar"
+            anchorEl={anchorEl}
+            anchorOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+            keepMounted
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+            open={open}
+            onClose={handleClose}
+            data-test="MenuComponent"
+          >
+            <MenuItem>{currentUser.name}</MenuItem>
+            <MenuItem onClick={handleLogout} data-test="MenuItemComponent">
+              Logout
+            </MenuItem>
+          </Menu>
+        </div>
+      );
+    }
+  };
+
   return (
     <AppBar position="fixed" data-test="navbar">
       <Toolbar data-test="toolbar">
@@ -68,37 +108,7 @@ export default function Navbar(props) {
         <Typography variant="h6" className={classes.title} color="inherit" noWrap data-test="appName">
           {props.appName}
         </Typography>
-        {isLoggedIn && (
-          <div>
-            <IconButton
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleMenu}
-              color="inherit"
-            >
-              <AccountCircle />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorEl}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={open}
-              onClose={handleClose}
-            >
-              <MenuItem>{currentUser.name}</MenuItem>
-              <MenuItem onClick={handleLogout}>Logout</MenuItem>
-            </Menu>
-          </div>
-        )}
+        {renderLoggedInMenu()}
       </Toolbar>
     </AppBar>
   );
