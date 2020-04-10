@@ -2,7 +2,7 @@ import { shallow } from 'enzyme';
 import React from 'react';
 import { history } from '../../../_helpers/history';
 import { clickButton, findByDataAttr } from '../../../_utils';
-import SignInButton from './SignInButton';
+import SignInButton from './signInButton';
 
 const props = {
   'data-test': '',

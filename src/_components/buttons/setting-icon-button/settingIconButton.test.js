@@ -5,7 +5,7 @@ import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { checkProps, findByDataAttr, initialState } from '../../../_utils';
 import { deviceOne } from '../../../_utils/fixtures/device.fixture';
-import SettingIconButton from './SettingIconButton';
+import SettingIconButton from './settingIconButton';
 
 let store;
 let wrapper;

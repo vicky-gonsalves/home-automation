@@ -5,10 +5,10 @@ import Alert from '@material-ui/lab/Alert';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import SettingIconButton from '../../buttons/SettingIconButton/SettingIconButton';
+import SettingIconButton from '../../buttons/setting-icon-button/settingIconButton';
 import DeviceOfflineAlert from '../../device-offline-alert/deviceOfflineAlert';
 import OnlineDeviceStatus from '../../online-device-status/onlineDeviceStatus';
-import SubDeviceComponent from '../../sub-device/SubDeviceComponent';
+import SubDeviceComponent from '../../sub-device/subDeviceComponent';
 import CardActionFooter from '../card-action/CardActionFooter';
 
 const useStyles = makeStyles(theme => ({

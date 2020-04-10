@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router';
-import SignInButton from '../../_components/buttons/SignInButton/SignInButton';
+import SignInButton from '../../_components/buttons/signIn-button/signInButton';
 import Footer from '../../_components/footer/footer';
 import Navbar from '../../_components/navbar/navbar';
 import config from '../../config';
