@@ -19,9 +19,7 @@ const MotorMode = props => {
   let thisSubDeviceParams;
   const classes = useStyles();
   const dispatch = useDispatch();
-  const subDeviceParams = useSelector(state =>
-    state && state.subDeviceParam && state.subDeviceParam.subDeviceParams ? state.subDeviceParam.subDeviceParams : []
-  );
+  const subDeviceParams = useSelector(state => state && state.subDeviceParam && state.subDeviceParam.subDeviceParams);
 
   const filterSubDeviceParams = () =>
     subDeviceParams.filter(
@@ -35,28 +33,47 @@ const MotorMode = props => {
 
   const handleRadioChange = event => {
     const _subDeviceParam = thisSubDeviceParams[0];
-    _subDeviceParam.paramValue = event.target.value;
-    dispatch(subDeviceParamActions.updateSubDeviceParamMode(_subDeviceParam));
+    if (_subDeviceParam.paramValue !== event.target.value) {
+      _subDeviceParam.paramValue = event.target.value;
+      dispatch(subDeviceParamActions.updateSubDeviceParamMode(_subDeviceParam));
+    }
   };
-  return (
-    <React.Fragment>
-      {thisSubDeviceParams && thisSubDeviceParams[0] && thisSubDeviceParams[0].paramValue && (
-        <FormControl component="fieldset" className={classes.mode}>
-          <FormLabel component="legend">Motor Start/Stop Mode</FormLabel>
+
+  const renderMotorMode = () => {
+    if (thisSubDeviceParams && thisSubDeviceParams[0] && thisSubDeviceParams[0].paramValue) {
+      return (
+        <FormControl component="fieldset" className={classes.mode} data-test="motorModeComponent">
+          <FormLabel component="legend" data-test="motorModeFormLabelComponent">
+            Motor Start/Stop Mode
+          </FormLabel>
           <RadioGroup
             aria-label="mode"
             name="mode"
             value={thisSubDeviceParams[0].paramValue}
             onChange={handleRadioChange}
             row
+            data-test="motorModeRadioGroupComponent"
           >
-            <FormControlLabel value="automatic" control={<Radio color="primary" />} label="Automatic" labelPlacement="end" />
-            <FormControlLabel value="manual" control={<Radio color="primary" />} label="Manual" labelPlacement="end" />
+            <FormControlLabel
+              value="automatic"
+              control={<Radio color="primary" />}
+              label="Automatic"
+              labelPlacement="end"
+              data-test="motorModeAutomaticComponent"
+            />
+            <FormControlLabel
+              value="manual"
+              control={<Radio color="primary" />}
+              label="Manual"
+              labelPlacement="end"
+              data-test="motorModeManualComponent"
+            />
           </RadioGroup>
         </FormControl>
-      )}
-    </React.Fragment>
-  );
+      );
+    }
+  };
+  return <React.Fragment>{renderMotorMode()}</React.Fragment>;
 };
 
 MotorMode.propTypes = {

@@ -94,6 +94,17 @@ const subDeviceParamEight = {
   updatedBy: email1,
 };
 
+const subDeviceParamNine = {
+  id: uniqid(),
+  deviceId: deviceOne.deviceId,
+  subDeviceId: subDeviceOne.subDeviceId,
+  paramName: 'mode',
+  paramValue: 'automatic',
+  isDisabled: false,
+  createdBy: email1,
+  updatedBy: email1,
+};
+
 module.exports = {
   subDeviceParamOne,
   subDeviceParamTwo,
@@ -103,4 +114,5 @@ module.exports = {
   subDeviceParamSix,
   subDeviceParamSeven,
   subDeviceParamEight,
+  subDeviceParamNine,
 };
