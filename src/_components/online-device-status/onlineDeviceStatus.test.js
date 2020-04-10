@@ -18,7 +18,7 @@ describe('OnlineDeviceStatus Component', () => {
     });
   });
 
-  describe('Components Testing with State', () => {
+  describe('Components Testing', () => {
     let wrapper;
     beforeEach(() => {});
     afterEach(() => {
