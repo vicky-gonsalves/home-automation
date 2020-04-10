@@ -13,7 +13,7 @@ import SmartSwitchCard from '../../_components/cards/smart-switch-card/SmartSwit
 import TankCard from '../../_components/cards/tank-card/TankCard';
 import SettingDialog from '../../_components/dialogs/setting-dialog/settingDialog';
 import Footer from '../../_components/footer';
-import Navbar from '../../_components/navbar';
+import Navbar from '../../_components/navbar/navbar';
 import config from '../../config';
 
 const useStyles = theme => ({
