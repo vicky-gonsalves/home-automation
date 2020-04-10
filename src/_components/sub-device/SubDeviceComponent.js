@@ -19,9 +19,7 @@ const SubDeviceComponent = props => {
   let thisSubDevicesLength = 0;
   const classes = useStyles();
 
-  const subDevices = useSelector(state =>
-    state && state.subDevice && state.subDevice.subDevices ? state.subDevice.subDevices : []
-  );
+  const subDevices = useSelector(state => state && state.subDevice && state.subDevice.subDevices);
 
   if (props.deviceId && subDevices && subDevices.length) {
     thisSubDevices = subDevices.filter(subDevice => subDevice.deviceId === props.deviceId);
@@ -32,32 +30,49 @@ const SubDeviceComponent = props => {
 
   const showAllSwitch = thisSubDevicesLength > 1;
 
-  return (
-    <React.Fragment>
-      <Grid container spacing={1}>
-        {thisSubDevices &&
-          thisSubDevices.length > 0 &&
-          thisSubDevices.map(subDevice => (
-            <Grid key={subDevice.subDeviceId} item xs={3} className={classes.buttonsGrp}>
-              <SmartSwitch name={subDevice.name} deviceId={subDevice.deviceId} subDeviceId={subDevice.subDeviceId} />
-            </Grid>
-          ))}
-        {showAllSwitch && (
-          <Grid
-            key={`all-${props.deviceId}`}
-            item
-            xs={3}
-            className={classes.buttonsGrp}
-            container
-            direction="row"
-            justify="flex-end"
-          >
-            <SmartSwitch name="All" deviceId={props.all} show={showAllSwitch} />
-          </Grid>
-        )}
+  const renderSwitches = () => {
+    return thisSubDevices.map(subDevice => (
+      <Grid key={subDevice.subDeviceId} item xs={3} className={classes.buttonsGrp}>
+        <SmartSwitch
+          name={subDevice.name}
+          deviceId={subDevice.deviceId}
+          subDeviceId={subDevice.subDeviceId}
+          data-test="subDeviceSmartSwitchContainer"
+        />
       </Grid>
-    </React.Fragment>
-  );
+    ));
+  };
+
+  const renderAllSwitch = () => {
+    if (showAllSwitch) {
+      return (
+        <Grid
+          key={`all-${props.deviceId}`}
+          item
+          xs={3}
+          className={classes.buttonsGrp}
+          container
+          direction="row"
+          justify="flex-end"
+        >
+          <SmartSwitch name="All" deviceId={props.all} show={showAllSwitch} data-test="subDeviceSmartSwitchAllContainer" />
+        </Grid>
+      );
+    }
+  };
+
+  const renderSubDevices = () => {
+    if (thisSubDevices && thisSubDevices.length > 0) {
+      return (
+        <Grid container spacing={1} data-test="subDeviceComponentContainer">
+          {renderSwitches()}
+          {renderAllSwitch()}
+        </Grid>
+      );
+    }
+  };
+
+  return <React.Fragment>{renderSubDevices()}</React.Fragment>;
 };
 
 SubDeviceComponent.propTypes = {
