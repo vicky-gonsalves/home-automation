@@ -34,40 +34,9 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const SimpleSmartSwitchSettingForm = props => {
-  let thisSettings = [];
+export const SimpleSmartSwitchSettingForm = props => {
   const classes = useStyles();
-  const {
-    deviceId,
-    values,
-    touched,
-    errors,
-    handleChange,
-    handleBlur,
-    isFetching,
-    handleSubmit,
-    onSubmit,
-    subDevices,
-    close,
-    subDeviceSettings,
-  } = props;
-
-  if (deviceId && subDevices && subDevices.length && subDeviceSettings && subDeviceSettings.length) {
-    subDeviceSettings.forEach(setting => {
-      subDevices.forEach(subDevice => {
-        const { idType, type, bindedTo } = setting;
-        if (
-          subDevice.subDeviceId === bindedTo &&
-          type === 'subDevice' &&
-          idType === 'subDeviceId' &&
-          subDevice.deviceId === deviceId &&
-          subDevice.type === 'switch'
-        ) {
-          thisSettings.push({ setting, subDevice });
-        }
-      });
-    });
-  }
+  const { values, touched, errors, handleChange, handleBlur, isFetching, handleSubmit, close } = props;
 
   const handleClose = () => {
     close();
@@ -97,6 +66,7 @@ const SimpleSmartSwitchSettingForm = props => {
                 error={Boolean(touchedField && errorField)}
                 onChange={handleChange}
                 onBlur={handleBlur}
+                data-test="smartSwitchSettingFormTextField"
               />
             </div>
           </React.Fragment>
@@ -104,19 +74,25 @@ const SimpleSmartSwitchSettingForm = props => {
       })}
     </React.Fragment>
   );
-  return (
-    <React.Fragment>
-      {values.settings <= 0 && (
-        <Alert className={classes.extraMargin} severity="info">
+
+  const renderNoSettingAlert = () => {
+    if (values.settings.length <= 0) {
+      return (
+        <Alert className={classes.extraMargin} severity="info" data-test="smartSwitchFieldAlertComponent">
           It seems there are no settings available for this device.
         </Alert>
-      )}
-      {thisSettings && thisSettings.length > 0 && (
-        <form className={classes.form} onSubmit={typeof onSubmit === 'function' ? onSubmit : handleSubmit} noValidate>
+      );
+    }
+  };
+
+  const renderSettingForm = () => {
+    if (values.settings && values.settings.length > 0) {
+      return (
+        <form className={classes.form} onSubmit={handleSubmit} noValidate data-test="smartSwitchSettingFormComponent">
           <InputLabel shrink id="autoShutDownTimeLabel">
             Automatic shutdown time (0 means no auto shutdown)
           </InputLabel>
-          <FieldArray name="settings" render={renderTextFields()} />
+          <FieldArray name="settings" render={renderTextFields()} data-test="smartSwitchFieldArrayComponent" />
           <div className={classes.dialogAction}>
             <Button
               type="submit"
@@ -124,7 +100,7 @@ const SimpleSmartSwitchSettingForm = props => {
               color="primary"
               className={classes.submit}
               disabled={isFetching}
-              data-test="submitButton"
+              data-test="smartSwitchSettingFormSubmitButton"
             >
               Save Settings
             </Button>
@@ -132,14 +108,21 @@ const SimpleSmartSwitchSettingForm = props => {
               type="button"
               className={classes.submit}
               disabled={isFetching}
-              data-test="cancelButton"
+              data-test="smartSwitchSettingFormCancelButton"
               onClick={handleClose}
             >
               Cancel
             </Button>
           </div>
         </form>
-      )}
+      );
+    }
+  };
+
+  return (
+    <React.Fragment>
+      {renderNoSettingAlert()}
+      {renderSettingForm()}
     </React.Fragment>
   );
 };
@@ -189,7 +172,7 @@ export const SmartSwitchSettingForm = withFormik({
     const allSettings = values.settings.map(({ setting }) => setting);
     saveSettings(allSettings);
   },
-  displayName: 'motorSettingForm',
+  displayName: 'smartSwitchSettingForm',
 })(SimpleSmartSwitchSettingForm);
 
 function mapStateToProps(state) {
