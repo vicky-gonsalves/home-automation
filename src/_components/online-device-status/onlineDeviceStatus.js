@@ -10,9 +10,15 @@ const OnlineDeviceStatus = props => {
   if (props.isDeviceOnline) {
     style = { color: green[500] };
   }
+  const getStatus = () => {
+    if (props.isDeviceOnline) {
+      return 'Device is online';
+    }
+    return 'Device is offline';
+  };
   return (
-    <Tooltip title={props.isDeviceOnline ? 'Device is online' : 'Device is offline'}>
-      <WifiIcon style={style} />
+    <Tooltip title={getStatus()} data-test="onlineDeviceStatusTooltipComponent">
+      <WifiIcon style={style} data-test="onlineDeviceStatusWifiIconComponent" />
     </Tooltip>
   );
 };
