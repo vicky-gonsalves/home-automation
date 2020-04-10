@@ -54,7 +54,7 @@ describe('SubDeviceComponent Component', () => {
           <SubDeviceComponent {..._props} />
         </Provider>
       );
-      const component = findByDataAttr(wrapper, 'subDeviceComponentContainer').first();
+      const component = findByDataAttr(wrapper, 'subDeviceIndSwitchComponentContainer').first();
       expect(component.length).toBe(0);
       // eslint-disable-next-line no-console
       console.error.mockClear();
@@ -62,7 +62,7 @@ describe('SubDeviceComponent Component', () => {
 
     it('should not render if no states', () => {
       wrapper = setupWrapper(initialState);
-      const component = findByDataAttr(wrapper, 'subDeviceComponentContainer').first();
+      const component = findByDataAttr(wrapper, 'subDeviceIndSwitchComponentContainer').first();
       expect(component.length).toBe(0);
     });
 
@@ -70,7 +70,7 @@ describe('SubDeviceComponent Component', () => {
       const _initialState = { ...initialState };
       _initialState.subDevice.subDevices = [subDeviceOne, subDeviceTwo];
       wrapper = setupWrapper(_initialState);
-      const component = findByDataAttr(wrapper, 'subDeviceComponentContainer').first();
+      const component = findByDataAttr(wrapper, 'subDeviceIndSwitchComponentContainer').first();
       expect(component.length).toBe(1);
     });
 

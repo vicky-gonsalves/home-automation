@@ -31,16 +31,24 @@ const SubDeviceComponent = props => {
   const showAllSwitch = thisSubDevicesLength > 1;
 
   const renderSwitches = () => {
-    return thisSubDevices.map(subDevice => (
-      <Grid key={subDevice.subDeviceId} item xs={3} className={classes.buttonsGrp}>
-        <SmartSwitch
-          name={subDevice.name}
-          deviceId={subDevice.deviceId}
-          subDeviceId={subDevice.subDeviceId}
-          data-test="subDeviceSmartSwitchContainer"
-        />
-      </Grid>
-    ));
+    if (thisSubDevices && thisSubDevices.length > 0) {
+      return thisSubDevices.map(subDevice => (
+        <Grid
+          key={subDevice.subDeviceId}
+          item
+          xs={3}
+          className={classes.buttonsGrp}
+          data-test="subDeviceIndSwitchComponentContainer"
+        >
+          <SmartSwitch
+            name={subDevice.name}
+            deviceId={subDevice.deviceId}
+            subDeviceId={subDevice.subDeviceId}
+            data-test="subDeviceSmartSwitchContainer"
+          />
+        </Grid>
+      ));
+    }
   };
 
   const renderAllSwitch = () => {
@@ -62,14 +70,12 @@ const SubDeviceComponent = props => {
   };
 
   const renderSubDevices = () => {
-    if (thisSubDevices && thisSubDevices.length > 0) {
-      return (
-        <Grid container spacing={1} data-test="subDeviceComponentContainer">
-          {renderSwitches()}
-          {renderAllSwitch()}
-        </Grid>
-      );
-    }
+    return (
+      <Grid container spacing={1}>
+        {renderSwitches()}
+        {renderAllSwitch()}
+      </Grid>
+    );
   };
 
   return <React.Fragment>{renderSubDevices()}</React.Fragment>;
