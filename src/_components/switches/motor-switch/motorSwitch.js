@@ -10,9 +10,7 @@ import { subDeviceParamActions } from '../../../_actions';
 const MotorSwitch = props => {
   let thisSubDeviceParams;
   const dispatch = useDispatch();
-  const subDeviceParams = useSelector(state =>
-    state && state.subDeviceParam && state.subDeviceParam.subDeviceParams ? state.subDeviceParam.subDeviceParams : []
-  );
+  const subDeviceParams = useSelector(state => state && state.subDeviceParam && state.subDeviceParam.subDeviceParams);
 
   const filterSubDeviceParams = () =>
     subDeviceParams.filter(
@@ -33,20 +31,27 @@ const MotorSwitch = props => {
   return (
     <Typography component="div">
       {thisSubDeviceParams && thisSubDeviceParams.length <= 0 && (
-        <Alert severity="error">It seems there is some issue with device. Please contact administrator!</Alert>
+        <Alert severity="error" data-test="motorSwitchAlertComponent">
+          It seems there is some issue with device. Please contact administrator!
+        </Alert>
       )}
       {thisSubDeviceParams && thisSubDeviceParams.length > 0 && (
-        <Grid component="label" container alignItems="center" spacing={1}>
-          <Grid item>{props.name} OFF</Grid>
+        <Grid component="label" container alignItems="center" spacing={1} data-test="motorSwitchContainer">
+          <Grid item data-test="motorSwitchOffLabelItemComponent">
+            {props.name} OFF
+          </Grid>
           <Grid item>
             <Switch
               color="primary"
               checked={thisSubDeviceParams[0].paramValue === 'on'}
               onChange={handleChange(thisSubDeviceParams[0])}
               inputProps={{ 'aria-label': props.name }}
+              data-test="motorSwitchItemComponent"
             />
           </Grid>
-          <Grid item>{props.name} ON</Grid>
+          <Grid item data-test="motorSwitchOnLabelItemComponent">
+            {props.name} ON
+          </Grid>
         </Grid>
       )}
     </Typography>
