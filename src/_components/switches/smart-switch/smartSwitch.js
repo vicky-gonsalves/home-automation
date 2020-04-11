@@ -12,9 +12,7 @@ import { subDeviceParamActions } from '../../../_actions';
 const SmartSwitch = ({ deviceId, name, show, subDeviceId }) => {
   let thisSubDeviceParams;
   const dispatch = useDispatch();
-  const subDeviceParams = useSelector(state =>
-    state && state.subDeviceParam && state.subDeviceParam.subDeviceParams ? state.subDeviceParam.subDeviceParams : []
-  );
+  const subDeviceParams = useSelector(state => state && state.subDeviceParam && state.subDeviceParam.subDeviceParams);
   const allSubDeviceParams = subDeviceParams.filter(
     subDeviceParam => subDeviceParam.deviceId === deviceId && subDeviceParam.paramName === 'status'
   );
@@ -22,12 +20,8 @@ const SmartSwitch = ({ deviceId, name, show, subDeviceId }) => {
 
   const filterSubDeviceParams = () =>
     subDeviceParams.filter(
-      subDeviceParam =>
-        subDeviceParam.paramName &&
-        subDeviceParam.paramValue &&
-        subDeviceParam.deviceId === deviceId &&
-        subDeviceParam.subDeviceId === subDeviceId &&
-        subDeviceParam.paramName === 'status'
+      ({ deviceId: _deviceId, paramName, paramValue, subDeviceId: _subDeviceId }) =>
+        paramName && paramValue && _deviceId === deviceId && _subDeviceId === subDeviceId && paramName === 'status'
     );
 
   if (deviceId && subDeviceId) {
@@ -53,56 +47,89 @@ const SmartSwitch = ({ deviceId, name, show, subDeviceId }) => {
   const renderSwitch =
     (show && name === 'All' && allSubDeviceParams.length > 1) || (name !== 'All' && deviceId && subDeviceId);
 
+  const renderAlert = () => {
+    if (name !== 'All' && thisSubDeviceParams && thisSubDeviceParams.length <= 0) {
+      return (
+        <Alert severity="error" data-test="smartSwitchAlertComponent">
+          It seems there is some issue with device. Please contact administrator!
+        </Alert>
+      );
+    }
+  };
+
+  const getIconColor = () => {
+    if (
+      (name === 'All' && deviceId && isAllOn()) ||
+      (name !== 'All' && thisSubDeviceParams && thisSubDeviceParams.length > 0 && thisSubDeviceParams[0].paramValue === 'on')
+    ) {
+      return 'secondary';
+    }
+    return 'disabled';
+  };
+
+  const renderAllSwitchIcon = () => {
+    if (renderSwitch) {
+      return (
+        <div>
+          <EmojiObjectsIcon fontSize="large" color={getIconColor()} data-test="smartSwitchIconComponent" />
+        </div>
+      );
+    }
+  };
+
+  const renderSmartSwitchContainer = () => {
+    if (thisSubDeviceParams && thisSubDeviceParams.length > 0) {
+      return (
+        <Grid
+          key={thisSubDeviceParams[0].subDeviceId + thisSubDeviceParams[0].paramName}
+          item
+          xs={12}
+          data-test="smartSwitchContainer"
+        >
+          <FormControlLabel
+            value="true"
+            control={
+              <Switch
+                color="primary"
+                checked={thisSubDeviceParams[0].paramValue === 'on'}
+                onChange={handleChange(thisSubDeviceParams[0])}
+                data-test="smartSwitchComponent"
+              />
+            }
+            label={name}
+            labelPlacement="bottom"
+          />
+        </Grid>
+      );
+    }
+  };
+
+  const renderAllSwitch = () => {
+    if (name === 'All' && renderSwitch) {
+      return (
+        <Grid item xs={12}>
+          <FormControlLabel
+            value="true"
+            control={
+              <Switch color="primary" checked={isAllOn()} onChange={handleAllChange} data-test="smartSwitchAllComponent" />
+            }
+            label={name}
+            labelPlacement="bottom"
+          />
+        </Grid>
+      );
+    }
+  };
+
   return (
     <React.Fragment>
-      {name !== 'All' && thisSubDeviceParams && thisSubDeviceParams.length <= 0 && (
-        <Alert severity="error">It seems there is some issue with device. Please contact administrator!</Alert>
-      )}
-      {renderSwitch && (
-        <div>
-          <EmojiObjectsIcon
-            fontSize="large"
-            color={
-              (name === 'All' && deviceId && isAllOn()) ||
-              (name !== 'All' &&
-                thisSubDeviceParams &&
-                thisSubDeviceParams.length > 0 &&
-                thisSubDeviceParams[0].paramValue === 'on')
-                ? 'secondary'
-                : 'disabled'
-            }
-          />
-        </div>
-      )}
+      {renderAlert()}
+      {renderAllSwitchIcon()}
       <div>
         <Typography component="div">
           <Grid component="label" container alignItems="center" spacing={2}>
-            {thisSubDeviceParams && thisSubDeviceParams.length > 0 && (
-              <Grid key={thisSubDeviceParams[0].subDeviceId + thisSubDeviceParams[0].paramName} item xs={12}>
-                <FormControlLabel
-                  value="true"
-                  control={
-                    <Switch
-                      color="primary"
-                      checked={thisSubDeviceParams[0].paramValue === 'on'}
-                      onChange={handleChange(thisSubDeviceParams[0])}
-                    />
-                  }
-                  label={name}
-                  labelPlacement="bottom"
-                />
-              </Grid>
-            )}
-            {name === 'All' && renderSwitch && (
-              <Grid item xs={12}>
-                <FormControlLabel
-                  value="true"
-                  control={<Switch color="primary" checked={isAllOn()} onChange={handleAllChange} />}
-                  label={name}
-                  labelPlacement="bottom"
-                />
-              </Grid>
-            )}
+            {renderSmartSwitchContainer()}
+            {renderAllSwitch()}
           </Grid>
         </Typography>
       </div>

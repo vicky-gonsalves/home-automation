@@ -105,6 +105,17 @@ const subDeviceParamNine = {
   updatedBy: email1,
 };
 
+const subDeviceParamTen = {
+  id: uniqid(),
+  deviceId: deviceTwo.deviceId,
+  subDeviceId: subDeviceFour.subDeviceId,
+  paramName: 'fake',
+  paramValue: 'off',
+  isDisabled: false,
+  createdBy: email2,
+  updatedBy: email2,
+};
+
 module.exports = {
   subDeviceParamOne,
   subDeviceParamTwo,
@@ -115,4 +126,5 @@ module.exports = {
   subDeviceParamSeven,
   subDeviceParamEight,
   subDeviceParamNine,
+  subDeviceParamTen,
 };
