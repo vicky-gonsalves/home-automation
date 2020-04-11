@@ -5,8 +5,8 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { deviceSettingActions } from '../../_actions/deviceSetting.actions';
-import { subDeviceSettingActions } from '../../_actions/subDeviceSetting.actions';
 import { subDeviceParamActions } from '../../_actions/sub-device-param.actions';
+import { subDeviceSettingActions } from '../../_actions/subDeviceSetting.actions';
 import { actions } from '../../_actions/user.actions';
 
 export class Toaster extends Component {
@@ -97,10 +97,15 @@ const actionCreators = {
 const connectedToaster = connect(mapState, actionCreators)(Toaster);
 
 Toaster.propTypes = {
+  'data-test': PropTypes.string.isRequired,
   loginError: PropTypes.string,
   settingError: PropTypes.string,
   subDeviceSettingError: PropTypes.string,
   subDeviceParamError: PropTypes.string,
+  clearLoginError: PropTypes.func.isRequired,
+  clearDeviceSettingError: PropTypes.func.isRequired,
+  clearSubDeviceSettingError: PropTypes.func.isRequired,
+  clearSubDeviceParamError: PropTypes.func.isRequired,
 };
 
 export default connectedToaster;
