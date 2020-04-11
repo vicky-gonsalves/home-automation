@@ -97,15 +97,10 @@ const actionCreators = {
 const connectedToaster = connect(mapState, actionCreators)(Toaster);
 
 Toaster.propTypes = {
-  'data-test': PropTypes.string.isRequired,
   loginError: PropTypes.string,
   settingError: PropTypes.string,
   subDeviceSettingError: PropTypes.string,
   subDeviceParamError: PropTypes.string,
-  clearLoginError: PropTypes.func.isRequired,
-  clearDeviceSettingError: PropTypes.func.isRequired,
-  clearSubDeviceSettingError: PropTypes.func.isRequired,
-  clearSubDeviceParamError: PropTypes.func.isRequired,
 };
 
 export default connectedToaster;
