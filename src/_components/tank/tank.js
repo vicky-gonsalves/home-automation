@@ -3,11 +3,17 @@ import React from 'react';
 import './tank.scss';
 
 const Tank = props => {
+  const getStyle = () => {
+    if (props.waterLevel) {
+      return { transform: `translate(0,${100 - (100 * props.waterLevel) / 100}px)` };
+    }
+    return { transform: `translate(0,1px)` };
+  };
   return (
-    <div className="tank">
+    <div className="tank" data-test="tankContainer">
       <div className="bowl">
         <div className="inner">
-          <div className="fill" style={{ transform: `translate(0,${100 - (100 * props.waterLevel) / 100}px)` }}>
+          <div className="fill" style={getStyle()} data-test="tankFillContainer">
             <svg
               version="1.1"
               xmlns="http://www.w3.org/2000/svg"
