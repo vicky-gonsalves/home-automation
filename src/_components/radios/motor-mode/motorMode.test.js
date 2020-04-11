@@ -33,7 +33,7 @@ describe('MotorMode Component', () => {
       const propsErr = checkProps(MotorMode, props);
       expect(propsErr).toBeUndefined();
     });
-    it('should not throw a warning', () => {
+    it('should throw a warning', () => {
       const propsErr = checkProps(MotorMode, {});
       expect(propsErr).toBeDefined();
     });
