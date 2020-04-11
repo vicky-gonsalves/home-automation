@@ -2,10 +2,10 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import './tank.scss';
 
-const Tank = props => {
+const Tank = ({ waterLevel }) => {
   const getStyle = () => {
-    if (props.waterLevel) {
-      return { transform: `translate(0,${100 - (100 * props.waterLevel) / 100}px)` };
+    if (waterLevel) {
+      return { transform: `translate(0,${100 - (100 * waterLevel) / 100}px)` };
     }
     return { transform: `translate(0,1px)` };
   };
@@ -35,7 +35,7 @@ const Tank = props => {
           </div>
         </div>
       </div>
-      <h1 className="overlap">{props.waterLevel}%</h1>
+      <h1 className="overlap">{waterLevel}%</h1>
     </div>
   );
 };
