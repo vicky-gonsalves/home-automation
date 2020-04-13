@@ -6,14 +6,14 @@ const handleResponse = response => {
   if (response && response.data) {
     return Promise.resolve(response.data);
   }
-  return Promise.reject(response);
+  return Promise.reject('No Data');
 };
 
 const handleResponseForAll = response => {
   if (response && response.status === 200) {
     return Promise.resolve(response);
   }
-  return Promise.reject(response);
+  return Promise.reject('No Data');
 };
 
 const handleError = error => {

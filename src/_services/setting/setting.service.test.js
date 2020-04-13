@@ -1,27 +1,27 @@
 import axios from 'axios';
 import { actions } from '../../_actions';
-import { updatedDeviceSettings } from '../../_utils/mock/device-setting/deviceSetting';
+import { updatedSettings } from '../../_utils/mock/setting/setting.data';
 import config from '../../config';
 import { settingService } from './setting.service';
 
 jest.mock('axios');
 
 describe('deviceSettingService', () => {
-  it('should get my devices without error', async () => {
+  it('should update settings without error', async () => {
     axios.patch.mockReturnValue(
       Promise.resolve({
-        data: updatedDeviceSettings,
+        data: updatedSettings,
       })
     );
-    const apiCall = settingService.updateSettings(updatedDeviceSettings);
-    expect(axios.patch).toHaveBeenCalledWith(`${config.apiUrl}/settings/multi`, updatedDeviceSettings);
-    await expect(apiCall).resolves.toEqual(updatedDeviceSettings);
+    const apiCall = settingService.updateSettings(updatedSettings);
+    expect(axios.patch).toHaveBeenCalledWith(`${config.apiUrl}/settings/multi`, updatedSettings);
+    await expect(apiCall).resolves.toEqual(updatedSettings);
   });
 
   it('should return error if no data', async () => {
     axios.patch.mockReturnValue(Promise.resolve());
-    const apiCall = settingService.updateSettings(updatedDeviceSettings);
-    expect(axios.patch).toHaveBeenCalledWith(`${config.apiUrl}/settings/multi`, updatedDeviceSettings);
+    const apiCall = settingService.updateSettings(updatedSettings);
+    expect(axios.patch).toHaveBeenCalledWith(`${config.apiUrl}/settings/multi`, updatedSettings);
     await expect(apiCall).rejects.toEqual('No Data');
   });
 
@@ -36,8 +36,8 @@ describe('deviceSettingService', () => {
       },
     };
     axios.patch.mockReturnValue(Promise.reject(error));
-    const apiCall = settingService.updateSettings(updatedDeviceSettings);
-    expect(axios.patch).toHaveBeenCalledWith(`${config.apiUrl}/settings/multi`, updatedDeviceSettings);
+    const apiCall = settingService.updateSettings(updatedSettings);
+    expect(axios.patch).toHaveBeenCalledWith(`${config.apiUrl}/settings/multi`, updatedSettings);
     await expect(apiCall).rejects.toEqual(message);
     expect(actions.signOut).toHaveBeenCalled();
     actions.signOut.mockRestore();
@@ -53,15 +53,15 @@ describe('deviceSettingService', () => {
       },
     };
     axios.patch.mockReturnValue(Promise.reject(error));
-    const apiCall = settingService.updateSettings(updatedDeviceSettings);
-    expect(axios.patch).toHaveBeenCalledWith(`${config.apiUrl}/settings/multi`, updatedDeviceSettings);
+    const apiCall = settingService.updateSettings(updatedSettings);
+    expect(axios.patch).toHaveBeenCalledWith(`${config.apiUrl}/settings/multi`, updatedSettings);
     await expect(apiCall).rejects.toEqual(message);
   });
 
   it('should return network error', async () => {
     axios.patch.mockReturnValue(Promise.reject());
-    const apiCall = settingService.updateSettings(updatedDeviceSettings);
-    expect(axios.patch).toHaveBeenCalledWith(`${config.apiUrl}/settings/multi`, updatedDeviceSettings);
+    const apiCall = settingService.updateSettings(updatedSettings);
+    expect(axios.patch).toHaveBeenCalledWith(`${config.apiUrl}/settings/multi`, updatedSettings);
     await expect(apiCall).rejects.toEqual('Network Error');
   });
 });
