@@ -1,6 +1,6 @@
 import { pick } from 'lodash';
 import { subDeviceSettingConstants } from '../_constants/subDeviceSetting.constants';
-import { subDeviceSettingService } from '../_services';
+import { settingService } from '../_services';
 import { settingDialogActions } from './settingDialog.actions';
 
 const pickFilteredParams = setting => pick(setting, ['type', 'idType', 'parent', 'bindedTo', 'paramName', 'paramValue']);
@@ -29,7 +29,7 @@ const saveSubDeviceSettings = _settings => async dispatch => {
   const settings = _settings.map(setting => pickFilteredParams(setting));
   try {
     dispatch(setProgress(true));
-    await subDeviceSettingService.updateSubDeviceSettings(settings);
+    await settingService.updateSettings(settings);
     dispatch(setProgress(false));
     dispatch(settingDialogActions.close());
   } catch (error) {

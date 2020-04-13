@@ -261,7 +261,7 @@ describe('MotorSettingForm', () => {
       expect(store.getActions()).toEqual([
         { type: 'SET_PROGRESS', payload: true },
         { type: 'SET_PROGRESS', payload: false },
-        { type: 'SET_DEVICE_SETTING_ERROR', payload: { error: undefined } },
+        { type: 'SET_DEVICE_SETTING_ERROR', payload: { error: 'No Data' } },
       ]);
     });
 

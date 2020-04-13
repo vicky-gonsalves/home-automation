@@ -1,6 +1,6 @@
 import { pick } from 'lodash';
 import { deviceSettingConstants } from '../_constants';
-import { subDeviceSettingService } from '../_services';
+import { settingService } from '../_services';
 import { settingDialogActions } from './settingDialog.actions';
 
 const pickFilteredParams = setting => pick(setting, ['type', 'idType', 'parent', 'bindedTo', 'paramName', 'paramValue']);
@@ -31,7 +31,7 @@ const saveDeviceSettings = settings => async dispatch => {
   const waterLevelToStart = pickFilteredParams(settings.waterLevelToStart);
   try {
     dispatch(setProgress(true));
-    await subDeviceSettingService.updateSubDeviceSettings([preferredSubDevice, autoShutDownTime, waterLevelToStart]);
+    await settingService.updateSettings([preferredSubDevice, autoShutDownTime, waterLevelToStart]);
     dispatch(setProgress(false));
     dispatch(settingDialogActions.close());
   } catch (error) {

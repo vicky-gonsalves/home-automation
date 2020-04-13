@@ -164,7 +164,7 @@ describe('SmartSwitchSettingForm', () => {
       expect(store.getActions()).toEqual([
         { type: 'SET_PROGRESS', payload: true },
         { type: 'SET_PROGRESS', payload: false },
-        { type: 'SET_SUB_DEVICE_SETTING_ERROR', payload: { error: undefined } },
+        { type: 'SET_SUB_DEVICE_SETTING_ERROR', payload: { error: 'No Data' } },
       ]);
     });
 

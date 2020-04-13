@@ -6,7 +6,7 @@ const handleResponse = response => {
   if (response && response.data) {
     return Promise.resolve(response.data);
   }
-  return Promise.reject(response);
+  return Promise.reject('No Data');
 };
 
 const handleError = error => {
@@ -23,7 +23,7 @@ const handleError = error => {
   return Promise.reject(err);
 };
 
-const updateSubDeviceSettings = async settings => {
+const updateSettings = async settings => {
   try {
     const response = await axios.patch(`${config.apiUrl}/settings/multi`, settings);
     return handleResponse(response);
@@ -32,6 +32,6 @@ const updateSubDeviceSettings = async settings => {
   }
 };
 
-export const subDeviceSettingService = {
-  updateSubDeviceSettings,
+export const settingService = {
+  updateSettings,
 };
