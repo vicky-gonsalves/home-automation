@@ -133,7 +133,7 @@ describe('SignInForm Component', () => {
     it('should submit form if email and password are valid', async () => {
       const form = wrapper.find(`form`).first();
       await submitFormikForm(form, { elements: { email, password } });
-      expect(store.getActions()).toEqual([{ type: 'SIGN_IN' }, { type: 'SET_LOGIN_ERROR', payload: { error: undefined } }]);
+      expect(store.getActions()).toEqual([{ type: 'SIGN_IN' }, { type: 'SET_LOGIN_ERROR', payload: { error: 'No Data' } }]);
     });
   });
 });

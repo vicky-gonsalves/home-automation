@@ -148,6 +148,13 @@ const mockSuccesfulResponse = (status = 200, method = 'GET', returnBody = {}) =>
 const mockErrorResponse = (status = 400, method = 'GET', returnBody = {}) =>
   axios[method.toLowerCase()].mockRejectedValue({ response: { status, data: returnBody } });
 
+// eslint-disable-next-line no-unused-vars
+const mockEmptyErrorResponse = (status = 400, method = 'GET') => axios[method.toLowerCase()].mockRejectedValue();
+
+// eslint-disable-next-line no-unused-vars
+const mockStatusTextErrorResponse = (status = 400, method = 'GET', returnBody = {}) =>
+  axios[method.toLowerCase()].mockRejectedValue({ response: { status, statusText: returnBody } });
+
 module.exports = {
   initialState,
   findByDataAttr,
@@ -161,4 +168,6 @@ module.exports = {
   clickButton,
   mockSuccesfulResponse,
   mockErrorResponse,
+  mockEmptyErrorResponse,
+  mockStatusTextErrorResponse,
 };

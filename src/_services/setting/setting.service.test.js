@@ -7,6 +7,10 @@ import { settingService } from './setting.service';
 jest.mock('axios');
 
 describe('deviceSettingService', () => {
+  afterAll(() => {
+    axios.mockClear();
+  });
+
   it('should update settings without error', async () => {
     axios.patch.mockReturnValue(
       Promise.resolve({

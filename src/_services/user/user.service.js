@@ -54,7 +54,7 @@ const handleResponse = (response, remember) => {
     }
     return Promise.resolve(response.data);
   }
-  return Promise.reject(response);
+  return Promise.reject('No Data');
 };
 
 const handleError = error => {

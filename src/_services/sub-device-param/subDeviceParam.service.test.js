@@ -8,6 +8,9 @@ import { subDeviceParamService } from './subDeviceParam.service';
 jest.mock('axios');
 
 describe('deviceSubDeviceParamService', () => {
+  afterAll(() => {
+    axios.mockClear();
+  });
   describe('updateSubDeviceParamMode', () => {
     const route = `${config.apiUrl}/devices/${subDeviceParamOne.deviceId}/sub-devices/${subDeviceParamOne.subDeviceId}/sub-device-param-value/mode`;
 
