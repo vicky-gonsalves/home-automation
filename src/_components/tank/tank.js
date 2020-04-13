@@ -1,12 +1,19 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import './tank.scss';
 
-const Tank = () => {
+const Tank = ({ waterLevel }) => {
+  const getStyle = () => {
+    if (waterLevel) {
+      return { transform: `translate(0,${100 - (100 * waterLevel) / 100}px)` };
+    }
+    return { transform: `translate(0,1px)` };
+  };
   return (
-    <div className="tank">
+    <div className="tank" data-test="tankContainer">
       <div className="bowl">
         <div className="inner">
-          <div className="fill" style={{ transform: `translate(0,${100 - (100 * 80) / 100}px)` }}>
+          <div className="fill" style={getStyle()} data-test="tankFillContainer">
             <svg
               version="1.1"
               xmlns="http://www.w3.org/2000/svg"
@@ -28,9 +35,13 @@ const Tank = () => {
           </div>
         </div>
       </div>
-      <h1 className="overlap">80%</h1>
+      <h1 className="overlap">{waterLevel}%</h1>
     </div>
   );
+};
+
+Tank.propTypes = {
+  waterLevel: PropTypes.number,
 };
 
 export default Tank;

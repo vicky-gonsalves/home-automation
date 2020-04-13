@@ -6,26 +6,30 @@ import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { userConstants } from '../../../_constants';
 import { history } from '../../../_helpers/history';
-import { checkProps, clickButton, findByDataAttr } from '../../../_utils';
+import { checkProps, clickButton, findByDataAttr, initialState } from '../../../_utils';
 import SignInPage, { SignInPage as SignInPageClass } from './SignInPage';
 
 const mockStore = configureStore([thunk]);
 const name = faker.name.firstName();
 const email = faker.internet.email();
 
+const props = {
+  classes: {
+    paper: '',
+    main: '',
+    footer: '',
+    avatar: '',
+  },
+  history,
+  location: {},
+  match: {},
+};
+
 describe('SignInPage', () => {
   describe('Store Checks', () => {
     let component;
     let store;
     beforeEach(() => {
-      const props = {
-        classes: { paper: 'someprop' },
-      };
-      const initialState = {
-        user: {
-          loginError: null,
-        },
-      };
       store = mockStore(initialState);
       component = mount(
         <Provider store={store}>
@@ -61,29 +65,26 @@ describe('SignInPage', () => {
   describe('Other Checks', () => {
     describe('Checking PropTypes', () => {
       it('should not throw a warning', () => {
-        const expectedPropTypes = {
-          classes: {},
-        };
-
-        const propsErr = checkProps(SignInPage, expectedPropTypes);
+        const propsErr = checkProps(SignInPage, props);
         expect(propsErr).toBeUndefined();
       });
     });
 
     describe('Checking Components', () => {
       let wrapper;
-      const props = { classes: { paper: 'someprop' }, signOut: jest.fn() };
       beforeEach(() => {
+        const _props = {
+          ...props,
+          signIn: jest.fn(),
+          signOut: jest.fn(),
+          isLoggedIn: false,
+        };
         history.push = jest.fn();
-        wrapper = shallow(<SignInPageClass {...props} />);
+        wrapper = shallow(<SignInPageClass {..._props} />);
       });
       afterEach(() => {
         wrapper.unmount();
         history.push.mockClear();
-      });
-
-      it('should logout user on signin page load', () => {
-        expect(props.signOut).toHaveBeenCalledTimes(1);
       });
 
       it('should have signIn container', () => {

@@ -1,8 +1,69 @@
 import { act } from '@testing-library/react';
+import * as axios from 'axios';
 import checkPropTypes from 'check-prop-types';
 import { applyMiddleware, createStore } from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import rootReducer from '../_reducers';
+
+jest.mock('axios');
+
+const initialState = {
+  user: {
+    name: null,
+    email: null,
+    remember: null,
+    isLoggedIn: false,
+    isFetching: false,
+    tokens: null,
+    loginError: null,
+    isAuthorized: false,
+  },
+  socket: {
+    isSocketFetching: false,
+    connected: false,
+  },
+  device: {
+    isFetchingDevice: false,
+    hasError: false,
+    devices: [],
+  },
+  subDevice: {
+    subDevices: [],
+  },
+  sharedDevice: {
+    sharedDevices: [],
+  },
+  subDeviceParam: {
+    isFetching: false,
+    subDeviceParamError: null,
+    subDeviceParams: [],
+  },
+  settingDialog: {
+    dialogType: null,
+    open: false,
+    deviceId: null,
+    title: null,
+  },
+  deviceSetting: {
+    isFetching: false,
+    settingError: null,
+    deviceSettings: [],
+  },
+  subDeviceSetting: {
+    isFetching: false,
+    subDeviceSettingError: null,
+    subDeviceSettings: [],
+  },
+  onlineDevice: {
+    onlineDevices: [],
+  },
+  deviceParam: {
+    deviceParams: [],
+  },
+  log: {
+    logs: [],
+  },
+};
 
 const findByDataAttr = (component, attr) => {
   return component.find(`[data-test='${attr}']`);
@@ -80,38 +141,22 @@ const clickButton = async nativeButtonWrapper => {
 };
 
 // eslint-disable-next-line no-unused-vars
-const mockSuccesfulResponse = (status = 200, method = 'GET', returnBody = {}) => {
-  global.fetch = jest.fn().mockImplementationOnce(() => {
-    // eslint-disable-next-line no-unused-vars
-    return new Promise(resolve => {
-      resolve({
-        ok: true,
-        status,
-        text: () => {
-          return Promise.resolve(returnBody || {});
-        },
-      });
-    });
-  });
-};
+const mockSuccesfulResponse = (status = 200, method = 'GET', returnBody = {}) =>
+  axios[method.toLowerCase()].mockResolvedValue({ status, data: returnBody });
 
 // eslint-disable-next-line no-unused-vars
-const mockErrorResponse = (status = 400, method = 'GET', returnBody = {}) => {
-  global.fetch = jest.fn().mockImplementationOnce(() => {
-    // eslint-disable-next-line no-unused-vars
-    return new Promise(resolve => {
-      resolve({
-        ok: false,
-        status,
-        text: () => {
-          return Promise.resolve(returnBody || {});
-        },
-      });
-    });
-  });
-};
+const mockErrorResponse = (status = 400, method = 'GET', returnBody = {}) =>
+  axios[method.toLowerCase()].mockRejectedValue({ response: { status, data: returnBody } });
+
+// eslint-disable-next-line no-unused-vars
+const mockEmptyErrorResponse = (status = 400, method = 'GET') => axios[method.toLowerCase()].mockRejectedValue();
+
+// eslint-disable-next-line no-unused-vars
+const mockStatusTextErrorResponse = (status = 400, method = 'GET', returnBody = {}) =>
+  axios[method.toLowerCase()].mockRejectedValue({ response: { status, statusText: returnBody } });
 
 module.exports = {
+  initialState,
   findByDataAttr,
   checkProps,
   testStore,
@@ -123,4 +168,6 @@ module.exports = {
   clickButton,
   mockSuccesfulResponse,
   mockErrorResponse,
+  mockEmptyErrorResponse,
+  mockStatusTextErrorResponse,
 };

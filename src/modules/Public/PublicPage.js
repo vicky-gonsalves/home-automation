@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router';
-import SignInButton from '../../_components/buttons/SignInButton/SignInButton';
+import SignInButton from '../../_components/buttons/signIn-button/signInButton';
 import Footer from '../../_components/footer/footer';
 import Navbar from '../../_components/navbar/navbar';
 import config from '../../config';
@@ -75,14 +75,26 @@ export class PublicPage extends Component {
   }
 }
 
-PublicPage.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
 function mapStateToProps(state) {
   const { isFetching, isLoggedIn, tokens } = state.user;
   return { isFetching, isLoggedIn, tokens };
 }
+
+PublicPage.propTypes = {
+  classes: PropTypes.shape({
+    main: PropTypes.string.isRequired,
+    icon: PropTypes.string.isRequired,
+    heroContent: PropTypes.string.isRequired,
+    heroButtons: PropTypes.string.isRequired,
+    footer: PropTypes.string.isRequired,
+  }),
+  history: PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired,
+  match: PropTypes.object.isRequired,
+  isFetching: PropTypes.bool.isRequired,
+  isLoggedIn: PropTypes.bool.isRequired,
+  tokens: PropTypes.object,
+};
 
 const connectedPublicPage = connect(mapStateToProps, null)(PublicPage);
 

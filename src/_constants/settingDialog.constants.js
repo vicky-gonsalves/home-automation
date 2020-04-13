@@ -1,0 +1,5 @@
+export const settingDialogConstants = {
+  OPEN_SETTINGS: 'OPEN_SETTINGS',
+  CLOSE_SETTINGS: 'CLOSE_SETTINGS',
+  RESET_SETTINGS: 'RESET_SETTINGS',
+};

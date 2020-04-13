@@ -10,7 +10,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { actions } from '../../../_actions/user.actions';
 import Footer from '../../../_components/footer/footer';
-import SignInForm from '../../../_components/forms/SignInForm/SignInForm';
+import SignInForm from '../../../_components/forms/signIn-form/SignInForm';
 import Navbar from '../../../_components/navbar/navbar';
 import { history } from '../../../_helpers/history';
 import config from '../../../config';
@@ -38,12 +38,6 @@ const useStyles = theme => ({
 });
 
 export class SignInPage extends Component {
-  constructor(props) {
-    super(props);
-    // reset login status
-    this.props.signOut();
-  }
-
   // eslint-disable-next-line class-methods-use-this
   navigateToForgotPass() {
     history.push('/forgot-password');
@@ -100,8 +94,22 @@ function mapState(state) {
 }
 
 const actionCreators = {
-  signOut: actions.signOut,
   signIn: actions.signIn,
+};
+
+SignInPage.propTypes = {
+  classes: PropTypes.shape({
+    paper: PropTypes.string.isRequired,
+    main: PropTypes.string.isRequired,
+    footer: PropTypes.string.isRequired,
+    avatar: PropTypes.string.isRequired,
+  }),
+  history: PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired,
+  match: PropTypes.object.isRequired,
+  isLoggedIn: PropTypes.bool.isRequired,
+  tokens: PropTypes.object,
+  signIn: PropTypes.func.isRequired,
 };
 
 const connectedSignInPage = connect(mapState, actionCreators)(SignInPage);

@@ -2,13 +2,7 @@
   "env": {
     "node": true
   },
-  "extends": [
-    "react-app",
-    "airbnb-base",
-    "plugin:prettier/recommended",
-    "plugin:jest/recommended",
-    "plugin:security/recommended"
-  ],
+  "extends": ["react-app"],
   "plugins": ["prettier", "jest", "security"],
   "parserOptions": {
     "ecmaVersion": 2018

@@ -1,15 +1,20 @@
 import { Card, CardContent, CardHeader } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
-import IconButton from '@material-ui/core/IconButton';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import SettingsIcon from '@material-ui/icons/Settings';
-import WifiIcon from '@material-ui/icons/Wifi';
-import React from 'react';
+import Alert from '@material-ui/lab/Alert';
+import moment from 'moment';
+import PropTypes from 'prop-types';
+import React, { useEffect, useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
+import SettingIconButton from '../../buttons/setting-icon-button/settingIconButton';
+import DeviceOfflineAlert from '../../device-offline-alert/deviceOfflineAlert';
+import OnlineDeviceStatus from '../../online-device-status/onlineDeviceStatus';
+import PreferredDevice from '../../preferred-device/preferredDevice';
 import MotorMode from '../../radios/motor-mode/motorMode';
-import MotorStatus from '../../switches/motor-status/motorStatus';
+import MotorSwitch from '../../switches/motor-switch/motorSwitch';
 import Tank from '../../tank/tank';
-import TankCardAction from '../tank-card-action/TankCardAction';
+import CardActionFooter from '../card-action/CardActionFooter';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -25,7 +30,7 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(0, 1),
   },
   mode: {
-    margin: theme.spacing(1, 0),
+    padding: theme.spacing(0, 1),
   },
   buttonsGrp: {
     display: 'flex',
@@ -33,43 +38,166 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  items: {
+    marginBottom: theme.spacing(2),
+    '&:last-child': {
+      marginBottom: theme.spacing(0),
+    },
+  },
+  update: {
+    marginTop: theme.spacing(2),
+    textAlign: 'center',
+  },
 }));
 
-const TankCard = () => {
+const TankCard = ({ deviceId, deviceName }) => {
   const classes = useStyles();
+  const [updatedAt, setUpdatedAt] = useState();
+  const ref = useRef(null);
+  let thisSubDevices = [];
+  let waterLevel = 0;
+  let isDeviceOnline = false;
+  let preferredDevice;
+
+  // noinspection JSValidateTypes
+  ref.current = { updatedAt, setUpdatedAt };
+
+  const socketIds = useSelector(state => state.onlineDevice);
+  if (socketIds && socketIds.onlineDevices && socketIds.onlineDevices.length && deviceId) {
+    isDeviceOnline = socketIds.onlineDevices.filter(({ bindedTo }) => bindedTo && bindedTo === deviceId).length > 0;
+  }
+
+  const subDevices = useSelector(state => state && state.subDevice && state.subDevice.subDevices);
+  const deviceSettings = useSelector(state => state && state.deviceSetting && state.deviceSetting.deviceSettings);
+  const deviceParams = useSelector(state => state && state.deviceParam && state.deviceParam.deviceParams);
+
+  if (deviceParams && deviceParams.length) {
+    const wLevel = deviceParams.filter(({ paramName }) => paramName === 'waterLevel');
+    if (wLevel.length) {
+      waterLevel = wLevel[0];
+      if (waterLevel && waterLevel.updatedAt) {
+        ref.current.updatedAt = moment(waterLevel.updatedAt).fromNow();
+      }
+    }
+  }
+  if (deviceId && subDevices.length) {
+    thisSubDevices = subDevices.filter(subDevice => subDevice.deviceId === deviceId && subDevice.type === 'motorSwitch');
+  }
+
+  if (deviceId && subDevices.length && deviceSettings.length) {
+    preferredDevice = deviceSettings.filter(
+      ({ bindedTo, idType, paramName, type }) =>
+        bindedTo === deviceId && type === 'device' && idType === 'deviceId' && paramName === 'preferredSubDevice'
+    )[0];
+  }
+
+  const { paramValue } = waterLevel;
+
+  // noinspection JSUnresolvedVariable
+  useEffect(() => {
+    const updatedAtInterval = setInterval(() => {
+      // noinspection JSUnresolvedVariable,JSUnresolvedFunction
+      ref.current.setUpdatedAt(moment(waterLevel.updatedAt).fromNow());
+    }, 1000);
+    return () => {
+      clearInterval(updatedAtInterval);
+    };
+  }, [waterLevel.updatedAt]);
+
+  const renderOfflineAlert = () => {
+    if (!isDeviceOnline) {
+      return <DeviceOfflineAlert data-test="tankOfflineAlertContainer" />;
+    }
+  };
+
+  const renderSubDeviceAlert = () => {
+    if (!thisSubDevices.length) {
+      return (
+        <CardContent className={classes.cardContent} data-test="tankCardNoSubDeviceAlertContainer">
+          {renderOfflineAlert()}
+          <Alert severity="info">It seems devices are not yet added. Please contact administrator!</Alert>
+        </CardContent>
+      );
+    }
+  };
+
+  const renderPreferredSubDevices = subDevice => {
+    if (thisSubDevices.length > 1 && preferredDevice && preferredDevice.paramValue === subDevice.subDeviceId) {
+      return <PreferredDevice data-test="preferredDeviceContainer" />;
+    }
+  };
+
+  const renderLastUpdated = () => {
+    const { updatedAt: lastUpdated } = ref.current;
+    return (
+      <Typography
+        component="div"
+        color="textSecondary"
+        variant="caption"
+        className={classes.update}
+        data-test="tankUpdateContainer"
+      >
+        {`Updated ${lastUpdated}`}
+      </Typography>
+    );
+  };
+
+  const renderButtonGroups = subDevice => {
+    return (
+      <div key={subDevice.subDeviceId} className={classes.items}>
+        {renderPreferredSubDevices(subDevice)}
+        <MotorSwitch
+          name={subDevice.name}
+          deviceId={deviceId}
+          subDeviceId={subDevice.subDeviceId}
+          data-test="MotorSwitchContainer"
+        />
+        <MotorMode
+          name={subDevice.name}
+          deviceId={deviceId}
+          subDeviceId={subDevice.subDeviceId}
+          data-test="MotorModeContainer"
+        />
+      </div>
+    );
+  };
 
   return (
-    <Card className={classes.default}>
+    <Card className={classes.default} data-test="tankCardContainer">
       <CardHeader
         className={classes.cardHeader}
-        avatar={<WifiIcon color="primary" />}
-        action={
-          <IconButton aria-label="settings">
-            <SettingsIcon />
-          </IconButton>
-        }
-        title="Tank"
+        avatar={<OnlineDeviceStatus isDeviceOnline={isDeviceOnline} />}
+        action={<SettingIconButton deviceName={deviceName} deviceId={deviceId} dialogType={'tank'} />}
+        title={deviceName}
         titleTypographyProps={{ align: 'center', variant: 'h6', color: 'primary', gutterBottom: false }}
       />
-      <CardContent className={classes.cardContent}>
-        <div className={classes.root}>
-          <Grid container spacing={1}>
-            <Grid item xs={5} sm={4} md={5} lg={3}>
-              <Tank />
-            </Grid>
-            <Grid item xs={7} sm={8} md={7} lg={9} className={classes.buttonsGrp}>
-              <MotorStatus />
-              <MotorMode />
-            </Grid>
-          </Grid>
-        </div>
-        <Typography component="div" color="textSecondary" variant="caption">
-          Last update at: Feb 18, 2020, 11:49:51 AM
-        </Typography>
-      </CardContent>
-      <TankCardAction />
+      {renderSubDeviceAlert()}
+      {thisSubDevices.length > 0 && (
+        <React.Fragment>
+          <CardContent className={classes.cardContent} data-test="tankCardContentContainer">
+            {renderOfflineAlert()}
+            <div className={classes.root}>
+              <Grid container spacing={1}>
+                <Grid item xs={5} sm={4} md={5} lg={3}>
+                  <Tank waterLevel={paramValue} data-test="tankContainer" />
+                  {renderLastUpdated()}
+                </Grid>
+                <Grid item xs={7} sm={8} md={7} lg={9} className={classes.buttonsGrp}>
+                  {thisSubDevices && thisSubDevices.map(subDevice => renderButtonGroups(subDevice))}
+                </Grid>
+              </Grid>
+            </div>
+          </CardContent>
+          <CardActionFooter deviceId={deviceId} deviceVariant="tank" data-test="tankCardActionFooterContainer" />
+        </React.Fragment>
+      )}
     </Card>
   );
+};
+
+TankCard.propTypes = {
+  deviceId: PropTypes.string.isRequired,
+  deviceName: PropTypes.string.isRequired,
 };
 
 export default TankCard;

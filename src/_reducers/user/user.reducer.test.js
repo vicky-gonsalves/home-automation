@@ -12,6 +12,52 @@ describe('User Reducer', () => {
     expect(newState).toEqual({});
   });
 
+  it('should return new state if SET_USER', () => {
+    const currentUser = {
+      name: 'Vicky Gonsalves',
+      email: 'vicky.gonsalves@outlook.com',
+      remember: false,
+      isLoggedIn: true,
+      isFetching: false,
+      tokens: {},
+      loginError: null,
+      isAuthorized: true,
+    };
+    const newState = user(
+      {},
+      {
+        type: userConstants.SET_USER,
+        payload: {
+          name: currentUser.name,
+          email: currentUser.email,
+          remember: currentUser.remember,
+          tokens: currentUser.tokens,
+        },
+      }
+    );
+    expect(newState).toEqual(currentUser);
+  });
+
+  it('should return new state if SET_USER_TOKENS', () => {
+    const currentUser = {
+      isLoggedIn: true,
+      isFetching: false,
+      tokens: { refresh: { token: 'sometoken' } },
+      loginError: null,
+      isAuthorized: false,
+    };
+    const newState = user(
+      {},
+      {
+        type: userConstants.SET_USER_TOKENS,
+        payload: {
+          tokens: currentUser.tokens,
+        },
+      }
+    );
+    expect(newState).toEqual(currentUser);
+  });
+
   it('should return new state if SIGN_IN', () => {
     const currentUser = {
       isFetching: true,
@@ -27,41 +73,42 @@ describe('User Reducer', () => {
     expect(newState).toEqual(currentUser);
   });
 
-  it('should return new state if SET_USER', () => {
-    const currentUser = {
-      name: 'Vicky Gonsalves',
-      email: 'vicky.gonsalves@outlook.com',
-      remember: false,
-      isLoggedIn: true,
-      isFetching: false,
-      tokens: {},
-      loginError: null,
-    };
-    const newState = user(
-      {},
-      {
-        type: userConstants.SET_USER,
-        payload: currentUser,
-      }
-    );
-    expect(newState).toEqual(currentUser);
-  });
-
   it('should return default state if SIGN_OUT', () => {
     const currentUser = {
-      email: null,
-      isFetching: false,
-      isLoggedIn: undefined,
-      loginError: null,
       name: null,
-      remember: false,
-      tokens: {},
+      email: null,
+      remember: null,
+      isLoggedIn: false,
+      isFetching: false,
+      tokens: null,
+      loginError: null,
+      isAuthorized: false,
     };
     const newState = user(
       {},
       {
         type: userConstants.SIGN_OUT,
-        payload: currentUser,
+      }
+    );
+    expect(newState).toEqual(currentUser);
+  });
+
+  it('should return default state if GET_ME', () => {
+    const currentUser = {
+      name: 'Vicky Gonsalves',
+      email: 'vicky.gonsalves@outlook.com',
+      isFetching: false,
+      loginError: null,
+      isAuthorized: true,
+    };
+    const newState = user(
+      {},
+      {
+        type: userConstants.GET_ME,
+        payload: {
+          name: currentUser.name,
+          email: currentUser.email,
+        },
       }
     );
     expect(newState).toEqual(currentUser);
@@ -70,13 +117,16 @@ describe('User Reducer', () => {
   it('should return new state if SET_LOGIN_ERROR', () => {
     const currentUser = {
       isFetching: false,
-      loginError: undefined,
+      loginError: 'Error',
+      isAuthorized: false,
     };
     const newState = user(
       {},
       {
         type: userConstants.SET_LOGIN_ERROR,
-        payload: currentUser,
+        payload: {
+          error: currentUser.loginError,
+        },
       }
     );
     expect(newState).toEqual(currentUser);
@@ -91,13 +141,19 @@ describe('User Reducer', () => {
       isFetching: false,
       tokens: {},
       loginError: null,
+      isAuthorized: true,
     };
     localStorage.setItem('user', JSON.stringify(currentUser));
     const newState = user(
       {},
       {
         type: userConstants.SET_USER,
-        payload: currentUser,
+        payload: {
+          name: currentUser.name,
+          email: currentUser.email,
+          remember: currentUser.remember,
+          tokens: currentUser.tokens,
+        },
       }
     );
     expect(newState).toEqual(JSON.parse(localStorage.getItem('user')));
@@ -112,13 +168,19 @@ describe('User Reducer', () => {
       isFetching: false,
       tokens: {},
       loginError: null,
+      isAuthorized: true,
     };
     sessionStorage.setItem('user', JSON.stringify(currentUser));
     const newState = user(
       {},
       {
         type: userConstants.SET_USER,
-        payload: currentUser,
+        payload: {
+          name: currentUser.name,
+          email: currentUser.email,
+          remember: currentUser.remember,
+          tokens: currentUser.tokens,
+        },
       }
     );
     expect(newState).toEqual(JSON.parse(sessionStorage.getItem('user')));

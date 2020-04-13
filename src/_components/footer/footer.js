@@ -2,7 +2,7 @@ import Link from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import Toaster from '../toaster';
+import Toaster from '../toaster/toaster';
 
 class Footer extends Component {
   render() {
@@ -26,7 +26,8 @@ class Footer extends Component {
 }
 
 Footer.propTypes = {
-  appName: PropTypes.string,
+  appName: PropTypes.string.isRequired,
+  'data-test': PropTypes.string.isRequired,
 };
 
 export default Footer;

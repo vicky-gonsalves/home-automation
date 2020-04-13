@@ -8,6 +8,13 @@ const setUser = userObj => {
   };
 };
 
+const setUserTokens = tokens => {
+  return {
+    type: userConstants.SET_USER_TOKENS,
+    payload: { tokens },
+  };
+};
+
 const setLoginError = error => {
   return {
     type: userConstants.SET_LOGIN_ERROR,
@@ -30,6 +37,7 @@ const signIn = userObj => dispatch => {
           tokens: response.tokens,
         })
       );
+      dispatch(setLoginError(null));
     })
     .catch(error => {
       // handle error
@@ -44,9 +52,15 @@ const signOut = () => dispatch => {
   userService.signOutService();
 };
 
+const me = () => {
+  return userService.getMe();
+};
+
 export const actions = {
   setUser,
   setLoginError,
   signIn,
   signOut,
+  me,
+  setUserTokens,
 };
