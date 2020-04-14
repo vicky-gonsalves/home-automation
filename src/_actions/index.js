@@ -2,7 +2,7 @@ export * from './user.actions';
 export * from './socket.actions';
 export * from './device/device.actions';
 export * from './sub-device/sub-device.actions';
-export * from './sub-device-param/sub-device-param.actions';
+export * from './sub-device-param/subDeviceParam.actions';
 export * from './device-setting/deviceSetting.actions';
 export * from './sub-device-setting/subDeviceSetting.actions';
 export * from './online-device/onlineDevice.actions';

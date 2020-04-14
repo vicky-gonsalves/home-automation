@@ -3,7 +3,7 @@ import thunk from 'redux-thunk';
 import { subDeviceParamService } from '../../_services';
 import { initialState } from '../../_utils';
 import { subDeviceParamNine, subDeviceParamThree } from '../../_utils/fixtures/subDeviceParam.fixture';
-import { subDeviceParamActions } from './sub-device-param.actions';
+import { subDeviceParamActions } from './subDeviceParam.actions';
 
 let store;
 const mockStore = configureStore([thunk]);
