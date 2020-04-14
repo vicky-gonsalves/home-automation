@@ -22,7 +22,7 @@ import {
   subDeviceParamActions,
   subDeviceSettingActions,
 } from '../../_actions';
-import { sharedDeviceActions } from '../../_actions/sharedDevice.actions';
+import { sharedDeviceActions } from '../../_actions/shared-device/sharedDevice.actions';
 
 const useStyles = makeStyles(() => ({
   title: {

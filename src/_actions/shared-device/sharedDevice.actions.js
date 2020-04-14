@@ -1,4 +1,4 @@
-import { sharedDeviceConstants } from '../_constants';
+import { sharedDeviceConstants } from '../../_constants';
 
 const removeAllSharedDevices = () => dispatch => {
   dispatch({

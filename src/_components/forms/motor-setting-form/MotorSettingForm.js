@@ -12,7 +12,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import * as yup from 'yup';
 import { deviceSettingActions } from '../../../_actions';
-import { settingDialogActions } from '../../../_actions/settingDialog.actions';
+import { settingDialogActions } from '../../../_actions/setting-dialog/settingDialog.actions';
 
 const useStyles = makeStyles(theme => ({
   form: {

@@ -19,7 +19,7 @@ import {
   subDeviceParamActions,
   subDeviceSettingActions,
 } from './_actions';
-import { sharedDeviceActions } from './_actions/sharedDevice.actions';
+import { sharedDeviceActions } from './_actions/shared-device/sharedDevice.actions';
 import { userConstants } from './_constants';
 import { history } from './_helpers/history';
 import { userService } from './_services';

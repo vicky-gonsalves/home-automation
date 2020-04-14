@@ -1,7 +1,7 @@
 import { pick } from 'lodash';
 import { subDeviceSettingConstants } from '../_constants/subDeviceSetting.constants';
 import { settingService } from '../_services';
-import { settingDialogActions } from './settingDialog.actions';
+import { settingDialogActions } from './setting-dialog/settingDialog.actions';
 
 const pickFilteredParams = setting => pick(setting, ['type', 'idType', 'parent', 'bindedTo', 'paramName', 'paramValue']);
 
