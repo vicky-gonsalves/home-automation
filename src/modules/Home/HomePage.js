@@ -44,6 +44,7 @@ export class HomePage extends Component {
     }
   }
 
+  // noinspection JSCheckFunctionSignatures
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.connected !== this.props.connected) {
       if (this.props.connected) {
