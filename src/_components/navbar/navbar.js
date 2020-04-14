@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  actions,
+  userActions,
   deviceActions,
   deviceParamActions,
   deviceSettingActions,
@@ -22,7 +22,7 @@ import {
   subDeviceParamActions,
   subDeviceSettingActions,
 } from '../../_actions';
-import { sharedDeviceActions } from '../../_actions/sharedDevice.actions';
+import { sharedDeviceActions } from '../../_actions/shared-device/sharedDevice.actions';
 
 const useStyles = makeStyles(() => ({
   title: {
@@ -48,7 +48,7 @@ export default function Navbar(props) {
 
   const handleLogout = () => {
     handleClose();
-    dispatch(actions.signOut());
+    dispatch(userActions.signOut());
     dispatch(socketActions.socketDisconnect());
     dispatch(deviceActions.removeAllDevices());
     dispatch(sharedDeviceActions.removeAllSharedDevices());

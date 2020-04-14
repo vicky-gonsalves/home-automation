@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Redirect } from 'react-router';
 import { Route, Router, Switch } from 'react-router-dom';
 import {
-  actions,
+  userActions,
   deviceActions,
   deviceParamActions,
   deviceSettingActions,
@@ -19,7 +19,7 @@ import {
   subDeviceParamActions,
   subDeviceSettingActions,
 } from './_actions';
-import { sharedDeviceActions } from './_actions/sharedDevice.actions';
+import { sharedDeviceActions } from './_actions/shared-device/sharedDevice.actions';
 import { userConstants } from './_constants';
 import { history } from './_helpers/history';
 import { userService } from './_services';
@@ -54,7 +54,7 @@ function App() {
   const showProgress = skipPath.indexOf(history.location.pathname) < 0 && (currentUser.isFetching || isFetchingDevice);
 
   const disconnect = () => {
-    dispatch(actions.signOut());
+    dispatch(userActions.signOut());
     dispatch(socketActions.socketDisconnect());
     dispatch(deviceActions.removeAllDevices());
     dispatch(sharedDeviceActions.removeAllSharedDevices());
@@ -77,7 +77,7 @@ function App() {
       )
       .then(response => {
         userService.setNewTokens(response.data);
-        dispatch(actions.setUserTokens(response.data));
+        dispatch(userActions.setUserTokens(response.data));
         // eslint-disable-next-line no-param-reassign
         failedRequest.response.config.headers.Authorization = `Bearer ${response.data.access.token}`;
         return Promise.resolve();
@@ -97,7 +97,7 @@ function App() {
 
   const fetchMe = () => {
     if (isLoggedIn) {
-      actions
+      userActions
         .me()
         .then(response => {
           if (response && response.data) {

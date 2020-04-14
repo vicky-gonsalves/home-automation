@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { actions } from '../../_actions';
+import { userActions } from '../../_actions';
 import { meData } from '../../_utils/mock/me/me.data';
 import { deviceService } from './device.service';
 import config from '../../config';
@@ -26,7 +26,7 @@ describe('deviceService', () => {
   });
 
   it('should return authentication error', async () => {
-    actions.signOut = jest.fn();
+    userActions.signOut = jest.fn();
     const message = 'Please authenticate';
     const status = 401;
     const error = {
@@ -39,8 +39,8 @@ describe('deviceService', () => {
     const apiCall = deviceService.getMyDevices();
     expect(axios.get).toHaveBeenCalledWith(`${config.apiUrl}/me/devices`);
     await expect(apiCall).rejects.toEqual(message);
-    expect(actions.signOut).toHaveBeenCalled();
-    actions.signOut.mockRestore();
+    expect(userActions.signOut).toHaveBeenCalled();
+    userActions.signOut.mockRestore();
   });
 
   it('should return Bad request error from statusText', async () => {

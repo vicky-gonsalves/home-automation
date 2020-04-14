@@ -1,4 +1,4 @@
-import { onlineDeviceConstants } from '../_constants';
+import { onlineDeviceConstants } from '../../_constants';
 
 const removeAllOnlineDevices = () => dispatch => {
   dispatch({

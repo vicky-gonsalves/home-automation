@@ -1,4 +1,4 @@
-import { settingDialogConstants } from '../_constants';
+import { settingDialogConstants } from '../../_constants';
 
 const open = (title, deviceId, dialogType) => dispatch =>
   dispatch({ type: settingDialogConstants.OPEN_SETTINGS, payload: { title, deviceId, dialogType } });

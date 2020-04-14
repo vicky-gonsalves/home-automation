@@ -3,7 +3,7 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { settingDialogActions } from '../../../_actions/settingDialog.actions';
+import { settingDialogActions } from '../../../_actions/setting-dialog/settingDialog.actions';
 
 const SettingIconButton = ({ deviceId, deviceName, dialogType }) => {
   const dispatch = useDispatch();

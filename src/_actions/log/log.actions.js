@@ -1,4 +1,4 @@
-import { logConstants } from '../_constants';
+import { logConstants } from '../../_constants';
 
 const removeAllLogs = () => dispatch => {
   dispatch({

@@ -1,5 +1,5 @@
-import { userConstants } from '../_constants/user.constants';
-import { userService } from '../_services/user/user.service';
+import { userConstants } from '../../_constants/user.constants';
+import { userService } from '../../_services/user/user.service';
 
 const setUser = userObj => {
   return {
@@ -56,7 +56,7 @@ const me = () => {
   return userService.getMe();
 };
 
-export const actions = {
+export const userActions = {
   setUser,
   setLoginError,
   signIn,

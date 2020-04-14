@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import * as yup from 'yup';
-import { actions } from '../../../_actions';
+import { userActions } from '../../../_actions';
 
 const useStyles = makeStyles(theme => ({
   form: {
@@ -103,7 +103,7 @@ function mapStateToProps(state) {
 }
 
 const actionCreators = {
-  signIn: actions.signIn,
+  signIn: userActions.signIn,
 };
 
 SimpleSignInForm.propTypes = {

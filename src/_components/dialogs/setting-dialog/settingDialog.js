@@ -4,7 +4,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { settingDialogActions } from '../../../_actions/settingDialog.actions';
+import { settingDialogActions } from '../../../_actions/setting-dialog/settingDialog.actions';
 import MotorSettingForm from '../../forms/motor-setting-form/MotorSettingForm';
 import SmartSwitchSettingForm from '../../forms/smart-switch-setting-form/SmartSwitchSettingForm';
 

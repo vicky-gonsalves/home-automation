@@ -1,4 +1,4 @@
-import { subDeviceConstants } from '../_constants';
+import { subDeviceConstants } from '../../_constants';
 
 const removeAllSubDevices = () => dispatch => {
   dispatch({

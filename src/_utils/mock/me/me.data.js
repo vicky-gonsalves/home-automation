@@ -691,3 +691,42 @@ export const meData = {
     },
   ],
 };
+
+export const myDeviceState = [
+  {
+    type: 'DEVICE_STORE_ALL',
+    payload: meData.devices.myDevices,
+  },
+  {
+    type: 'SHARED_DEVICE_STORE_ALL',
+    payload: meData.devices.sharedDevices,
+  },
+  {
+    type: 'SUB_DEVICE_STORE_ALL',
+    payload: meData.subDevices,
+  },
+  {
+    type: 'SUB_DEVICE_PARAM_STORE_ALL',
+    payload: meData.subDeviceParams,
+  },
+  {
+    type: 'DEVICE_PARAM_STORE_ALL',
+    payload: meData.deviceParams,
+  },
+  {
+    type: 'DEVICE_SETTING_STORE_ALL',
+    payload: meData.settings.deviceSettings,
+  },
+  {
+    type: 'SUB_DEVICE_SETTING_STORE_ALL',
+    payload: meData.settings.subDeviceSettings,
+  },
+  {
+    type: 'ONLINE_DEVICE_STORE_ALL',
+    payload: meData.onlineDevices,
+  },
+  {
+    type: 'LOG_STORE_ALL',
+    payload: meData.logs,
+  },
+];

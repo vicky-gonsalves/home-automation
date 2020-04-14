@@ -4,10 +4,10 @@ import CloseIcon from '@material-ui/icons/Close';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { deviceSettingActions } from '../../_actions/deviceSetting.actions';
-import { subDeviceParamActions } from '../../_actions/sub-device-param.actions';
-import { subDeviceSettingActions } from '../../_actions/subDeviceSetting.actions';
-import { actions } from '../../_actions/user.actions';
+import { deviceSettingActions } from '../../_actions/device-setting/deviceSetting.actions';
+import { subDeviceParamActions } from '../../_actions/sub-device-param/subDeviceParam.actions';
+import { subDeviceSettingActions } from '../../_actions/sub-device-setting/subDeviceSetting.actions';
+import { userActions } from '../../_actions/user/user.actions';
 
 export class Toaster extends Component {
   constructor(props) {
@@ -89,7 +89,7 @@ function mapState(state) {
 }
 
 const actionCreators = {
-  clearLoginError: actions.setLoginError,
+  clearLoginError: userActions.setLoginError,
   clearDeviceSettingError: deviceSettingActions.setDeviceSettingError,
   clearSubDeviceSettingError: subDeviceSettingActions.setSubDeviceSettingError,
   clearSubDeviceParamError: subDeviceParamActions.setSubDeviceParamError,
