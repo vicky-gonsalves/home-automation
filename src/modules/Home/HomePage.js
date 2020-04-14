@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { actions, socketActions } from '../../_actions';
-import { deviceActions } from '../../_actions/device.actions';
+import { deviceActions } from '../../_actions/device/device.actions';
 import AppSkeleton from '../../_components/app-skeleton/AppSkeleton';
 import SmartSwitchCard from '../../_components/cards/smart-switch-card/SmartSwitchCard';
 import TankCard from '../../_components/cards/tank-card/TankCard';

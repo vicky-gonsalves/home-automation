@@ -7,9 +7,9 @@ import {
   subDeviceConstants,
   subDeviceParamConstants,
   subDeviceSettingConstants,
-} from '../_constants';
-import { deviceParamConstants } from '../_constants/deviecParam.constants';
-import { deviceService } from '../_services';
+} from '../../_constants';
+import { deviceParamConstants } from '../../_constants/deviecParam.constants';
+import { deviceService } from '../../_services';
 
 const setDevices = devices => {
   return {
