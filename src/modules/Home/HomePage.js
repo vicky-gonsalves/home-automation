@@ -54,44 +54,99 @@ export class HomePage extends Component {
 
   render() {
     const { classes, isFetchingDevice, devices, sharedDevices } = this.props;
+
+    const renderAppSkeleton = () => {
+      if (isFetchingDevice) {
+        return <AppSkeleton data-test="appSkeletonComponent" />;
+      }
+    };
+
+    const renderNoDeviceAlertComponent = () => {
+      if (!isFetchingDevice && devices.length <= 0 && sharedDevices.length <= 0) {
+        return (
+          <Alert severity="info" data-test="noDeviceAlertComponent">
+            <AlertTitle>No Devices</AlertTitle>
+            Hi! it seems you don't have any smart home devices yet!
+          </Alert>
+        );
+      }
+    };
+
+    const renderMyTankCardComponent = device => {
+      if (device.variant && device.variant === 'tank') {
+        return <TankCard deviceName={device.name} deviceId={device.deviceId} data-test="myTankCardComponent" />;
+      }
+    };
+
+    const renderMySmartSwitchCardComponent = device => {
+      if (device.variant && device.variant === 'smartSwitch') {
+        return (
+          <SmartSwitchCard deviceName={device.name} deviceId={device.deviceId} data-test="mySmartSwitchCardComponent" />
+        );
+      }
+    };
+
+    const renderMyDeviceGridComponent = () => {
+      return (
+        devices &&
+        devices.length > 0 &&
+        devices.map(device => (
+          <Grid key={device.deviceId} item xs={12} sm={12} md={6} xl={4} data-test="myDeviceGridComponent">
+            {renderMyTankCardComponent(device)}
+            {renderMySmartSwitchCardComponent(device)}
+          </Grid>
+        ))
+      );
+    };
+
+    const renderSharedTankCardComponent = device => {
+      if (device.variant && device.variant === 'tank') {
+        return <TankCard deviceName={device.name} deviceId={device.deviceId} data-test="sharedTankCardComponent" />;
+      }
+    };
+
+    const renderSharedSmartSwitchCardComponent = device => {
+      if (device.variant && device.variant === 'smartSwitch') {
+        return (
+          <SmartSwitchCard deviceName={device.name} deviceId={device.deviceId} data-test="sharedSmartSwitchCardComponent" />
+        );
+      }
+    };
+
+    const renderSharedDeviceGridComponent = () => {
+      return (
+        sharedDevices &&
+        sharedDevices.length > 0 &&
+        sharedDevices.map(device => (
+          <Grid key={device.deviceId} item xs={12} sm={12} md={6} xl={4} data-test="sharedDeviceGridComponent">
+            {renderSharedTankCardComponent(device)}
+            {renderSharedSmartSwitchCardComponent(device)}
+          </Grid>
+        ))
+      );
+    };
+
+    const renderSettingDialogComponent = () => {
+      if ((devices && devices.length > 0) || (sharedDevices && sharedDevices.length > 0)) {
+        return <SettingDialog data-test="settingDialogComponent" />;
+      }
+    };
+
     return (
       <React.Fragment>
         <CssBaseline />
         <Navbar appName={config.appName} data-test="navbarComponent" />
-        <Container disableGutters={true} maxWidth="xl">
+        <Container disableGutters={true} maxWidth="xl" data-test="homePageContainer">
           <div className={classes.root}>
-            {isFetchingDevice && <AppSkeleton />}
-            {!isFetchingDevice && devices.length <= 0 && sharedDevices <= 0 && (
-              <Alert severity="info">
-                <AlertTitle>No Devices</AlertTitle>
-                Hi! it seems you don't have any smart home devices yet!
-              </Alert>
-            )}
-            <Grid container spacing={3}>
-              {devices.map(device => (
-                <Grid key={device.deviceId} item xs={12} sm={12} md={6} xl={4}>
-                  {device.variant && device.variant === 'tank' && (
-                    <TankCard deviceName={device.name} deviceId={device.deviceId} />
-                  )}
-                  {device.variant && device.variant === 'smartSwitch' && (
-                    <SmartSwitchCard deviceName={device.name} deviceId={device.deviceId} />
-                  )}
-                </Grid>
-              ))}
-              {sharedDevices.map(device => (
-                <Grid key={device.deviceId} item xs={12} sm={12} md={6} xl={4}>
-                  {device.variant && device.variant === 'tank' && (
-                    <TankCard deviceName={device.name} deviceId={device.deviceId} />
-                  )}
-                  {device.variant && device.variant === 'smartSwitch' && (
-                    <SmartSwitchCard deviceName={device.name} deviceId={device.deviceId} />
-                  )}
-                </Grid>
-              ))}
+            {renderAppSkeleton()}
+            {renderNoDeviceAlertComponent()}
+            <Grid container spacing={3} data-test="deviceGridComponent">
+              {renderMyDeviceGridComponent()}
+              {renderSharedDeviceGridComponent()}
             </Grid>
           </div>
         </Container>
-        <SettingDialog />
+        {renderSettingDialogComponent()}
         {/* Footer */}
         <footer className={classes.footer}>
           <Footer appName={config.appName} data-test="footerComponent" />
