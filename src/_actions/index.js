@@ -1,4 +1,4 @@
-export * from './user.actions';
+export * from './user/user.actions';
 export * from './socket.actions';
 export * from './device/device.actions';
 export * from './sub-device/sub-device.actions';
