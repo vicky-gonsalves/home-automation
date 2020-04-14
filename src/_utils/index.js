@@ -1,9 +1,6 @@
 import { act } from '@testing-library/react';
 import * as axios from 'axios';
 import checkPropTypes from 'check-prop-types';
-import { applyMiddleware, createStore } from 'redux';
-import thunkMiddleware from 'redux-thunk';
-import rootReducer from '../_reducers';
 
 jest.mock('axios');
 
@@ -78,11 +75,6 @@ const checkProps = (component, expectedProps) => {
   return checkPropTypes(component.propTypes, expectedProps, 'props', component.name);
 };
 
-const testStore = initialState => {
-  const createStoreWithMiddleware = applyMiddleware(thunkMiddleware)(createStore);
-  return createStoreWithMiddleware(rootReducer, initialState);
-};
-
 const wait = timeout => new Promise(resolve => setTimeout(resolve, timeout));
 
 const updateFormikField = async (nativeFieldWrapper, targetName, value) => {
@@ -105,19 +97,6 @@ const updateFormikField = async (nativeFieldWrapper, targetName, value) => {
     });
   });
 
-  await wait(0);
-};
-
-const clickFormikCheckbox = async (nativeFormWrapper, targetName, checked) => {
-  await act(async () => {
-    nativeFormWrapper.simulate('change', {
-      persist: () => {},
-      target: {
-        checked,
-        name: targetName,
-      },
-    });
-  });
   await wait(0);
 };
 
@@ -159,11 +138,9 @@ module.exports = {
   initialState,
   findByDataAttr,
   checkProps,
-  testStore,
   findByDataAttrWhenMounted,
   wait,
   updateFormikField,
-  clickFormikCheckbox,
   submitFormikForm,
   clickButton,
   mockSuccesfulResponse,
