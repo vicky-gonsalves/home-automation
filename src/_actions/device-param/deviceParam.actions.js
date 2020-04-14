@@ -1,4 +1,4 @@
-import { deviceParamConstants } from '../_constants';
+import { deviceParamConstants } from '../../_constants';
 
 const removeAllDeviceParams = () => dispatch => {
   dispatch({
