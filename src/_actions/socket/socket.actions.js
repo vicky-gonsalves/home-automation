@@ -10,8 +10,8 @@ import {
   subDeviceConstants,
   subDeviceParamConstants,
   subDeviceSettingConstants,
-} from '../_constants';
-import config from '../config';
+} from '../../_constants';
+import config from '../../config';
 
 let socket;
 const socketInit = accessToken => dispatch => {

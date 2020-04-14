@@ -1,5 +1,5 @@
 export * from './user/user.actions';
-export * from './socket.actions';
+export * from './socket/socket.actions';
 export * from './device/device.actions';
 export * from './sub-device/sub-device.actions';
 export * from './sub-device-param/subDeviceParam.actions';
