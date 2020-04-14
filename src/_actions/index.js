@@ -5,6 +5,6 @@ export * from './sub-device.actions';
 export * from './sub-device-param.actions';
 export * from './device-setting/deviceSetting.actions';
 export * from './subDeviceSetting.actions';
-export * from './onlineDevice.actions';
+export * from './online-device/onlineDevice.actions';
 export * from './device-param/deviceParam.actions';
 export * from './log/log.actions';
