@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import { deviceSettingActions } from '../../_actions/device-setting/deviceSetting.actions';
 import { subDeviceParamActions } from '../../_actions/sub-device-param/subDeviceParam.actions';
 import { subDeviceSettingActions } from '../../_actions/sub-device-setting/subDeviceSetting.actions';
-import { actions } from '../../_actions/user/user.actions';
+import { userActions } from '../../_actions/user/user.actions';
 
 export class Toaster extends Component {
   constructor(props) {
@@ -89,7 +89,7 @@ function mapState(state) {
 }
 
 const actionCreators = {
-  clearLoginError: actions.setLoginError,
+  clearLoginError: userActions.setLoginError,
   clearDeviceSettingError: deviceSettingActions.setDeviceSettingError,
   clearSubDeviceSettingError: subDeviceSettingActions.setSubDeviceSettingError,
   clearSubDeviceParamError: subDeviceParamActions.setSubDeviceParamError,

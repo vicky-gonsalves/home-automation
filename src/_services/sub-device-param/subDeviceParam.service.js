@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { actions } from '../../_actions';
+import { userActions } from '../../_actions';
 import config from '../../config';
 
 const handleResponse = response => {
@@ -21,7 +21,7 @@ const handleError = error => {
   if (error && error.response) {
     if (error.response.status === 401) {
       // auto logout if 401 response returned from api
-      actions.signOut();
+      userActions.signOut();
     }
     err = (error.response.data && error.response.data.message) || error.response.statusText;
   } else {

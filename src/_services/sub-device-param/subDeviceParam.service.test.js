@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { actions } from '../../_actions';
+import { userActions } from '../../_actions';
 import { subDeviceParamOne } from '../../_utils/fixtures/subDeviceParam.fixture';
 import { updatedSubDeviceParams } from '../../_utils/mock/sub-device-param/subDeviceParam.data';
 import config from '../../config';
@@ -29,7 +29,7 @@ describe('deviceSubDeviceParamService', () => {
     });
 
     it('should return authentication error', async () => {
-      actions.signOut = jest.fn();
+      userActions.signOut = jest.fn();
       const message = 'Please authenticate';
       const status = 401;
       const error = {
@@ -42,8 +42,8 @@ describe('deviceSubDeviceParamService', () => {
       const apiCall = subDeviceParamService.updateSubDeviceParamMode(updatedSubDeviceParams);
       expect(axios.patch).toHaveBeenCalledWith(route, { paramValue: subDeviceParamOne.paramValue });
       await expect(apiCall).rejects.toEqual(message);
-      expect(actions.signOut).toHaveBeenCalled();
-      actions.signOut.mockRestore();
+      expect(userActions.signOut).toHaveBeenCalled();
+      userActions.signOut.mockRestore();
     });
 
     it('should return Bad request error from statusText', async () => {
@@ -87,7 +87,7 @@ describe('deviceSubDeviceParamService', () => {
     });
 
     it('should return authentication error', async () => {
-      actions.signOut = jest.fn();
+      userActions.signOut = jest.fn();
       const message = 'Please authenticate';
       const status = 401;
       const error = {
@@ -100,8 +100,8 @@ describe('deviceSubDeviceParamService', () => {
       const apiCall = subDeviceParamService.updateSubDeviceParamStatus(subDeviceParamOne);
       expect(axios.patch).toHaveBeenCalledWith(route, { paramValue: subDeviceParamOne.paramValue });
       await expect(apiCall).rejects.toEqual(message);
-      expect(actions.signOut).toHaveBeenCalled();
-      actions.signOut.mockRestore();
+      expect(userActions.signOut).toHaveBeenCalled();
+      userActions.signOut.mockRestore();
     });
 
     it('should return Bad request error from statusText', async () => {
@@ -154,7 +154,7 @@ describe('deviceSubDeviceParamService', () => {
     });
 
     it('should return authentication error', async () => {
-      actions.signOut = jest.fn();
+      userActions.signOut = jest.fn();
       const message = 'Please authenticate';
       const status = 401;
       const error = {
@@ -170,8 +170,8 @@ describe('deviceSubDeviceParamService', () => {
       );
       expect(axios.patch).toHaveBeenCalledWith(route, { paramValue: subDeviceParamOne.paramValue });
       await expect(apiCall).rejects.toEqual(message);
-      expect(actions.signOut).toHaveBeenCalled();
-      actions.signOut.mockRestore();
+      expect(userActions.signOut).toHaveBeenCalled();
+      userActions.signOut.mockRestore();
     });
 
     it('should return Bad request error from statusText', async () => {

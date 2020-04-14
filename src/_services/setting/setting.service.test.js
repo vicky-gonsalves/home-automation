@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { actions } from '../../_actions';
+import { userActions } from '../../_actions';
 import { updatedSettings } from '../../_utils/mock/setting/setting.data';
 import config from '../../config';
 import { settingService } from './setting.service';
@@ -30,7 +30,7 @@ describe('deviceSettingService', () => {
   });
 
   it('should return authentication error', async () => {
-    actions.signOut = jest.fn();
+    userActions.signOut = jest.fn();
     const message = 'Please authenticate';
     const status = 401;
     const error = {
@@ -43,8 +43,8 @@ describe('deviceSettingService', () => {
     const apiCall = settingService.updateSettings(updatedSettings);
     expect(axios.patch).toHaveBeenCalledWith(`${config.apiUrl}/settings/multi`, updatedSettings);
     await expect(apiCall).rejects.toEqual(message);
-    expect(actions.signOut).toHaveBeenCalled();
-    actions.signOut.mockRestore();
+    expect(userActions.signOut).toHaveBeenCalled();
+    userActions.signOut.mockRestore();
   });
 
   it('should return Bad request error from statusText', async () => {

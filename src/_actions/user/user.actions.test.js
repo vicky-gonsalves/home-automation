@@ -3,7 +3,7 @@ import thunk from 'redux-thunk';
 import { userService } from '../../_services';
 import { initialState, wait } from '../../_utils';
 import { userOne } from '../../_utils/fixtures/user.fixture';
-import { actions } from './user.actions';
+import { userActions } from './user.actions';
 
 let store;
 const mockStore = configureStore([thunk]);
@@ -15,12 +15,12 @@ describe('userActions', () => {
   });
 
   it('should dispatch SET_USER action', () => {
-    store.dispatch(actions.setUser(userOne));
+    store.dispatch(userActions.setUser(userOne));
     expect(store.getActions()).toEqual([{ type: 'SET_USER', payload: userOne }]);
   });
 
   it('should dispatch SET_USER action', () => {
-    store.dispatch(actions.setLoginError('Error'));
+    store.dispatch(userActions.setLoginError('Error'));
     expect(store.getActions()).toEqual([{ type: 'SET_LOGIN_ERROR', payload: { error: 'Error' } }]);
   });
 
@@ -30,7 +30,7 @@ describe('userActions', () => {
       tokens: { access: { token: '', expires: '' }, refresh: { token: '', expires: '' } },
     };
     userService.signInService = jest.fn().mockResolvedValueOnce(user);
-    store.dispatch(actions.signIn({ ...userOne, password: 'somepass', remember: false }));
+    store.dispatch(userActions.signIn({ ...userOne, password: 'somepass', remember: false }));
     await wait();
     expect(store.getActions()).toEqual([
       { type: 'SIGN_IN' },
@@ -41,7 +41,7 @@ describe('userActions', () => {
 
   it('should dispatch SET_LOGIN_ERROR action if errors', async () => {
     userService.signInService = jest.fn().mockRejectedValueOnce('Error');
-    store.dispatch(actions.signIn({ ...userOne, password: 'somepass', remember: false }));
+    store.dispatch(userActions.signIn({ ...userOne, password: 'somepass', remember: false }));
     await wait();
     expect(store.getActions()).toEqual([{ type: 'SIGN_IN' }, { payload: { error: 'Error' }, type: 'SET_LOGIN_ERROR' }]);
   });
@@ -52,12 +52,12 @@ describe('userActions', () => {
       tokens: { access: { token: '', expires: '' }, refresh: { token: '', expires: '' } },
     };
     userService.getMe = jest.fn().mockResolvedValueOnce(user);
-    const response = await actions.me();
+    const response = await userActions.me();
     expect(response).toEqual(user);
   });
 
   it('should dispatch SET_USER_TOKENS action', async () => {
-    store.dispatch(actions.setUserTokens());
+    store.dispatch(userActions.setUserTokens());
     expect(store.getActions()).toEqual([{ payload: {}, type: 'SET_USER_TOKENS' }]);
   });
 });

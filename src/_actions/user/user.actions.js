@@ -56,7 +56,7 @@ const me = () => {
   return userService.getMe();
 };
 
-export const actions = {
+export const userActions = {
   setUser,
   setLoginError,
   signIn,

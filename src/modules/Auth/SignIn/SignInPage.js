@@ -8,7 +8,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { actions } from '../../../_actions/user/user.actions';
+import { userActions } from '../../../_actions/user/user.actions';
 import Footer from '../../../_components/footer/footer';
 import SignInForm from '../../../_components/forms/signIn-form/SignInForm';
 import Navbar from '../../../_components/navbar/navbar';
@@ -94,7 +94,7 @@ function mapState(state) {
 }
 
 const actionCreators = {
-  signIn: actions.signIn,
+  signIn: userActions.signIn,
 };
 
 SignInPage.propTypes = {
