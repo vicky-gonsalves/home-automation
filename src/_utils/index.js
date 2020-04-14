@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import { act } from '@testing-library/react';
 import * as axios from 'axios';
 import checkPropTypes from 'check-prop-types';
