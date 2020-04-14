@@ -5,8 +5,8 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { deviceSettingActions } from '../../_actions/device-setting/deviceSetting.actions';
-import { subDeviceParamActions } from '../../_actions/sub-device-param.actions';
-import { subDeviceSettingActions } from '../../_actions/subDeviceSetting.actions';
+import { subDeviceParamActions } from '../../_actions/sub-device-param/sub-device-param.actions';
+import { subDeviceSettingActions } from '../../_actions/sub-device-setting/subDeviceSetting.actions';
 import { actions } from '../../_actions/user.actions';
 
 export class Toaster extends Component {

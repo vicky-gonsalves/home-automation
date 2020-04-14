@@ -1,5 +1,5 @@
-import { subDeviceParamConstants } from '../_constants';
-import { subDeviceParamService } from '../_services';
+import { subDeviceParamConstants } from '../../_constants';
+import { subDeviceParamService } from '../../_services';
 
 const removeAllSubDeviceParams = () => dispatch => {
   dispatch({

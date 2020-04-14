@@ -11,6 +11,7 @@ describe('subDeviceActions', () => {
   afterEach(() => {
     store.clearActions();
   });
+
   it('should dispatch SHARED_DEVICE_REMOVE_ALL action', () => {
     store.dispatch(subDeviceActions.removeAllSubDevices());
     expect(store.getActions()).toEqual([{ type: 'SUB_DEVICE_REMOVE_ALL' }]);

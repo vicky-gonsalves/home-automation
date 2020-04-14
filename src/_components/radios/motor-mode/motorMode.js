@@ -7,7 +7,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { subDeviceParamActions } from '../../../_actions/sub-device-param.actions';
+import { subDeviceParamActions } from '../../../_actions/sub-device-param/sub-device-param.actions';
 
 const useStyles = makeStyles(theme => ({
   mode: {
