@@ -7,7 +7,7 @@ import React from 'react';
 
 function NotFoundPage() {
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" maxWidth="xs" data-test="notFoundPageContainer">
       <Card variant="outlined">
         <CardContent>
           <Typography variant="h5" component="h2">

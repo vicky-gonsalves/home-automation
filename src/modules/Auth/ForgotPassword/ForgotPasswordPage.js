@@ -1,7 +1,8 @@
 import PropTypes from 'prop-types';
+import React from 'react';
 
 const ForgotPasswordPage = () => {
-  return 'Forgot Password Page Works';
+  return <div data-test="forgotPasswordPageContainer">Forgot Password Page Works</div>;
 };
 
 ForgotPasswordPage.propTypes = {
