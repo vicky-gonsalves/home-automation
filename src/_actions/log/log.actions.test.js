@@ -7,7 +7,7 @@ let store;
 const mockStore = configureStore([thunk]);
 store = mockStore(initialState);
 
-describe('deviceActions', () => {
+describe('logActions', () => {
   afterEach(() => {
     store.clearActions();
   });
