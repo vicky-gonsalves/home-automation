@@ -7,4 +7,4 @@ export * from './device-setting/deviceSetting.actions';
 export * from './subDeviceSetting.actions';
 export * from './onlineDevice.actions';
 export * from './device-param/deviceParam.actions';
-export * from './log.actions';
+export * from './log/log.actions';
