@@ -63,6 +63,10 @@ const initialState = {
   },
 };
 
+const getStateClone = () => {
+  return JSON.parse(JSON.stringify(initialState));
+};
+
 const findByDataAttr = (component, attr) => {
   return component.find(`[data-test='${attr}']`);
 };
@@ -137,6 +141,7 @@ const mockStatusTextErrorResponse = (status = 400, method = 'GET', returnBody = 
 
 module.exports = {
   initialState,
+  getStateClone,
   findByDataAttr,
   checkProps,
   findByDataAttrWhenMounted,

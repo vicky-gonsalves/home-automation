@@ -8,7 +8,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Redirect } from 'react-router';
 import { Route, Router, Switch } from 'react-router-dom';
 import {
-  userActions,
   deviceActions,
   deviceParamActions,
   deviceSettingActions,
@@ -18,6 +17,7 @@ import {
   subDeviceActions,
   subDeviceParamActions,
   subDeviceSettingActions,
+  userActions,
 } from './_actions';
 import { sharedDeviceActions } from './_actions/shared-device/sharedDevice.actions';
 import { userConstants } from './_constants';
@@ -105,6 +105,8 @@ function App() {
               type: userConstants.GET_ME,
               payload: { ...response.data },
             });
+          } else {
+            disconnect();
           }
         })
         .catch(() => {
@@ -115,20 +117,31 @@ function App() {
 
   useEffect(fetchMe, []);
 
-  const PrivateRoute = ({ component: Component, ...rest }) => (
-    <Route {...rest} render={props => (isLoggedIn === true ? <Component {...props} /> : <Redirect to="/signin" />)} />
-  );
+  const PrivateRoute = ({ component: Component, authed, ...rest }) => {
+    return (
+      <Route
+        {...rest}
+        render={props =>
+          authed === true ? (
+            <Component {...props} />
+          ) : (
+            <Redirect to={{ pathname: '/signin', state: { from: props.location } }} />
+          )
+        }
+      />
+    );
+  };
 
   return (
     <Container maxWidth={false} disableGutters={true} className={classes.root} data-test="appContainer">
       <div className={classes.offset} />
-      <LinearProgress color="secondary" className={showProgress ? '' : classes.hidden} />
+      <LinearProgress color="secondary" className={showProgress ? '' : classes.hidden} data-test="linearProgressComponent" />
       <Router history={history} data-test="routerComponent">
         <Switch data-test="switchComponent">
-          <Route path="/" component={PublicPage} exact data-test="publicRouterPath" />
-          <Route path="/signin" component={SignInPage} />
+          <PrivateRoute authed={isLoggedIn} path="/home" component={HomePage} data-test="privateRouterPath" />
+          <Route path="/signin" component={SignInPage} data-test="signInRouterPath" />
           <Route path="/forgot-password" component={ForgotPasswordPage} />
-          <PrivateRoute path="/home" component={HomePage} />
+          <Route path="/" component={PublicPage} exact data-test="publicRouterPath" />
           <Route component={NotFoundPage} />
         </Switch>
       </Router>
