@@ -7,24 +7,11 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect } from 'react-router';
 import { Route, Router, Switch } from 'react-router-dom';
-import {
-  deviceActions,
-  deviceParamActions,
-  deviceSettingActions,
-  logActions,
-  onlineDeviceActions,
-  socketActions,
-  subDeviceActions,
-  subDeviceParamActions,
-  subDeviceSettingActions,
-  userActions,
-} from './_actions';
-import { sharedDeviceActions } from './_actions/shared-device/sharedDevice.actions';
+import { userActions } from './_actions';
 import { userConstants } from './_constants';
 import { history } from './_helpers/history';
-import { userService } from './_services';
+import { authInterceptor } from './_interceptors/auth/auth.interceptor';
 import './App.scss';
-import config from './config';
 import ForgotPasswordPage from './modules/Auth/ForgotPassword/ForgotPasswordPage';
 import SignInPage from './modules/Auth/SignIn/SignInPage';
 import HomePage from './modules/Home/HomePage';
@@ -52,48 +39,8 @@ function App() {
   const dispatch = useDispatch();
   const skipPath = ['/', '/signin'];
   const showProgress = skipPath.indexOf(history.location.pathname) < 0 && (currentUser.isFetching || isFetchingDevice);
-
-  const disconnect = () => {
-    dispatch(userActions.signOut());
-    dispatch(socketActions.socketDisconnect());
-    dispatch(deviceActions.removeAllDevices());
-    dispatch(sharedDeviceActions.removeAllSharedDevices());
-    dispatch(subDeviceActions.removeAllSubDevices());
-    dispatch(deviceParamActions.removeAllDeviceParams());
-    dispatch(subDeviceParamActions.removeAllSubDeviceParams());
-    dispatch(deviceSettingActions.removeAllSettings());
-    dispatch(subDeviceSettingActions.removeAllSettings());
-    dispatch(onlineDeviceActions.removeAllOnlineDevices());
-    dispatch(logActions.removeAllLogs());
-  };
-
-  // Function that will be called to refresh authorization
-  const refreshAuthLogic = failedRequest =>
-    axios
-      .post(
-        `${config.apiUrl}/auth/refresh-tokens`,
-        { refreshToken: userService.getRefreshToken() },
-        { skipAuthRefresh: true }
-      )
-      .then(response => {
-        userService.setNewTokens(response.data);
-        dispatch(userActions.setUserTokens(response.data));
-        // eslint-disable-next-line no-param-reassign
-        failedRequest.response.config.headers.Authorization = `Bearer ${response.data.access.token}`;
-        return Promise.resolve();
-      })
-      .catch(e => {
-        disconnect();
-        return Promise.reject(e);
-      });
-
-  if (isLoggedIn) {
-    axios.interceptors.request.use(request => {
-      request.headers.Authorization = `Bearer ${userService.getAccessToken()}`;
-      return request;
-    });
-    createAuthRefreshInterceptor(axios, refreshAuthLogic);
-  }
+  authInterceptor.interceptRequests();
+  createAuthRefreshInterceptor(axios, authInterceptor.refreshAuthLogic(dispatch));
 
   const fetchMe = () => {
     if (isLoggedIn) {
@@ -106,11 +53,11 @@ function App() {
               payload: { ...response.data },
             });
           } else {
-            disconnect();
+            dispatch(authInterceptor.disconnect());
           }
         })
         .catch(() => {
-          disconnect();
+          dispatch(authInterceptor.disconnect());
         });
     }
   };

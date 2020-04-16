@@ -10,19 +10,7 @@ import BrightnessAutoIcon from '@material-ui/icons/BrightnessAuto';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  userActions,
-  deviceActions,
-  deviceParamActions,
-  deviceSettingActions,
-  logActions,
-  onlineDeviceActions,
-  socketActions,
-  subDeviceActions,
-  subDeviceParamActions,
-  subDeviceSettingActions,
-} from '../../_actions';
-import { sharedDeviceActions } from '../../_actions/shared-device/sharedDevice.actions';
+import { authInterceptor } from '../../_interceptors/auth/auth.interceptor';
 
 const useStyles = makeStyles(() => ({
   title: {
@@ -48,17 +36,7 @@ export default function Navbar(props) {
 
   const handleLogout = () => {
     handleClose();
-    dispatch(userActions.signOut());
-    dispatch(socketActions.socketDisconnect());
-    dispatch(deviceActions.removeAllDevices());
-    dispatch(sharedDeviceActions.removeAllSharedDevices());
-    dispatch(subDeviceActions.removeAllSubDevices());
-    dispatch(deviceParamActions.removeAllDeviceParams());
-    dispatch(subDeviceParamActions.removeAllSubDeviceParams());
-    dispatch(deviceSettingActions.removeAllSettings());
-    dispatch(subDeviceSettingActions.removeAllSettings());
-    dispatch(onlineDeviceActions.removeAllOnlineDevices());
-    dispatch(logActions.removeAllLogs());
+    dispatch(authInterceptor.disconnect());
   };
 
   const renderLoggedInMenu = () => {
