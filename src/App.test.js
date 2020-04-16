@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { userActions } from './_actions';
-import { history } from './_helpers/history';
+import { history } from './_helpers/history/history';
 import { findByDataAttr, findByDataAttrWhenMounted, getStateClone, initialState, wait } from './_utils';
 import { userOne } from './_utils/fixtures/user.fixture';
 import App from './App';

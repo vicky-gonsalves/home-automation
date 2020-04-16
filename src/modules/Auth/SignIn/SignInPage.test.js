@@ -5,7 +5,7 @@ import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { userConstants } from '../../../_constants';
-import { history } from '../../../_helpers/history';
+import { history } from '../../../_helpers/history/history';
 import { checkProps, clickButton, findByDataAttr, initialState } from '../../../_utils';
 import SignInPage, { SignInPage as SignInPageClass } from './SignInPage';
 

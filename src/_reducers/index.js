@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import { combineReducers } from 'redux';
 import deviceParam from './device-param/deviceParam.reducer';
 import deviceSetting from './device-setting/deviceSetting.reducer';

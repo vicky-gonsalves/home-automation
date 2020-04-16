@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import { Router } from 'react-router';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { history } from '../../_helpers/history';
+import { history } from '../../_helpers/history/history';
 import { initialState, checkProps, findByDataAttr } from '../../_utils';
 import config from '../../config';
 import DefaultPublicPage, { PublicPage } from './PublicPage';

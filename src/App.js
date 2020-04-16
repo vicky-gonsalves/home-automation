@@ -9,7 +9,7 @@ import { Redirect } from 'react-router';
 import { Route, Router, Switch } from 'react-router-dom';
 import { userActions } from './_actions';
 import { userConstants } from './_constants';
-import { history } from './_helpers/history';
+import { history } from './_helpers/history/history';
 import { authInterceptor } from './_interceptors/auth/auth.interceptor';
 import './App.scss';
 import ForgotPasswordPage from './modules/Auth/ForgotPassword/ForgotPasswordPage';

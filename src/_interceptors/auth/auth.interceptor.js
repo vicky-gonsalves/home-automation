@@ -17,7 +17,10 @@ import config from '../../config';
 
 const interceptRequests = () => {
   axios.interceptors.request.use(request => {
-    request.headers.Authorization = `Bearer ${userService.getAccessToken()}`;
+    const token = userService.getAccessToken();
+    if (token) {
+      request.headers.Authorization = `Bearer ${token}`;
+    }
     return request;
   });
 };
