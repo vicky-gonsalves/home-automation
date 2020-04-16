@@ -10,6 +10,8 @@ import {
 } from '../../_utils/fixtures/deviceParam.fixture';
 import deviceParam from './deviceParam.reducer';
 
+jest.mock('axios');
+
 describe('Device Param Reducer', () => {
   beforeEach(() => {});
 

@@ -10,6 +10,8 @@ import {
 } from '../../_utils/fixtures/subDevice.fixture';
 import subDevice from './subDevice.reducer';
 
+jest.mock('axios');
+
 describe('Sub Device Reducer', () => {
   beforeEach(() => {});
 

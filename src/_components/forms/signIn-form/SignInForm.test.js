@@ -8,6 +8,8 @@ import thunk from 'redux-thunk';
 import { checkProps, findByDataAttr, initialState, submitFormikForm, updateFormikField } from '../../../_utils';
 import DefaultSignInForm, { SignInForm } from './SignInForm';
 
+jest.mock('axios');
+
 let store;
 const props = {
   isFetching: false,

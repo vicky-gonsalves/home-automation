@@ -2,6 +2,8 @@ import { settingDialogConstants } from '../../_constants';
 import { deviceOne } from '../../_utils/fixtures/device.fixture';
 import settingDialog from './settingDialog.reducer';
 
+jest.mock('axios');
+
 describe('Setting Dialog Reducer', () => {
   beforeEach(() => {});
 

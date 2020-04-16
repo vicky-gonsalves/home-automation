@@ -3,6 +3,8 @@ import React from 'react';
 import { checkProps, findByDataAttr } from '../../_utils';
 import DeviceOfflineAlert from './deviceOfflineAlert';
 
+jest.mock('axios');
+
 const props = {};
 
 describe('DeviceOfflineAlert', () => {

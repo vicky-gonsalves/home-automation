@@ -5,6 +5,8 @@ import { initialState } from '../../_utils';
 import { subDeviceParamNine, subDeviceParamThree } from '../../_utils/fixtures/subDeviceParam.fixture';
 import { subDeviceParamActions } from './subDeviceParam.actions';
 
+jest.mock('axios');
+
 let store;
 const mockStore = configureStore([thunk]);
 store = mockStore(initialState);

@@ -7,6 +7,8 @@ import { checkProps, findByDataAttr, initialState } from '../../../_utils';
 import { deviceOne } from '../../../_utils/fixtures/device.fixture';
 import SettingIconButton from './settingIconButton';
 
+jest.mock('axios');
+
 let store;
 let wrapper;
 const props = {

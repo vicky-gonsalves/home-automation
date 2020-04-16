@@ -8,6 +8,8 @@ import { userOne } from '../../_utils/fixtures/user.fixture';
 import config from '../../config';
 import Navbar from './navbar';
 
+jest.mock('axios');
+
 let wrapper;
 let store;
 const mockStore = configureStore([thunk]);

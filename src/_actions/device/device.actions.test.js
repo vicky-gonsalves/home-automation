@@ -1,9 +1,11 @@
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { deviceService } from '../../_services';
+import { initialState } from '../../_utils/index';
 import { meData, myDeviceState } from '../../_utils/mock/me/me.data';
 import { deviceActions } from './device.actions';
-import { initialState } from '../../_utils/index';
+
+jest.mock('axios');
 
 let store;
 const mockStore = configureStore([thunk]);

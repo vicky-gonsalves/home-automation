@@ -2,6 +2,8 @@ import { deviceConstants } from '../../_constants';
 import { deviceOne, deviceTwo } from '../../_utils/fixtures/device.fixture';
 import device from './device.reducer';
 
+jest.mock('axios');
+
 describe('Device Reducer', () => {
   beforeEach(() => {});
 

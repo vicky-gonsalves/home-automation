@@ -3,6 +3,8 @@ import React from 'react';
 import { checkProps, findByDataAttr } from '../../_utils';
 import PreferredDevice from './preferredDevice';
 
+jest.mock('axios');
+
 const props = {};
 const setupWrapper = props => {
   return shallow(<PreferredDevice {...props} />);

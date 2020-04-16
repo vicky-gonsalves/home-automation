@@ -4,6 +4,8 @@ import { logOne, logTwo, logThree, logFour, logFive, logSix } from '../../_utils
 import { subDeviceOne } from '../../_utils/fixtures/subDevice.fixture';
 import log from './log.reducer';
 
+jest.mock('axios');
+
 describe('Log Reducer', () => {
   beforeEach(() => {});
 

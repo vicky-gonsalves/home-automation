@@ -9,6 +9,8 @@ import { socketIdSix } from '../../../_utils/fixtures/socketId.fixture';
 import { subDeviceThree } from '../../../_utils/fixtures/subDevice.fixture';
 import SmartSwitchCard from './SmartSwitchCard';
 
+jest.mock('axios');
+
 let store;
 const props = {
   deviceId: deviceTwo.deviceId,

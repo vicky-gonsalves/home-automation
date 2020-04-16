@@ -3,6 +3,8 @@ import React from 'react';
 import { checkProps, findByDataAttr } from '../../_utils';
 import Tank from './tank';
 
+jest.mock('axios');
+
 const setupWrapper = props => {
   return shallow(<Tank {...props} />);
 };

@@ -3,8 +3,6 @@ import { act } from '@testing-library/react';
 import * as axios from 'axios';
 import checkPropTypes from 'check-prop-types';
 
-jest.mock('axios');
-
 const initialState = {
   user: {
     name: null,

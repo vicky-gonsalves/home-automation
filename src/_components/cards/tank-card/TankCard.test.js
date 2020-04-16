@@ -12,6 +12,8 @@ import { socketIdOne } from '../../../_utils/fixtures/socketId.fixture';
 import { subDeviceOne, subDeviceThree, subDeviceTwo } from '../../../_utils/fixtures/subDevice.fixture';
 import TankCard from './TankCard';
 
+jest.mock('axios');
+
 let store;
 const props = {
   deviceId: deviceOne.deviceId,

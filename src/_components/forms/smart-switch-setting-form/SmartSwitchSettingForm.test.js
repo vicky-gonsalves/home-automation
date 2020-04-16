@@ -13,6 +13,8 @@ import {
 } from '../../../_utils/fixtures/subDeviceSetting.fixture';
 import SmartSwitchSettingForm, { SimpleSmartSwitchSettingForm } from './SmartSwitchSettingForm';
 
+jest.mock('axios');
+
 let wrapper;
 let store;
 const props = {

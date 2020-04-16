@@ -10,6 +10,8 @@ import { subDeviceThree } from '../../../_utils/fixtures/subDevice.fixture';
 import { subDeviceParamFive, subDeviceParamFour, subDeviceParamTen } from '../../../_utils/fixtures/subDeviceParam.fixture';
 import SmartSwitch from './smartSwitch';
 
+jest.mock('axios');
+
 let wrapper;
 let store;
 const mockStore = configureStore([thunk]);

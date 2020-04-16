@@ -6,6 +6,8 @@ import { getStateClone } from '../../_utils';
 import config from '../../config';
 import { authInterceptor } from './auth.interceptor';
 
+jest.restoreAllMocks();
+
 describe('interceptor', () => {
   const defaultTimeout = axios.defaults.timeout;
   beforeAll(() => {

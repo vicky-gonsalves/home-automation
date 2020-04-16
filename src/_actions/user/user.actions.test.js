@@ -5,6 +5,8 @@ import { initialState, wait } from '../../_utils';
 import { userOne } from '../../_utils/fixtures/user.fixture';
 import { userActions } from './user.actions';
 
+jest.mock('axios');
+
 let store;
 const mockStore = configureStore([thunk]);
 store = mockStore(initialState);

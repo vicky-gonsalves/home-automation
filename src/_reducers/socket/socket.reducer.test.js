@@ -1,6 +1,8 @@
 import { socketConstants } from '../../_constants';
 import socket from './socket.reducer';
 
+jest.mock('axios');
+
 describe('Socket Reducer', () => {
   beforeEach(() => {});
 

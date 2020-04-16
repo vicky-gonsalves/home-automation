@@ -5,6 +5,7 @@ import { socketActions } from './socket.actions';
 import socketIOClient from 'socket.io-client';
 import MockedSocket from 'socket.io-mock';
 
+jest.mock('axios');
 jest.mock('socket.io-client');
 
 let store;

@@ -3,6 +3,8 @@ import thunk from 'redux-thunk';
 import { initialState } from '../../_utils';
 import { onlineDeviceActions } from './onlineDevice.actions';
 
+jest.mock('axios');
+
 let store;
 const mockStore = configureStore([thunk]);
 store = mockStore(initialState);

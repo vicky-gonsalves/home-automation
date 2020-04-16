@@ -8,6 +8,8 @@ import { deviceOne } from '../../../_utils/fixtures/device.fixture';
 import { logFive, logFour, logOne, logSix, logThree, logTwo } from '../../../_utils/fixtures/log.fixture';
 import Stats from './Stats';
 
+jest.mock('axios');
+
 let store;
 const props = {
   deviceId: deviceOne.deviceId,

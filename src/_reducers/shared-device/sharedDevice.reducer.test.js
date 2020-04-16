@@ -2,6 +2,8 @@ import { sharedDeviceConstants } from '../../_constants';
 import { deviceOne, deviceTwo } from '../../_utils/fixtures/device.fixture';
 import sharedDevice from './sharedDevice.reducer';
 
+jest.mock('axios');
+
 describe('Shared SharedDevice Reducer', () => {
   beforeEach(() => {});
 

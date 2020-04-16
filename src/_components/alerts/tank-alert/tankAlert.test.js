@@ -11,6 +11,8 @@ import { subDeviceOne } from '../../../_utils/fixtures/subDevice.fixture';
 import { subDeviceParamThree } from '../../../_utils/fixtures/subDeviceParam.fixture';
 import TankAlert from './tankAlert';
 
+jest.mock('axios');
+
 let store;
 const props = {
   deviceId: deviceOne.deviceId,

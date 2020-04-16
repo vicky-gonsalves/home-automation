@@ -4,6 +4,8 @@ import { history } from '../../../_helpers/history/history';
 import { clickButton, findByDataAttr } from '../../../_utils';
 import SignInButton from './signInButton';
 
+jest.mock('axios');
+
 const props = {
   'data-test': '',
 };

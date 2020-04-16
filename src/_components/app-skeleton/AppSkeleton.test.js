@@ -6,6 +6,8 @@ import thunk from 'redux-thunk';
 import { checkProps, findByDataAttr, initialState } from '../../_utils';
 import AppSkeleton from './AppSkeleton';
 
+jest.mock('axios');
+
 let store;
 const props = {};
 const mockStore = configureStore([thunk]);

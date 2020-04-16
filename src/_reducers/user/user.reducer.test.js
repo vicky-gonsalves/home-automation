@@ -1,6 +1,8 @@
 import { userConstants } from '../../_constants';
 import user from './user.reducer';
 
+jest.mock('axios');
+
 describe('User Reducer', () => {
   beforeEach(() => {
     localStorage.clear();

@@ -7,6 +7,8 @@ import { clickButton, findByDataAttr, initialState, wait } from '../../../_utils
 import { deviceOne } from '../../../_utils/fixtures/device.fixture';
 import CardActionFooter from './CardActionFooter';
 
+jest.mock('axios');
+
 let store;
 const props = {
   deviceId: deviceOne.deviceId,

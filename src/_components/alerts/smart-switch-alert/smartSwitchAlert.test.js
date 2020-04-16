@@ -11,6 +11,8 @@ import { subDeviceParamFour } from '../../../_utils/fixtures/subDeviceParam.fixt
 import { subDeviceSettingFive, subDeviceSettingOne } from '../../../_utils/fixtures/subDeviceSetting.fixture';
 import SmartSwitchAlert from './smartSwitchAlert';
 
+jest.mock('axios');
+
 let store;
 const props = {
   deviceId: deviceTwo.deviceId,
