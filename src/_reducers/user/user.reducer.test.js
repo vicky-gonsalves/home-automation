@@ -108,8 +108,8 @@ describe('User Reducer', () => {
         remember: false,
         tokens: { access: {}, refresh: {} },
       });
+      userService.getCurrentUser.mockClear();
     });
-    userService.getCurrentUser.mockClear();
   });
 
   describe('InitialState Faked', () => {
