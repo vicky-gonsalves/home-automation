@@ -8,6 +8,8 @@ import { deviceOne } from '../../_utils/fixtures/device.fixture';
 import { subDeviceOne, subDeviceTwo } from '../../_utils/fixtures/subDevice.fixture';
 import SubDeviceComponent from './subDeviceComponent';
 
+jest.mock('axios');
+
 let wrapper;
 let store;
 const mockStore = configureStore([thunk]);

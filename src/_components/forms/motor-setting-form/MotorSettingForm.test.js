@@ -16,6 +16,8 @@ import { subDeviceOne, subDeviceTwo } from '../../../_utils/fixtures/subDevice.f
 import { SimpleMotorSettingForm } from './MotorSettingForm';
 import MotorSettingForm from './MotorSettingForm';
 
+jest.mock('axios');
+
 let wrapper;
 let store;
 const props = {

@@ -6,6 +6,8 @@ import thunk from 'redux-thunk';
 import { checkProps, findByDataAttr, initialState } from '../../_utils';
 import Toaster, { Toaster as ToasterClass } from './toaster';
 
+jest.mock('axios');
+
 let wrapper;
 let store;
 const mockStore = configureStore([thunk]);

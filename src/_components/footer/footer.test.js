@@ -4,6 +4,8 @@ import { checkProps, findByDataAttr } from '../../_utils';
 import config from '../../config';
 import Footer from './footer';
 
+jest.mock('axios');
+
 const props = {
   appName: config.appName,
   'data-test': '',

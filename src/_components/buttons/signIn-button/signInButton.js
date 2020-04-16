@@ -1,7 +1,7 @@
 import Button from '@material-ui/core/Button';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { history } from '../../../_helpers/history';
+import { history } from '../../../_helpers/history/history';
 
 const redirectToSignIn = () => {
   history.push('/signin');

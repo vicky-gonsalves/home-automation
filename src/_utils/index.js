@@ -3,8 +3,6 @@ import { act } from '@testing-library/react';
 import * as axios from 'axios';
 import checkPropTypes from 'check-prop-types';
 
-jest.mock('axios');
-
 const initialState = {
   user: {
     name: null,
@@ -61,6 +59,10 @@ const initialState = {
   log: {
     logs: [],
   },
+};
+
+const getStateClone = () => {
+  return JSON.parse(JSON.stringify(initialState));
 };
 
 const findByDataAttr = (component, attr) => {
@@ -137,6 +139,7 @@ const mockStatusTextErrorResponse = (status = 400, method = 'GET', returnBody = 
 
 module.exports = {
   initialState,
+  getStateClone,
   findByDataAttr,
   checkProps,
   findByDataAttrWhenMounted,

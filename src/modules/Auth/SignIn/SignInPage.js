@@ -12,7 +12,7 @@ import { userActions } from '../../../_actions/user/user.actions';
 import Footer from '../../../_components/footer/footer';
 import SignInForm from '../../../_components/forms/signIn-form/SignInForm';
 import Navbar from '../../../_components/navbar/navbar';
-import { history } from '../../../_helpers/history';
+import { history } from '../../../_helpers/history/history';
 import config from '../../../config';
 
 const useStyles = theme => ({

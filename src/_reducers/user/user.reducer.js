@@ -1,20 +1,21 @@
 import { userConstants } from '../../_constants';
 import { userService } from '../../_services/user/user.service';
 
-const storedUser = userService.getCurrentUser();
-
-const initialState = {
-  name: storedUser && storedUser.user && storedUser.user.name ? storedUser.user.name : null,
-  email: storedUser && storedUser.user && storedUser.user.email ? storedUser.user.email : null,
-  remember: false,
-  isLoggedIn: !!(storedUser && storedUser.user && storedUser.tokens),
-  isFetching: false,
-  tokens: storedUser && storedUser.tokens ? storedUser.tokens : {},
-  loginError: null,
-  isAuthorized: null,
+const initialState = () => {
+  const storedUser = userService.getCurrentUser();
+  return {
+    name: storedUser && storedUser.user && storedUser.user.name ? storedUser.user.name : null,
+    email: storedUser && storedUser.user && storedUser.user.email ? storedUser.user.email : null,
+    remember: false,
+    isLoggedIn: !!(storedUser && storedUser.user && storedUser.tokens),
+    isFetching: false,
+    tokens: storedUser && storedUser.tokens ? storedUser.tokens : {},
+    loginError: null,
+    isAuthorized: null,
+  };
 };
 
-const user = (state = initialState, action) => {
+const user = (state = initialState(), action) => {
   switch (action.type) {
     case userConstants.SET_USER:
       return {

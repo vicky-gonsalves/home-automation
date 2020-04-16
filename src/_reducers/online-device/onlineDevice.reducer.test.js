@@ -2,6 +2,8 @@ import { onlineDeviceConstants } from '../../_constants';
 import { socketIdOne, socketIdTwo } from '../../_utils/fixtures/socketId.fixture';
 import onlineDevice from './onlineDevice.reducer';
 
+jest.mock('axios');
+
 describe('Online Device Reducer', () => {
   beforeEach(() => {});
 

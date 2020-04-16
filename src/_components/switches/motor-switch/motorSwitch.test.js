@@ -9,6 +9,8 @@ import { subDeviceOne } from '../../../_utils/fixtures/subDevice.fixture';
 import { subDeviceParamOne, subDeviceParamThree, subDeviceParamTwo } from '../../../_utils/fixtures/subDeviceParam.fixture';
 import MotorSwitch from './motorSwitch';
 
+jest.mock('axios');
+
 let wrapper;
 let store;
 const mockStore = configureStore([thunk]);

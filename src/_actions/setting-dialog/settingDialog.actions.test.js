@@ -3,6 +3,8 @@ import thunk from 'redux-thunk';
 import { initialState } from '../../_utils';
 import { settingDialogActions } from './settingDialog.actions';
 
+jest.mock('axios');
+
 let store;
 const mockStore = configureStore([thunk]);
 store = mockStore(initialState);

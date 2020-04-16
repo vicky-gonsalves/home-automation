@@ -1,8 +1,10 @@
 import { shallow } from 'enzyme';
 import React from 'react';
-import { history } from '../../../_helpers/history';
+import { history } from '../../../_helpers/history/history';
 import { clickButton, findByDataAttr } from '../../../_utils';
 import SignInButton from './signInButton';
+
+jest.mock('axios');
 
 const props = {
   'data-test': '',

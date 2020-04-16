@@ -10,6 +10,8 @@ import {
 } from '../../_utils/fixtures/deviceSetting.fixture';
 import deviceSetting from './deviceSetting.reducer';
 
+jest.mock('axios');
+
 describe('Device Setting Reducer', () => {
   beforeEach(() => {});
 

@@ -8,6 +8,8 @@ import thunk from 'redux-thunk';
 import { findByDataAttr, initialState } from '../../_utils';
 import CountDownTimer from './CountDownTimer';
 
+jest.mock('axios');
+
 let store;
 const props = {
   endTime: moment().add(30, 'minutes'),

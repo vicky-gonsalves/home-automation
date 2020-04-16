@@ -5,6 +5,8 @@ import { initialState } from '../../_utils';
 import { meData } from '../../_utils/mock/me/me.data';
 import { deviceSettingActions } from './deviceSetting.actions';
 
+jest.mock('axios');
+
 let store;
 const mockStore = configureStore([thunk]);
 store = mockStore(initialState);

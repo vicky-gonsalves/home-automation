@@ -7,6 +7,8 @@ import { checkProps, findByDataAttr, initialState } from '../../../_utils';
 import { dialogOne, dialogTwo } from '../../../_utils/fixtures/dialog.fixture';
 import SettingDialog from './settingDialog';
 
+jest.mock('axios');
+
 let store;
 const props = {};
 const mockStore = configureStore([thunk]);
