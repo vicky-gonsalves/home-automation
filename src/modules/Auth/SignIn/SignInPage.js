@@ -84,10 +84,6 @@ export class SignInPage extends Component {
   }
 }
 
-SignInPage.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
 function mapState(state) {
   const { isLoggedIn, tokens } = state.user;
   return { isLoggedIn, tokens };
