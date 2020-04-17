@@ -1,11 +1,12 @@
 import { mount } from 'enzyme';
 import React from 'react';
 import { Provider } from 'react-redux';
+import { Router } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import { history } from '../../_helpers/history/history';
 import { checkProps, findByDataAttr, getStateClone, initialState } from '../../_utils';
 import AdminDrawer from './adminDrawer';
-import { history } from '../../_helpers/history/history';
 
 jest.mock('axios');
 
@@ -18,7 +19,9 @@ const setupWrapper = _initialState => {
   store = mockStore(_initialState);
   return mount(
     <Provider store={store}>
-      <AdminDrawer {...props} />
+      <Router history={history}>
+        <AdminDrawer {...props} />
+      </Router>
     </Provider>
   );
 };
@@ -64,24 +67,6 @@ describe('AdminDrawer', () => {
       expect(component.length).toBe(1);
     });
 
-    it('should render listItemComponent without error', () => {
-      wrapper = setupWrapper(initialState);
-      const component = findByDataAttr(wrapper, 'listItemComponent').first();
-      expect(component.length).toBe(1);
-    });
-
-    it('should render listItemIconComponent without error', () => {
-      wrapper = setupWrapper(initialState);
-      const component = findByDataAttr(wrapper, 'listItemIconComponent');
-      expect(component.length).toBeGreaterThanOrEqual(1);
-    });
-
-    it('should render listItemTextComponent without error', () => {
-      wrapper = setupWrapper(initialState);
-      const component = findByDataAttr(wrapper, 'listItemTextComponent');
-      expect(component.length).toBeGreaterThanOrEqual(1);
-    });
-
     it('should open drawer', () => {
       const _initialState = getStateClone();
       _initialState.adminDrawer.open = false;
@@ -98,17 +83,6 @@ describe('AdminDrawer', () => {
       const component = findByDataAttr(wrapper, 'mobileDrawer').first();
       component.props().onClose();
       expect(store.getActions()).toEqual([{ type: 'CLOSE_ADMIN_DRAWER' }]);
-    });
-
-    it('should navigate to specified path', () => {
-      history.push = jest.fn();
-      const _initialState = getStateClone();
-      _initialState.adminDrawer.open = true;
-      wrapper = setupWrapper(_initialState);
-      const component = findByDataAttr(wrapper, 'listItemComponent').first();
-      component.props().onClick('/home');
-      expect(history.push).toHaveBeenCalled();
-      history.push.mockClear();
     });
   });
 });

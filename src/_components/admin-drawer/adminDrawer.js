@@ -1,9 +1,6 @@
 import Drawer from '@material-ui/core/Drawer';
 import Hidden from '@material-ui/core/Hidden';
 import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
 import { makeStyles } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
 import DevicesIcon from '@material-ui/icons/Devices';
@@ -11,7 +8,7 @@ import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { adminDrawerActions } from '../../_actions/admin-drawer/adminDrawer.actions';
-import { history } from '../../_helpers/history/history';
+import ListItemLink from '../list-link-item/listItemLink';
 
 const drawerWidth = 240;
 
@@ -36,7 +33,7 @@ const AdminDrawer = () => {
   const adminDrawer = useSelector(state => state.adminDrawer);
 
   const menuList = [
-    { name: 'Users', path: '/home', icon: <SupervisorAccountIcon /> },
+    { name: 'Users', path: '/users', icon: <SupervisorAccountIcon /> },
     { name: 'Devices', path: '/home', icon: <DevicesIcon /> },
   ];
 
@@ -48,15 +45,8 @@ const AdminDrawer = () => {
     }
   };
 
-  const handleNavigation = path => () => {
-    history.push(path);
-  };
-
   const renderMenuList = menuList.map(menu => (
-    <ListItem button key={menu.name} onClick={handleNavigation(menu.path)} data-test="listItemComponent">
-      <ListItemIcon data-test="listItemIconComponent">{menu.icon}</ListItemIcon>
-      <ListItemText data-test="listItemTextComponent" primary={menu.name} />
-    </ListItem>
+    <ListItemLink key={menu.name} icon={menu.icon} primary={menu.name} to={menu.path} />
   ));
 
   const renderMenu = (

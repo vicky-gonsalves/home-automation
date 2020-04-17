@@ -5,19 +5,14 @@ import axios from 'axios';
 import createAuthRefreshInterceptor from 'axios-auth-refresh';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Redirect } from 'react-router';
 import { Route, Router, Switch } from 'react-router-dom';
 import { userActions } from './_actions';
+import Layout from './_components/route-layouts/layout/layout';
 import { userConstants } from './_constants';
 import { history } from './_helpers/history/history';
 import { authInterceptor } from './_interceptors/auth/auth.interceptor';
 import './App.scss';
-import DashboardPage from './modules/Admin/Dashboard/DashboardPage';
-import ForgotPasswordPage from './modules/Auth/ForgotPassword/ForgotPasswordPage';
-import SignInPage from './modules/Auth/SignIn/SignInPage';
-import HomePage from './modules/Home/HomePage';
 import NotFoundPage from './modules/NotFound/NotFoundPage';
-import PublicPage from './modules/Public/PublicPage';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -66,47 +61,13 @@ function App() {
 
   useEffect(fetchMe, []);
 
-  const PrivateRoute = ({ component: Component, authed, ...rest }) => {
-    return (
-      <Route
-        {...rest}
-        render={props =>
-          authed === true ? (
-            <Component {...props} />
-          ) : (
-            <Redirect to={{ pathname: '/signin', state: { from: props.location } }} />
-          )
-        }
-      />
-    );
-  };
-
-  const AdminRoute = ({ component: Component, isAdmin, ...rest }) => {
-    return (
-      <Route
-        {...rest}
-        render={props =>
-          isAdmin === true ? (
-            <Component {...props} />
-          ) : (
-            <Redirect to={{ pathname: '/signin', state: { from: props.location } }} />
-          )
-        }
-      />
-    );
-  };
-
   return (
     <Container maxWidth={false} disableGutters={true} className={classes.root} data-test="appContainer">
       <div className={classes.offset} />
       <LinearProgress color="secondary" className={showProgress ? '' : classes.hidden} data-test="linearProgressComponent" />
       <Router history={history} data-test="routerComponent">
         <Switch data-test="switchComponent">
-          <PrivateRoute authed={isLoggedIn} path="/home" component={HomePage} data-test="privateRouterPath" />
-          <AdminRoute isAdmin={isAdmin} path="/admin" component={DashboardPage} data-test="privateAdminRouterPath" />
-          <Route path="/signin" component={SignInPage} data-test="signInRouterPath" />
-          <Route path="/forgot-password" component={ForgotPasswordPage} />
-          <Route path="/" component={PublicPage} exact data-test="publicRouterPath" />
+          <Layout isAdmin={isAdmin} isLoggedIn={isLoggedIn} />
           <Route component={NotFoundPage} />
         </Switch>
       </Router>
