@@ -8,6 +8,7 @@ import { history } from './_helpers/history/history';
 import { findByDataAttr, findByDataAttrWhenMounted, getStateClone, initialState, wait } from './_utils';
 import { userOne } from './_utils/fixtures/user.fixture';
 import App from './App';
+import DashboardPage from './modules/Admin/Dashboard/DashboardPage';
 import SignInPage from './modules/Auth/SignIn/SignInPage';
 import HomePage from './modules/Home/HomePage';
 
@@ -116,6 +117,32 @@ describe('App', () => {
       expect(path).toBe('/home');
     });
 
+    it('should have Admin DashBoardPage if user is logged in and having role admin', () => {
+      history.location = { pathname: '/admin', search: '', hash: '', state: undefined };
+      const _initialState = getStateClone();
+      _initialState.user.isLoggedIn = true;
+      _initialState.user.role = 'admin';
+      _initialState.user.tokens = { access: { token: '', expires: '' }, refresh: { token: '', expires: '' } };
+      wrapper = setupWrapper(_initialState);
+      const component = wrapper.find(DashboardPage);
+      const path = wrapper.find('Route').prop('location').pathname;
+      expect(component).toHaveLength(1);
+      expect(path).toBe('/admin');
+    });
+
+    it('should not have Admin DashBoardPage if user is logged in and having role user', () => {
+      history.location = { pathname: '/admin', search: '', hash: '', state: undefined };
+      const _initialState = getStateClone();
+      _initialState.user.isLoggedIn = true;
+      _initialState.user.role = 'user';
+      _initialState.user.tokens = { access: { token: '', expires: '' }, refresh: { token: '', expires: '' } };
+      wrapper = setupWrapper(_initialState);
+      const component = wrapper.find(HomePage);
+      const path = wrapper.find('Route').prop('location').pathname;
+      expect(component).toHaveLength(1);
+      expect(path).toBe('/home');
+    });
+
     it('should not have SignInPage if user is logged in', () => {
       const _initialState = getStateClone();
       _initialState.user.isLoggedIn = true;
@@ -142,6 +169,15 @@ describe('App', () => {
       const _initialState = getStateClone();
       wrapper = setupWrapper(_initialState);
       const component = wrapper.find(HomePage);
+      const path = wrapper.find('Route').prop('location').pathname;
+      expect(component).toHaveLength(0);
+      expect(path).toBe('/signin');
+    });
+
+    it('should not have Admin DashBoardPage if user is not logged in', () => {
+      const _initialState = getStateClone();
+      wrapper = setupWrapper(_initialState);
+      const component = wrapper.find(DashboardPage);
       const path = wrapper.find('Route').prop('location').pathname;
       expect(component).toHaveLength(0);
       expect(path).toBe('/signin');

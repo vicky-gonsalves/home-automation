@@ -34,6 +34,7 @@ const signIn = userObj => dispatch => {
         setUser({
           name: response.user.name,
           email: response.user.email,
+          role: response.user.role,
           tokens: response.tokens,
         })
       );

@@ -36,7 +36,7 @@ describe('userActions', () => {
     await wait();
     expect(store.getActions()).toEqual([
       { type: 'SIGN_IN' },
-      { payload: { email: userOne.email, name: userOne.name, tokens: user.tokens }, type: 'SET_USER' },
+      { payload: { email: userOne.email, role: userOne.role, name: userOne.name, tokens: user.tokens }, type: 'SET_USER' },
       { payload: { error: null }, type: 'SET_LOGIN_ERROR' },
     ]);
   });

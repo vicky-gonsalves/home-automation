@@ -59,6 +59,9 @@ const initialState = {
   log: {
     logs: [],
   },
+  adminDrawer: {
+    open: false,
+  },
 };
 
 const getStateClone = () => {

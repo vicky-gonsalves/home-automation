@@ -38,6 +38,12 @@ const useStyles = theme => ({
 });
 
 export class SignInPage extends Component {
+  constructor(props) {
+    super(props);
+    this.isLoggedIn = this.props.isLoggedIn && this.props.tokens !== null;
+    if (this.isLoggedIn) history.push('/');
+  }
+
   // eslint-disable-next-line class-methods-use-this
   navigateToForgotPass() {
     history.push('/forgot-password');

@@ -15,6 +15,7 @@ describe('User Reducer', () => {
       const newState = user(undefined, {});
       expect(newState).toEqual({
         email: null,
+        role: null,
         isAuthorized: null,
         isFetching: false,
         isLoggedIn: false,
@@ -31,6 +32,7 @@ describe('User Reducer', () => {
       const newState = user(undefined, {});
       expect(newState).toEqual({
         email: null,
+        role: null,
         isAuthorized: null,
         isFetching: false,
         isLoggedIn: false,
@@ -47,6 +49,7 @@ describe('User Reducer', () => {
       const newState = user(undefined, {});
       expect(newState).toEqual({
         email: null,
+        role: null,
         isAuthorized: null,
         isFetching: false,
         isLoggedIn: false,
@@ -63,6 +66,7 @@ describe('User Reducer', () => {
       const newState = user(undefined, {});
       expect(newState).toEqual({
         email: null,
+        role: null,
         isAuthorized: null,
         isFetching: false,
         isLoggedIn: false,
@@ -81,6 +85,26 @@ describe('User Reducer', () => {
       const newState = user(undefined, {});
       expect(newState).toEqual({
         email: 'vicky.gonsalves@outlook.com',
+        role: null,
+        isAuthorized: null,
+        isFetching: false,
+        isLoggedIn: false,
+        loginError: null,
+        name: 'Vicky',
+        remember: false,
+        tokens: {},
+      });
+      userService.getCurrentUser.mockClear();
+    });
+
+    it('should return default state if has no storedUser user name and email and role object', () => {
+      userService.getCurrentUser = jest
+        .fn()
+        .mockReturnValueOnce({ user: { name: 'Vicky', email: 'vicky.gonsalves@outlook.com', role: 'admin' } });
+      const newState = user(undefined, {});
+      expect(newState).toEqual({
+        email: 'vicky.gonsalves@outlook.com',
+        role: 'admin',
         isAuthorized: null,
         isFetching: false,
         isLoggedIn: false,
@@ -100,6 +124,7 @@ describe('User Reducer', () => {
       const newState = user(undefined, {});
       expect(newState).toEqual({
         email: 'vicky.gonsalves@outlook.com',
+        role: null,
         isAuthorized: null,
         isFetching: false,
         isLoggedIn: true,
@@ -122,6 +147,7 @@ describe('User Reducer', () => {
       const currentUser = {
         name: 'Vicky Gonsalves',
         email: 'vicky.gonsalves@outlook.com',
+        role: 'admin',
         remember: false,
         isLoggedIn: true,
         isFetching: false,
@@ -136,6 +162,7 @@ describe('User Reducer', () => {
           payload: {
             name: currentUser.name,
             email: currentUser.email,
+            role: currentUser.role,
             remember: currentUser.remember,
             tokens: currentUser.tokens,
           },
@@ -183,6 +210,7 @@ describe('User Reducer', () => {
       const currentUser = {
         name: null,
         email: null,
+        role: null,
         remember: null,
         isLoggedIn: false,
         isFetching: false,
@@ -203,6 +231,7 @@ describe('User Reducer', () => {
       const currentUser = {
         name: 'Vicky Gonsalves',
         email: 'vicky.gonsalves@outlook.com',
+        role: 'admin',
         isFetching: false,
         loginError: null,
         isAuthorized: true,
@@ -214,6 +243,7 @@ describe('User Reducer', () => {
           payload: {
             name: currentUser.name,
             email: currentUser.email,
+            role: currentUser.role,
           },
         }
       );
@@ -242,6 +272,7 @@ describe('User Reducer', () => {
       const currentUser = {
         name: 'Vicky Gonsalves',
         email: 'vicky.gonsalves@outlook.com',
+        role: 'admin',
         remember: false,
         isLoggedIn: true,
         isFetching: false,
@@ -257,6 +288,7 @@ describe('User Reducer', () => {
           payload: {
             name: currentUser.name,
             email: currentUser.email,
+            role: currentUser.role,
             remember: currentUser.remember,
             tokens: currentUser.tokens,
           },
@@ -269,6 +301,7 @@ describe('User Reducer', () => {
       const currentUser = {
         name: 'Vicky Gonsalves',
         email: 'vicky.gonsalves@outlook.com',
+        role: 'admin',
         remember: false,
         isLoggedIn: true,
         isFetching: false,
@@ -284,6 +317,7 @@ describe('User Reducer', () => {
           payload: {
             name: currentUser.name,
             email: currentUser.email,
+            role: currentUser.role,
             remember: currentUser.remember,
             tokens: currentUser.tokens,
           },

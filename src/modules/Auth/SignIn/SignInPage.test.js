@@ -1,17 +1,8 @@
-import { mount, shallow } from 'enzyme';
-import faker from 'faker';
+import { shallow } from 'enzyme';
 import React from 'react';
-import { Provider } from 'react-redux';
-import configureStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
-import { userConstants } from '../../../_constants';
 import { history } from '../../../_helpers/history/history';
-import { checkProps, clickButton, findByDataAttr, initialState } from '../../../_utils';
+import { checkProps, clickButton, findByDataAttr } from '../../../_utils';
 import SignInPage, { SignInPage as SignInPageClass } from './SignInPage';
-
-const mockStore = configureStore([thunk]);
-const name = faker.name.firstName();
-const email = faker.internet.email();
 
 const props = {
   classes: {
@@ -26,42 +17,6 @@ const props = {
 };
 
 describe('SignInPage', () => {
-  describe('Store Checks', () => {
-    let component;
-    let store;
-    beforeEach(() => {
-      store = mockStore(initialState);
-      component = mount(
-        <Provider store={store}>
-          <SignInPage {...props} />
-        </Provider>
-      );
-      // clear SIGN_OUT
-      store.clearActions();
-    });
-
-    afterEach(() => {
-      component.unmount();
-      store.clearActions();
-    });
-
-    it('should dispatch SET_USER', () => {
-      const fakeUser = {
-        name,
-        email,
-      };
-      const expectedPayload = {
-        type: 'SET_USER',
-        payload: { ...fakeUser },
-      };
-      store.dispatch({
-        type: userConstants.SET_USER,
-        payload: fakeUser,
-      });
-      expect(store.getActions()).toEqual([expectedPayload]);
-    });
-  });
-
   describe('Other Checks', () => {
     describe('Checking PropTypes', () => {
       it('should not throw a warning', () => {
@@ -113,18 +68,21 @@ describe('SignInPage', () => {
       });
 
       it('should navigate to forgot password page', async () => {
+        history.location = { pathname: '/signin', search: '', hash: '', state: undefined };
         const component = findByDataAttr(wrapper, 'forgotPassword').first();
         await clickButton(component);
         expect(history.push).toHaveBeenCalledTimes(1);
       });
 
-      it('should navigate to home page if user is logged in', () => {
+      it('should navigate to home page if user is logged in on componentDidUpdate', () => {
+        history.location = { pathname: '/signin', search: '', hash: '', state: undefined };
         wrapper.setProps({ isLoggedIn: true, tokens: { access: 'access_token' } });
         wrapper.instance().componentDidUpdate();
         expect(history.push).toHaveBeenCalledTimes(1);
       });
 
       it('should not navigate to home page if user is not logged in', () => {
+        history.location = { pathname: '/signin', search: '', hash: '', state: undefined };
         wrapper.setProps({ isLoggedIn: false });
         wrapper.instance().componentDidUpdate();
         expect(history.push).toHaveBeenCalledTimes(0);

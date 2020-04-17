@@ -1,0 +1,4 @@
+export const adminDrawerConstants = {
+  OPEN_ADMIN_DRAWER: 'OPEN_ADMIN_DRAWER',
+  CLOSE_ADMIN_DRAWER: 'CLOSE_ADMIN_DRAWER',
+};

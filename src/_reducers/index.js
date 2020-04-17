@@ -1,5 +1,6 @@
 /* istanbul ignore file */
 import { combineReducers } from 'redux';
+import adminDrawer from './admin-drawer/adminDrawer.reducer';
 import deviceParam from './device-param/deviceParam.reducer';
 import deviceSetting from './device-setting/deviceSetting.reducer';
 import device from './device/device.reducer';
@@ -26,6 +27,7 @@ const rootReducer = combineReducers({
   onlineDevice,
   deviceParam,
   log,
+  adminDrawer,
 });
 
 export default rootReducer;

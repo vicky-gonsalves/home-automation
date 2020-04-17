@@ -3,8 +3,9 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import { history } from '../../_helpers/history/history';
 import { checkProps, findByDataAttr, initialState } from '../../_utils';
-import { userOne } from '../../_utils/fixtures/user.fixture';
+import { admin, userOne } from '../../_utils/fixtures/user.fixture';
 import config from '../../config';
 import Navbar from './navbar';
 
@@ -127,6 +128,83 @@ describe('Navbar Component', () => {
         { type: 'ONLINE_DEVICE_REMOVE_ALL' },
         { type: 'LOG_REMOVE_ALL' },
       ]);
+    });
+
+    it('should not have drawerIconButtonComponent if logged in user is not admin', () => {
+      const _initialState = { ...initialState };
+      _initialState.user = { ...userOne };
+      _initialState.user.isLoggedIn = true;
+      _initialState.user.tokens = { access: {}, refresh: {} };
+      wrapper = setupWrapper(_initialState);
+      const component = findByDataAttr(wrapper, 'drawerIconButtonComponent');
+      expect(component).toHaveLength(0);
+    });
+
+    it('should have drawerIconButtonComponent if logged in user is admin', () => {
+      const _initialState = { ...initialState };
+      _initialState.user = { ...admin };
+      _initialState.user.isLoggedIn = true;
+      _initialState.user.tokens = { access: {}, refresh: {} };
+      wrapper = setupWrapper(_initialState);
+      const component = findByDataAttr(wrapper, 'drawerIconButtonComponent').first();
+      expect(component.length).toBe(1);
+    });
+
+    it('should not have adminPanelMenuItem if logged in user is not admin', () => {
+      const _initialState = { ...initialState };
+      _initialState.user = { ...userOne };
+      _initialState.user.isLoggedIn = true;
+      _initialState.user.tokens = { access: {}, refresh: {} };
+      wrapper = setupWrapper(_initialState);
+      const component = findByDataAttr(wrapper, 'adminPanelMenuItem');
+      expect(component).toHaveLength(0);
+    });
+
+    it('should have adminPanelMenuItem if logged in user is admin', () => {
+      const _initialState = { ...initialState };
+      _initialState.user = { ...admin };
+      _initialState.user.isLoggedIn = true;
+      _initialState.user.tokens = { access: {}, refresh: {} };
+      wrapper = setupWrapper(_initialState);
+      const component = findByDataAttr(wrapper, 'adminPanelMenuItem').first();
+      expect(component.length).toBe(1);
+    });
+
+    it('should have close drawer if logged in user is admin and adminDrawer is open', async () => {
+      const _initialState = { ...initialState };
+      _initialState.user = { ...admin };
+      _initialState.adminDrawer.open = true;
+      _initialState.user.isLoggedIn = true;
+      _initialState.user.tokens = { access: {}, refresh: {} };
+      wrapper = setupWrapper(_initialState);
+      const component = findByDataAttr(wrapper, 'drawerIconButtonComponent').first();
+      component.props().onClick();
+      expect(store.getActions()).toEqual([{ type: 'CLOSE_ADMIN_DRAWER' }]);
+    });
+
+    it('should have open drawer if logged in user is admin and adminDrawer is closed', async () => {
+      const _initialState = { ...initialState };
+      _initialState.user = { ...admin };
+      _initialState.adminDrawer.open = false;
+      _initialState.user.isLoggedIn = true;
+      _initialState.user.tokens = { access: {}, refresh: {} };
+      wrapper = setupWrapper(_initialState);
+      const component = findByDataAttr(wrapper, 'drawerIconButtonComponent').first();
+      component.props().onClick();
+      expect(store.getActions()).toEqual([{ type: 'OPEN_ADMIN_DRAWER' }]);
+    });
+
+    it('should navigate to specified path', async () => {
+      history.push = jest.fn();
+      const _initialState = { ...initialState };
+      _initialState.user = { ...admin };
+      _initialState.user.isLoggedIn = true;
+      _initialState.user.tokens = { access: {}, refresh: {} };
+      wrapper = setupWrapper(_initialState);
+      const component = findByDataAttr(wrapper, 'adminPanelMenuItem').first();
+      component.props().onClick('/admin');
+      expect(history.push).toHaveBeenCalled();
+      history.push.mockClear();
     });
   });
 });

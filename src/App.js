@@ -12,6 +12,7 @@ import { userConstants } from './_constants';
 import { history } from './_helpers/history/history';
 import { authInterceptor } from './_interceptors/auth/auth.interceptor';
 import './App.scss';
+import DashboardPage from './modules/Admin/Dashboard/DashboardPage';
 import ForgotPasswordPage from './modules/Auth/ForgotPassword/ForgotPasswordPage';
 import SignInPage from './modules/Auth/SignIn/SignInPage';
 import HomePage from './modules/Home/HomePage';
@@ -36,6 +37,7 @@ function App() {
   const currentUser = useSelector(state => state.user);
   const isFetchingDevice = useSelector(state => state.device && state.device.isFetchingDevice);
   const isLoggedIn = currentUser.isLoggedIn && currentUser.tokens !== null;
+  const isAdmin = isLoggedIn && currentUser.role === 'admin';
   const dispatch = useDispatch();
   const skipPath = ['/', '/signin'];
   const showProgress = skipPath.indexOf(history.location.pathname) < 0 && (currentUser.isFetching || isFetchingDevice);
@@ -79,6 +81,21 @@ function App() {
     );
   };
 
+  const AdminRoute = ({ component: Component, isAdmin, ...rest }) => {
+    return (
+      <Route
+        {...rest}
+        render={props =>
+          isAdmin === true ? (
+            <Component {...props} />
+          ) : (
+            <Redirect to={{ pathname: '/signin', state: { from: props.location } }} />
+          )
+        }
+      />
+    );
+  };
+
   return (
     <Container maxWidth={false} disableGutters={true} className={classes.root} data-test="appContainer">
       <div className={classes.offset} />
@@ -86,6 +103,7 @@ function App() {
       <Router history={history} data-test="routerComponent">
         <Switch data-test="switchComponent">
           <PrivateRoute authed={isLoggedIn} path="/home" component={HomePage} data-test="privateRouterPath" />
+          <AdminRoute isAdmin={isAdmin} path="/admin" component={DashboardPage} data-test="privateAdminRouterPath" />
           <Route path="/signin" component={SignInPage} data-test="signInRouterPath" />
           <Route path="/forgot-password" component={ForgotPasswordPage} />
           <Route path="/" component={PublicPage} exact data-test="publicRouterPath" />
