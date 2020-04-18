@@ -5,7 +5,11 @@ import config from '../../config';
 
 export const composeEnhancers = () => {
   /* istanbul ignore if  */
-  if (typeof window === 'object' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ && config.env === 'development') {
+  if (
+    typeof window === 'object' &&
+    window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ &&
+    /* istanbul ignore next */ config.env === 'development'
+  ) {
     return window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({});
   }
   return compose;
