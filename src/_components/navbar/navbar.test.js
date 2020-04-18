@@ -115,19 +115,7 @@ describe('Navbar Component', () => {
       wrapper = setupWrapper(_initialState);
       const component = findByDataAttr(wrapper, 'MenuItemComponent').first();
       component.props().onClick();
-      expect(store.getActions()).toEqual([
-        { type: 'SIGN_OUT' },
-        { type: 'DISCONNECTED' },
-        { type: 'DEVICE_REMOVE_ALL' },
-        { type: 'SHARED_DEVICE_REMOVE_ALL' },
-        { type: 'SUB_DEVICE_REMOVE_ALL' },
-        { type: 'DEVICE_PARAM_REMOVE_ALL' },
-        { type: 'SUB_DEVICE_PARAM_REMOVE_ALL' },
-        { type: 'DEVICE_SETTING_REMOVE_ALL' },
-        { type: 'SUB_DEVICE_SETTING_REMOVE_ALL' },
-        { type: 'ONLINE_DEVICE_REMOVE_ALL' },
-        { type: 'LOG_REMOVE_ALL' },
-      ]);
+      expect(store.getActions()).toEqual([{ type: 'SIGN_OUT' }, { type: 'DISCONNECTED' }, { type: 'CLEAR_DATA' }]);
     });
 
     it('should not have drawerIconButtonComponent if logged in user is not admin', () => {

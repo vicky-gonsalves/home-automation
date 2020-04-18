@@ -1,17 +1,5 @@
 import axios from 'axios';
-import {
-  deviceActions,
-  deviceParamActions,
-  deviceSettingActions,
-  logActions,
-  onlineDeviceActions,
-  socketActions,
-  subDeviceActions,
-  subDeviceParamActions,
-  subDeviceSettingActions,
-  userActions,
-} from '../../_actions';
-import { sharedDeviceActions } from '../../_actions/shared-device/sharedDevice.actions';
+import { appActions, socketActions, userActions } from '../../_actions';
 import { userService } from '../../_services';
 import config from '../../config';
 
@@ -28,15 +16,7 @@ const interceptRequests = () => {
 const disconnect = () => dispatch => {
   dispatch(userActions.signOut());
   dispatch(socketActions.socketDisconnect());
-  dispatch(deviceActions.removeAllDevices());
-  dispatch(sharedDeviceActions.removeAllSharedDevices());
-  dispatch(subDeviceActions.removeAllSubDevices());
-  dispatch(deviceParamActions.removeAllDeviceParams());
-  dispatch(subDeviceParamActions.removeAllSubDeviceParams());
-  dispatch(deviceSettingActions.removeAllSettings());
-  dispatch(subDeviceSettingActions.removeAllSettings());
-  dispatch(onlineDeviceActions.removeAllOnlineDevices());
-  dispatch(logActions.removeAllLogs());
+  dispatch(appActions.clearData());
 };
 
 const refreshAuthLogic = dispatch => failedRequest => {

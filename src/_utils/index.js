@@ -7,12 +7,13 @@ const initialState = {
   user: {
     name: null,
     email: null,
-    remember: null,
+    role: null,
+    remember: false,
     isLoggedIn: false,
     isFetching: false,
-    tokens: null,
+    tokens: {},
     loginError: null,
-    isAuthorized: false,
+    isAuthorized: null,
   },
   socket: {
     isSocketFetching: false,

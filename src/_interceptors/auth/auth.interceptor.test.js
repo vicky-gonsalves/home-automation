@@ -80,19 +80,7 @@ describe('interceptor', () => {
     const mockStore = configureStore([thunk]);
     const store = mockStore(getStateClone());
     store.dispatch(authInterceptor.disconnect());
-    expect(store.getActions()).toEqual([
-      { type: 'SIGN_OUT' },
-      { type: 'DISCONNECTED' },
-      { type: 'DEVICE_REMOVE_ALL' },
-      { type: 'SHARED_DEVICE_REMOVE_ALL' },
-      { type: 'SUB_DEVICE_REMOVE_ALL' },
-      { type: 'DEVICE_PARAM_REMOVE_ALL' },
-      { type: 'SUB_DEVICE_PARAM_REMOVE_ALL' },
-      { type: 'DEVICE_SETTING_REMOVE_ALL' },
-      { type: 'SUB_DEVICE_SETTING_REMOVE_ALL' },
-      { type: 'ONLINE_DEVICE_REMOVE_ALL' },
-      { type: 'LOG_REMOVE_ALL' },
-    ]);
+    expect(store.getActions()).toEqual([{ type: 'SIGN_OUT' }, { type: 'DISCONNECTED' }, { type: 'CLEAR_DATA' }]);
   });
 
   it('should fail to get new access token if has no failedRequest and should disconnect', async () => {
@@ -101,19 +89,7 @@ describe('interceptor', () => {
     authInterceptor
       .refreshAuthLogic(store.dispatch)()
       .catch(() => {
-        expect(store.getActions()).toEqual([
-          { type: 'SIGN_OUT' },
-          { type: 'DISCONNECTED' },
-          { type: 'DEVICE_REMOVE_ALL' },
-          { type: 'SHARED_DEVICE_REMOVE_ALL' },
-          { type: 'SUB_DEVICE_REMOVE_ALL' },
-          { type: 'DEVICE_PARAM_REMOVE_ALL' },
-          { type: 'SUB_DEVICE_PARAM_REMOVE_ALL' },
-          { type: 'DEVICE_SETTING_REMOVE_ALL' },
-          { type: 'SUB_DEVICE_SETTING_REMOVE_ALL' },
-          { type: 'ONLINE_DEVICE_REMOVE_ALL' },
-          { type: 'LOG_REMOVE_ALL' },
-        ]);
+        expect(store.getActions()).toEqual([{ type: 'SIGN_OUT' }, { type: 'DISCONNECTED' }, { type: 'CLEAR_DATA' }]);
       });
   });
 

@@ -268,15 +268,7 @@ describe('App', () => {
         { payload: true, type: 'DEVICE_UPDATE_FETCHING' },
         { type: 'SIGN_OUT' },
         { type: 'DISCONNECTED' },
-        { type: 'DEVICE_REMOVE_ALL' },
-        { type: 'SHARED_DEVICE_REMOVE_ALL' },
-        { type: 'SUB_DEVICE_REMOVE_ALL' },
-        { type: 'DEVICE_PARAM_REMOVE_ALL' },
-        { type: 'SUB_DEVICE_PARAM_REMOVE_ALL' },
-        { type: 'DEVICE_SETTING_REMOVE_ALL' },
-        { type: 'SUB_DEVICE_SETTING_REMOVE_ALL' },
-        { type: 'ONLINE_DEVICE_REMOVE_ALL' },
-        { type: 'LOG_REMOVE_ALL' },
+        { type: 'CLEAR_DATA' },
       ]);
     });
 
@@ -291,15 +283,7 @@ describe('App', () => {
         { payload: true, type: 'DEVICE_UPDATE_FETCHING' },
         { type: 'SIGN_OUT' },
         { type: 'DISCONNECTED' },
-        { type: 'DEVICE_REMOVE_ALL' },
-        { type: 'SHARED_DEVICE_REMOVE_ALL' },
-        { type: 'SUB_DEVICE_REMOVE_ALL' },
-        { type: 'DEVICE_PARAM_REMOVE_ALL' },
-        { type: 'SUB_DEVICE_PARAM_REMOVE_ALL' },
-        { type: 'DEVICE_SETTING_REMOVE_ALL' },
-        { type: 'SUB_DEVICE_SETTING_REMOVE_ALL' },
-        { type: 'ONLINE_DEVICE_REMOVE_ALL' },
-        { type: 'LOG_REMOVE_ALL' },
+        { type: 'CLEAR_DATA' },
       ]);
     });
   });
