@@ -1,10 +1,11 @@
 import { applyMiddleware, compose, createStore } from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import rootReducer from '../../_reducers';
+import config from '../../config';
 
 export const composeEnhancers = () => {
   /* istanbul ignore if  */
-  if (typeof window === 'object' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) {
+  if (typeof window === 'object' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ && config.env === 'development') {
     return window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({});
   }
   return compose;
