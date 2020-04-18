@@ -264,12 +264,7 @@ describe('App', () => {
       _initialState.user.tokens = { access: { token: '', expires: '' }, refresh: { token: '', expires: '' } };
       wrapper = setupWrapper(_initialState);
       await wait();
-      expect(store.getActions()).toEqual([
-        { payload: true, type: 'DEVICE_UPDATE_FETCHING' },
-        { type: 'SIGN_OUT' },
-        { type: 'DISCONNECTED' },
-        { type: 'CLEAR_DATA' },
-      ]);
+      expect(store.getActions()).toEqual([{ type: 'SIGN_OUT' }, { type: 'DISCONNECTED' }, { type: 'CLEAR_DATA' }]);
     });
 
     it('should disconnect and dispatch reset state actions if user is logged in but received no data from getMe Api', async () => {
@@ -279,12 +274,17 @@ describe('App', () => {
       _initialState.user.tokens = { access: { token: '', expires: '' }, refresh: { token: '', expires: '' } };
       wrapper = setupWrapper(_initialState);
       await wait();
-      expect(store.getActions()).toEqual([
-        { payload: true, type: 'DEVICE_UPDATE_FETCHING' },
-        { type: 'SIGN_OUT' },
-        { type: 'DISCONNECTED' },
-        { type: 'CLEAR_DATA' },
-      ]);
+      expect(store.getActions()).toEqual([{ type: 'SIGN_OUT' }, { type: 'DISCONNECTED' }, { type: 'CLEAR_DATA' }]);
+    });
+
+    it('should connect to socket when received data from getMe api and user is logged in', async () => {
+      userActions.me = jest.fn().mockResolvedValueOnce({ data: userOne });
+      const _initialState = getStateClone();
+      _initialState.user.isLoggedIn = true;
+      _initialState.user.tokens = { access: { token: '', expires: '' }, refresh: { token: '', expires: '' } };
+      wrapper = setupWrapper(_initialState);
+      await wait();
+      expect(store.getActions()).toEqual([{ payload: { ...userOne }, type: 'GET_ME' }, { type: 'SOCKET_INIT' }]);
     });
   });
 });

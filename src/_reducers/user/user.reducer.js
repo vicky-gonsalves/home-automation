@@ -13,6 +13,7 @@ const initialState = () => {
     tokens: storedUser && storedUser.tokens ? storedUser.tokens : {},
     loginError: null,
     isAuthorized: null,
+    hasFetchedDevices: false,
   };
 };
 
@@ -74,6 +75,11 @@ const user = (state = initialState(), action) => {
         isFetching: false,
         loginError: action.payload.error,
         isAuthorized: false,
+      };
+    case userConstants.SET_FETCHED_DEVICES:
+      return {
+        ...state,
+        hasFetchedDevices: action.payload,
       };
     default:
       return state;

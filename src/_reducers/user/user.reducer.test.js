@@ -23,6 +23,7 @@ describe('User Reducer', () => {
         name: null,
         remember: false,
         tokens: {},
+        hasFetchedDevices: false,
       });
       userService.getCurrentUser.mockClear();
     });
@@ -40,6 +41,7 @@ describe('User Reducer', () => {
         name: null,
         remember: false,
         tokens: {},
+        hasFetchedDevices: false,
       });
       userService.getCurrentUser.mockClear();
     });
@@ -57,6 +59,7 @@ describe('User Reducer', () => {
         name: null,
         remember: false,
         tokens: {},
+        hasFetchedDevices: false,
       });
       userService.getCurrentUser.mockClear();
     });
@@ -74,6 +77,7 @@ describe('User Reducer', () => {
         name: 'Vicky',
         remember: false,
         tokens: {},
+        hasFetchedDevices: false,
       });
       userService.getCurrentUser.mockClear();
     });
@@ -93,6 +97,7 @@ describe('User Reducer', () => {
         name: 'Vicky',
         remember: false,
         tokens: {},
+        hasFetchedDevices: false,
       });
       userService.getCurrentUser.mockClear();
     });
@@ -112,6 +117,7 @@ describe('User Reducer', () => {
         name: 'Vicky',
         remember: false,
         tokens: {},
+        hasFetchedDevices: false,
       });
       userService.getCurrentUser.mockClear();
     });
@@ -132,6 +138,28 @@ describe('User Reducer', () => {
         name: 'Vicky',
         remember: false,
         tokens: { access: {}, refresh: {} },
+        hasFetchedDevices: false,
+      });
+      userService.getCurrentUser.mockClear();
+    });
+
+    it('should return default state if has no storedUser user name, email and tokens and hasFetchedDevices', () => {
+      userService.getCurrentUser = jest.fn().mockReturnValueOnce({
+        user: { name: 'Vicky', email: 'vicky.gonsalves@outlook.com' },
+        tokens: { access: {}, refresh: {} },
+      });
+      const newState = user(undefined, {});
+      expect(newState).toEqual({
+        email: 'vicky.gonsalves@outlook.com',
+        role: null,
+        isAuthorized: null,
+        isFetching: false,
+        isLoggedIn: true,
+        loginError: null,
+        name: 'Vicky',
+        remember: false,
+        tokens: { access: {}, refresh: {} },
+        hasFetchedDevices: false,
       });
       userService.getCurrentUser.mockClear();
     });
@@ -201,6 +229,20 @@ describe('User Reducer', () => {
         {
           type: userConstants.SIGN_IN,
           payload: currentUser,
+        }
+      );
+      expect(newState).toEqual(currentUser);
+    });
+
+    it('should return new state if SET_FETCHED_DEVICES', () => {
+      const currentUser = {
+        hasFetchedDevices: true,
+      };
+      const newState = user(
+        {},
+        {
+          type: userConstants.SET_FETCHED_DEVICES,
+          payload: true,
         }
       );
       expect(newState).toEqual(currentUser);

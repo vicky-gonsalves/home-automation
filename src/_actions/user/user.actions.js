@@ -1,3 +1,4 @@
+import { socketActions } from '..';
 import { userConstants } from '../../_constants/user.constants';
 import { userService } from '../../_services/user/user.service';
 
@@ -39,6 +40,7 @@ const signIn = userObj => dispatch => {
         })
       );
       dispatch(setLoginError(null));
+      dispatch(socketActions.socketInit(response.tokens.access.token));
     })
     .catch(error => {
       // handle error
@@ -57,6 +59,13 @@ const me = () => {
   return userService.getMe();
 };
 
+const setDevicesFetched = flag => dispatch => {
+  dispatch({
+    type: userConstants.SET_FETCHED_DEVICES,
+    payload: flag,
+  });
+};
+
 export const userActions = {
   setUser,
   setLoginError,
@@ -64,4 +73,5 @@ export const userActions = {
   signOut,
   me,
   setUserTokens,
+  setDevicesFetched,
 };

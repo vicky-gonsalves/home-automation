@@ -6,7 +6,7 @@ import AlertTitle from '@material-ui/lab/AlertTitle';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { userActions, socketActions } from '../../_actions';
+import { socketActions, userActions } from '../../_actions';
 import { deviceActions } from '../../_actions/device/device.actions';
 import AppSkeleton from '../../_components/app-skeleton/AppSkeleton';
 import SmartSwitchCard from '../../_components/cards/smart-switch-card/SmartSwitchCard';
@@ -28,42 +28,30 @@ const useStyles = theme => ({
 });
 
 export class HomePage extends Component {
-  componentDidMount() {
-    if (!this.props.isFetchingDevice && !this.props.connected) {
-      this.props.setDeviceFetching(true);
-    }
+  componentDidUpdate() {
     if (
-      this.props.isAuthorized &&
-      this.props.isLoggedIn &&
-      this.props.tokens &&
-      this.props.tokens.access &&
-      this.props.tokens.access.token &&
-      !this.props.connected
+      !this.props.hasFetchedDevices &&
+      !this.props.isFetchingDevice &&
+      this.props.connected &&
+      (this.props.isLoggedIn || this.props.isAuthorized)
     ) {
-      this.props.socketInit(this.props.tokens.access.token);
-    }
-  }
-
-  // noinspection JSCheckFunctionSignatures
-  componentDidUpdate(prevProps, prevState) {
-    if (prevProps.connected !== this.props.connected) {
-      if (this.props.connected) {
-        this.props.myDevices();
-      }
+      userActions.setDevicesFetched(true);
+      this.props.setDeviceFetching(true);
+      this.props.myDevices();
     }
   }
 
   render() {
-    const { classes, isFetchingDevice, devices, sharedDevices } = this.props;
+    const { classes, isFetchingDevice, devices, sharedDevices, isSocketFetching, hasFetchedDevices } = this.props;
 
     const renderAppSkeleton = () => {
-      if (isFetchingDevice) {
+      if (!hasFetchedDevices && (isFetchingDevice || isSocketFetching)) {
         return <AppSkeleton data-test="appSkeletonComponent" />;
       }
     };
 
     const renderNoDeviceAlertComponent = () => {
-      if (!isFetchingDevice && devices.length <= 0 && sharedDevices.length <= 0) {
+      if (!isFetchingDevice && devices.length <= 0 && sharedDevices.length <= 0 && hasFetchedDevices) {
         return (
           <Alert severity="info" data-test="noDeviceAlertComponent">
             <AlertTitle>No Devices</AlertTitle>
@@ -89,6 +77,8 @@ export class HomePage extends Component {
 
     const renderMyDeviceGridComponent = () => {
       return (
+        !isFetchingDevice &&
+        hasFetchedDevices &&
         devices &&
         devices.length > 0 &&
         devices.map(device => (
@@ -116,6 +106,8 @@ export class HomePage extends Component {
 
     const renderSharedDeviceGridComponent = () => {
       return (
+        !isFetchingDevice &&
+        hasFetchedDevices &&
         sharedDevices &&
         sharedDevices.length > 0 &&
         sharedDevices.map(device => (
@@ -159,11 +151,21 @@ export class HomePage extends Component {
 }
 
 function mapState(state) {
-  const { isLoggedIn, tokens, isAuthorized } = state.user;
+  const { isLoggedIn, tokens, isAuthorized, hasFetchedDevices } = state.user;
   const { isSocketFetching, connected } = state.socket;
   const { devices, isFetchingDevice } = state.device;
   const { sharedDevices } = state.sharedDevice;
-  return { isLoggedIn, tokens, isSocketFetching, isAuthorized, connected, devices, sharedDevices, isFetchingDevice };
+  return {
+    isLoggedIn,
+    tokens,
+    isSocketFetching,
+    isAuthorized,
+    connected,
+    devices,
+    sharedDevices,
+    isFetchingDevice,
+    hasFetchedDevices,
+  };
 }
 
 const actionCreators = {
@@ -186,6 +188,7 @@ HomePage.propTypes = {
   match: PropTypes.object.isRequired,
   devices: PropTypes.array.isRequired,
   connected: PropTypes.bool.isRequired,
+  hasFetchedDevices: PropTypes.bool.isRequired,
   isAuthorized: PropTypes.bool,
   isLoggedIn: PropTypes.bool.isRequired,
   isFetchingDevice: PropTypes.bool.isRequired,

@@ -14,6 +14,7 @@ const initialState = {
     tokens: {},
     loginError: null,
     isAuthorized: null,
+    hasFetchedDevices: false,
   },
   socket: {
     isSocketFetching: false,

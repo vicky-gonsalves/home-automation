@@ -26,7 +26,7 @@ describe('userActions', () => {
     expect(store.getActions()).toEqual([{ type: 'SET_LOGIN_ERROR', payload: { error: 'Error' } }]);
   });
 
-  it('should dispatch SIGN_IN action', async () => {
+  it('should dispatch SIGN_IN action and connect to socket', async () => {
     const user = {
       user: { ...userOne },
       tokens: { access: { token: '', expires: '' }, refresh: { token: '', expires: '' } },
@@ -38,6 +38,7 @@ describe('userActions', () => {
       { type: 'SIGN_IN' },
       { payload: { email: userOne.email, role: userOne.role, name: userOne.name, tokens: user.tokens }, type: 'SET_USER' },
       { payload: { error: null }, type: 'SET_LOGIN_ERROR' },
+      { type: 'SOCKET_INIT' },
     ]);
   });
 
@@ -61,5 +62,15 @@ describe('userActions', () => {
   it('should dispatch SET_USER_TOKENS action', async () => {
     store.dispatch(userActions.setUserTokens());
     expect(store.getActions()).toEqual([{ payload: {}, type: 'SET_USER_TOKENS' }]);
+  });
+
+  it('should dispatch SIGN_OUT action', async () => {
+    store.dispatch(userActions.signOut());
+    expect(store.getActions()).toEqual([{ type: 'SIGN_OUT' }]);
+  });
+
+  it('should dispatch SET_FETCHED_DEVICES action', async () => {
+    store.dispatch(userActions.setDevicesFetched(true));
+    expect(store.getActions()).toEqual([{ payload: true, type: 'SET_FETCHED_DEVICES' }]);
   });
 });

@@ -6,7 +6,7 @@ import createAuthRefreshInterceptor from 'axios-auth-refresh';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Route, Router, Switch } from 'react-router-dom';
-import { userActions } from './_actions';
+import { socketActions, userActions } from './_actions';
 import Layout from './_components/route-layouts/layout/layout';
 import { userConstants } from './_constants';
 import { history } from './_helpers/history/history';
@@ -49,6 +49,7 @@ function App() {
               type: userConstants.GET_ME,
               payload: { ...response.data },
             });
+            dispatch(socketActions.socketInit(currentUser.tokens.access.token));
           } else {
             dispatch(authInterceptor.disconnect());
           }
@@ -59,7 +60,7 @@ function App() {
     }
   };
 
-  useEffect(fetchMe, []);
+  useEffect(fetchMe, [dispatch]);
 
   return (
     <Container maxWidth={false} disableGutters={true} className={classes.root} data-test="appContainer">
