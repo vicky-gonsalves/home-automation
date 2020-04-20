@@ -2,6 +2,7 @@
 import { combineReducers } from 'redux';
 import { appConstants } from '../_constants';
 import adminDrawer from './admin-drawer/adminDrawer.reducer';
+import adminUser from './admin-user/adminUser.reducer';
 import deviceParam from './device-param/deviceParam.reducer';
 import deviceSetting from './device-setting/deviceSetting.reducer';
 import device from './device/device.reducer';
@@ -29,6 +30,7 @@ const appReducer = combineReducers({
   deviceParam,
   log,
   adminDrawer,
+  adminUser,
 });
 
 const rootReducer = (state, action) => {
