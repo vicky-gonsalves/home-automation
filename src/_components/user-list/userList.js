@@ -78,7 +78,7 @@ const UserList = ({ isLoggedIn, isConnected }) => {
     { id: 'email', sort: true, search: true, align: 'left', label: 'Email', type: 'email', width: 300 },
     { id: 'role', sort: true, search: true, align: 'left', label: 'Role', type: 'text', width: 300 },
     { id: 'isDisabled', sort: true, search: true, align: 'left', label: 'Disabled?', type: 'boolean', width: 300 },
-    { id: 'createdAt', sort: true, search: true, align: 'right', label: 'created at', type: 'datetime', width: 300 },
+    { id: 'createdAt', sort: true, search: true, align: 'right', label: 'created at', type: 'datetime-local', width: 330 },
   ];
 
   const getList = useCallback(
