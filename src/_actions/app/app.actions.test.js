@@ -80,6 +80,11 @@ describe('appActions', () => {
       adminDrawer: {
         open: true,
       },
+      adminUser: {
+        count: 1,
+        isFetchingUsersList: false,
+        users: [userOne],
+      },
     };
 
     const store = testStore(_initialState);

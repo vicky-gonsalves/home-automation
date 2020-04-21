@@ -64,6 +64,11 @@ const initialState = {
   adminDrawer: {
     open: false,
   },
+  adminUser: {
+    count: 0,
+    isFetchingUsersList: false,
+    users: [],
+  },
 };
 
 const getStateClone = () => {
