@@ -32,6 +32,7 @@ const UserList = ({ isLoggedIn, isConnected }) => {
   const dispatch = useDispatch();
   const adminUser = useSelector(state => state.adminUser);
   const list = adminUser.users;
+  const isFetching = adminUser.isFetchingUsersList;
   const tableHeaders = [
     {
       id: 'actions',
@@ -76,9 +77,27 @@ const UserList = ({ isLoggedIn, isConnected }) => {
     },
     { id: 'name', sort: true, search: true, align: 'left', label: 'Name', type: 'text', width: 300 },
     { id: 'email', sort: true, search: true, align: 'left', label: 'Email', type: 'email', width: 300 },
-    { id: 'role', sort: true, search: true, align: 'left', label: 'Role', type: 'text', width: 300 },
-    { id: 'isDisabled', sort: true, search: true, align: 'left', label: 'Disabled?', type: 'boolean', width: 300 },
-    { id: 'createdAt', sort: true, search: true, align: 'right', label: 'created at', type: 'datetime-local', width: 330 },
+    {
+      id: 'role',
+      sort: true,
+      search: true,
+      align: 'left',
+      label: 'Role',
+      type: 'select',
+      options: ['admin', 'user'],
+      width: 300,
+    },
+    {
+      id: 'isDisabled',
+      sort: true,
+      search: true,
+      align: 'left',
+      label: 'Disabled?',
+      type: 'select',
+      options: ['true', 'false'],
+      width: 300,
+    },
+    { id: 'createdAt', sort: true, search: true, align: 'right', label: 'created at', type: 'datetime', width: 330 },
   ];
 
   const getList = useCallback(
@@ -110,6 +129,7 @@ const UserList = ({ isLoggedIn, isConnected }) => {
             getList={getList}
             isLoggedIn={isLoggedIn}
             isConnected={isConnected}
+            isFetching={isFetching}
           />
         </Paper>
       </div>

@@ -40,10 +40,11 @@ export const SimpleTableSearchForm = props => {
   const classes = useStyles();
   const { values, touched, errors, handleChange, handleBlur, isFetching, handleSubmit, headCell, handleCancel } = props;
 
-  return (
-    <form className={classes.form} onSubmit={handleSubmit} noValidate>
-      {(headCell.type === 'text' || headCell.type === 'number' || headCell.type === 'email') && (
+  const renderInput = () => {
+    if (headCell.type === 'text' || headCell.type === 'number' || headCell.type === 'email') {
+      return (
         <Input
+          autoFocus
           style={{ minWidth: headCell.width - 100 }}
           className={classes.input}
           required
@@ -58,8 +59,20 @@ export const SimpleTableSearchForm = props => {
           error={errors[headCell.id] && touched[headCell.id]}
           data-test="fieldInput"
         />
-      )}
-      {headCell.type === 'boolean' && (
+      );
+    }
+  };
+
+  const renderSelect = () => {
+    const renderMenuItems = () => {
+      return headCell.options.map(item => (
+        <MenuItem key={item} value={item}>
+          {item}
+        </MenuItem>
+      ));
+    };
+    if (headCell.type === 'select' && headCell.options && headCell.options.length) {
+      return (
         <FormControl className={clsx(classes.formControl, classes.noLabel)}>
           <Select
             required
@@ -77,11 +90,17 @@ export const SimpleTableSearchForm = props => {
             <MenuItem value="" disabled>
               {headCell.label}
             </MenuItem>
-            <MenuItem value={true}>true</MenuItem>
-            <MenuItem value={false}>false</MenuItem>
+            {renderMenuItems()}
           </Select>
         </FormControl>
-      )}
+      );
+    }
+  };
+
+  return (
+    <form className={classes.form} onSubmit={handleSubmit} noValidate>
+      {renderInput()}
+      {renderSelect()}
       <IconButton
         aria-label="search"
         size="small"
@@ -93,7 +112,7 @@ export const SimpleTableSearchForm = props => {
       >
         <CheckIcon fontSize="small" />
       </IconButton>
-      <IconButton type="button" aria-label="search" size="small" onClick={handleCancel}>
+      <IconButton disabled={isFetching} type="button" aria-label="search" size="small" onClick={handleCancel}>
         <CloseIcon fontSize="small" />
       </IconButton>
     </form>

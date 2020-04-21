@@ -1,6 +1,5 @@
 import blue from '@material-ui/core/colors/blue';
 import IconButton from '@material-ui/core/IconButton';
-import Popover from '@material-ui/core/Popover';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -12,11 +11,11 @@ import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Typography from '@material-ui/core/Typography';
 import SearchIcon from '@material-ui/icons/Search';
-import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
+import moment from 'moment';
 import React, { useEffect } from 'react';
 import config from '../../../config';
 import TableSearchForm from '../../forms/table-search-form/TableSearchForm';
-import MomentUtils from '@date-io/moment';
+import DateRangePicker from '../../pickers/date-range-picker/dateRangePicker';
 
 const useStyles = makeStyles(theme => ({
   table: {
@@ -44,7 +43,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const ListTable = ({ tableHeaders, list, count, getList, isLoggedIn, isConnected }) => {
+const ListTable = ({ tableHeaders, list, count, getList, isLoggedIn, isConnected, isFetching }) => {
   const classes = useStyles();
   const [order, setOrder] = React.useState('desc');
   const [orderBy, setOrderBy] = React.useState('createdAt');
@@ -52,19 +51,11 @@ const ListTable = ({ tableHeaders, list, count, getList, isLoggedIn, isConnected
   const [limit, setLimit] = React.useState(config.table.rowsPerPage);
   const [searchFilter, setSearchFilter] = React.useState({});
   const [headCells, setHeadCells] = React.useState(tableHeaders);
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const thRefs = React.useRef([]);
-  const open = Boolean(anchorEl);
-  const id = open ? 'date-time-popover' : undefined;
 
   const performFilter = _searchFilter => {
     setSearchFilter(_searchFilter);
     setPage(0);
     getList(isLoggedIn, isConnected, orderBy, order, limit, page, searchFilter);
-  };
-
-  const handleClose = headCell => {
-    handleSearch(headCell, null, true);
   };
 
   const handleRequestSort = (event, property) => {
@@ -92,15 +83,10 @@ const ListTable = ({ tableHeaders, list, count, getList, isLoggedIn, isConnected
     performFilter(_searchFilter);
   };
 
-  const handleSearch = (headCell, index, cancel = false) => () => {
+  const handleSearch = (headCell, cancel = false) => () => {
     const newHeadcells = [];
     headCells.forEach(_headCell => {
       if (_headCell.id === headCell.id) {
-        if (index) {
-          setAnchorEl(thRefs.current[index]);
-        } else {
-          setAnchorEl(null);
-        }
         _headCell.searchClicked = !cancel;
       }
       newHeadcells.push(_headCell);
@@ -116,6 +102,11 @@ const ListTable = ({ tableHeaders, list, count, getList, isLoggedIn, isConnected
   };
 
   const renderSortTableLabel = headCell => {
+    const renderOrderBy = () => {
+      if (orderBy === headCell.id) {
+        return <span className={classes.visuallyHidden}>{order === 'desc' ? 'sorted descending' : 'sorted ascending'}</span>;
+      }
+    };
     if (headCell.sort) {
       return (
         <TableSortLabel
@@ -124,25 +115,23 @@ const ListTable = ({ tableHeaders, list, count, getList, isLoggedIn, isConnected
           onClick={createSortHandler(headCell.id)}
         >
           {headCell.label}
-          {orderBy === headCell.id ? (
-            <span className={classes.visuallyHidden}>{order === 'desc' ? 'sorted descending' : 'sorted ascending'}</span>
-          ) : null}
+          {renderOrderBy()}
         </TableSortLabel>
       );
     }
   };
 
-  const renderSearchIcons = (headCell, index) => {
+  const renderSearchIcons = headCell => {
     if (headCell.search) {
       return (
-        <IconButton aria-label="search" size="small" onClick={handleSearch(headCell, index)}>
+        <IconButton aria-label="search" size="small" onClick={handleSearch(headCell)}>
           <SearchIcon fontSize="small" />
         </IconButton>
       );
     }
   };
 
-  const renderSortLabel = (headCell, index) => {
+  const renderSortLabel = headCell => {
     if (headCell.id === 'actions') {
       return headCell.label;
     } else {
@@ -150,60 +139,50 @@ const ListTable = ({ tableHeaders, list, count, getList, isLoggedIn, isConnected
         <React.Fragment>
           {renderSortTableLabel(headCell)}
           {!headCell.sort && headCell.label}
-          {renderSearchIcons(headCell, index)}
+          {renderSearchIcons(headCell)}
         </React.Fragment>
       );
     }
   };
 
-  const renderTableHeadings = (headCell, index) => {
+  const renderTableHeadings = headCell => {
+    const renderDateTimeForm = () => {
+      if (headCell.type === 'datetime') {
+        return (
+          <DateRangePicker
+            handleSubmit={handleSearchFilter}
+            headCell={headCell}
+            handleCancel={handleSearch(headCell, true)}
+            isFetching={isFetching}
+          />
+        );
+      }
+    };
+
+    const renderNormalForm = () => {
+      if (headCell.type !== 'datetime') {
+        return (
+          <TableSearchForm
+            handleSubmit={handleSearchFilter}
+            headCell={headCell}
+            handleCancel={handleSearch(headCell, true)}
+            isFetching={isFetching}
+          />
+        );
+      }
+    };
+
     if (!headCell.searchClicked) {
       return (
-        <TableCell
-          key={headCell.id}
-          align={headCell.align}
-          style={{ minWidth: headCell.width }}
-          ref={el => (thRefs.current[index] = el)}
-        >
-          {renderSortLabel(headCell, index)}
+        <TableCell key={headCell.id} align={headCell.align} style={{ minWidth: headCell.width }}>
+          {renderSortLabel(headCell)}
         </TableCell>
       );
     }
     return (
       <TableCell key={headCell.id} align={headCell.align} className={classes.highlight} style={{ minWidth: headCell.width }}>
-        {headCell.type !== 'datetime-local' && (
-          <TableSearchForm
-            handleSubmit={handleSearchFilter}
-            headCell={headCell}
-            handleCancel={handleSearch(headCell, null, true)}
-          />
-        )}
-        {headCell.type === 'datetime-local' && (
-          <Popover
-            id={id}
-            open={open}
-            anchorEl={anchorEl}
-            onClose={handleClose(headCell)}
-            anchorOrigin={{
-              vertical: 'center',
-              horizontal: 'center',
-            }}
-            transformOrigin={{
-              vertical: 'center',
-              horizontal: 'center',
-            }}
-          >
-            {/*<TableSearchForm*/}
-            {/*  handleSubmit={handleSearchFilter}*/}
-            {/*  headCell={headCell}*/}
-            {/*  handleCancel={handleSearch(headCell, null, true)}*/}
-            {/*/>*/}
-            <MuiPickersUtilsProvider utils={MomentUtils}>
-              <DateTimePicker autoOk disableFuture showTodayButton label="From" format="YYYY/MM/DD hh:mm A" />
-              <DateTimePicker autoOk disableFuture showTodayButton label="To" format="YYYY/MM/DD hh:mm A" />
-            </MuiPickersUtilsProvider>
-          </Popover>
-        )}
+        {renderNormalForm()}
+        {renderDateTimeForm()}
       </TableCell>
     );
   };
@@ -223,7 +202,8 @@ const ListTable = ({ tableHeaders, list, count, getList, isLoggedIn, isConnected
         return (
           <TableCell key={headCell.id} align={headCell.align}>
             <Typography variant="body2" noWrap>
-              {item[headCell.id].toString()}
+              {headCell.type === 'datetime' && moment(item[headCell.id]).format('MMMM Do YYYY, h:mm:ss a')}
+              {headCell.type !== 'datetime' && item[headCell.id].toString()}
             </Typography>
           </TableCell>
         );
@@ -243,7 +223,7 @@ const ListTable = ({ tableHeaders, list, count, getList, isLoggedIn, isConnected
       <TableContainer>
         <Table stickyHeader className={classes.table} aria-label="Table">
           <TableHead>
-            <TableRow>{headCells.map((headCell, index) => renderTableHeadings(headCell, index))}</TableRow>
+            <TableRow>{headCells.map(headCell => renderTableHeadings(headCell))}</TableRow>
           </TableHead>
           <TableBody>{renderTableRows()}</TableBody>
         </Table>
