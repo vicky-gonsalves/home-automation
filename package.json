@@ -30,6 +30,7 @@
     "history": "^4.10.1",
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
+    "next": "^9.3.5",
     "node-sass": "^4.13.1",
     "prop-types": "^15.7.2",
     "react": "^16.13.1",
@@ -41,11 +42,12 @@
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
     "socket.io-client": "^2.3.0",
+    "spdy": "^4.0.2",
     "yup": "^0.28.1"
   },
   "scripts": {
     "start": "react-scripts start",
-    "start:build": "env-cmd -f .env.production react-scripts build & node .",
+    "start:build": "env-cmd -f .env.production react-scripts build && node .",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "prettier": "prettier --check **/*.js",
@@ -83,6 +85,7 @@
     ]
   },
   "devDependencies": {
+    "@babel/helper-compilation-targets": "^7.8.7",
     "check-prop-types": "^1.1.2",
     "coveralls": "^3.0.11",
     "enzyme": "^3.11.0",
@@ -104,6 +107,7 @@
     "prettier": "^1.19.1",
     "redux-mock-store": "^1.5.4",
     "socket.io-mock": "^1.2.4",
+    "ssl-root-cas": "^1.3.1",
     "uniqid": "^5.2.0"
   }
 }
