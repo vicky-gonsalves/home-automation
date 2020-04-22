@@ -33,34 +33,39 @@ function App() {
   const isFetchingDevice = useSelector(state => state.device && state.device.isFetchingDevice);
   const isLoggedIn = currentUser.isLoggedIn && currentUser.tokens !== null;
   const isAdmin = isLoggedIn && currentUser.role === 'admin';
+  const token =
+    currentUser && currentUser.tokens && currentUser.tokens.access && currentUser.tokens.access.token
+      ? currentUser.tokens.access.token
+      : null;
   const dispatch = useDispatch();
   const skipPath = ['/', '/signin'];
   const showProgress = skipPath.indexOf(history.location.pathname) < 0 && (currentUser.isFetching || isFetchingDevice);
   authInterceptor.interceptRequests();
   createAuthRefreshInterceptor(axios, authInterceptor.refreshAuthLogic(dispatch));
 
-  const fetchMe = () => {
-    if (isLoggedIn) {
-      userActions
-        .me()
-        .then(response => {
-          if (response && response.data) {
-            dispatch({
-              type: userConstants.GET_ME,
-              payload: { ...response.data },
-            });
-            dispatch(socketActions.socketInit(currentUser.tokens.access.token));
-          } else {
+  useEffect(() => {
+    const fetchMe = () => {
+      if (isLoggedIn) {
+        userActions
+          .me()
+          .then(response => {
+            if (response && response.data) {
+              dispatch({
+                type: userConstants.GET_ME,
+                payload: { ...response.data },
+              });
+              dispatch(socketActions.socketInit(token));
+            } else {
+              dispatch(authInterceptor.disconnect());
+            }
+          })
+          .catch(() => {
             dispatch(authInterceptor.disconnect());
-          }
-        })
-        .catch(() => {
-          dispatch(authInterceptor.disconnect());
-        });
-    }
-  };
-
-  useEffect(fetchMe, [dispatch]);
+          });
+      }
+    };
+    fetchMe();
+  }, [token, dispatch, isLoggedIn]);
 
   return (
     <Container maxWidth={false} disableGutters={true} className={classes.root} data-test="appContainer">
