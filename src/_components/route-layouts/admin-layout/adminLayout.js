@@ -2,9 +2,11 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { Redirect } from 'react-router';
 import { Route } from 'react-router-dom';
-import DashboardPage from '../../../modules/Admin/Dashboard/DashboardPage';
-import UserEditorPage from '../../../modules/Admin/User/UserEditor/UserEditorPage';
-import UserListPage from '../../../modules/Admin/User/UserList/UserListPage';
+import LazyLoader from '../../lazy-loader/LazyLoader';
+
+const UserListPage = React.lazy(() => import('../../../modules/Admin/User/UserList/UserListPage'));
+const UserEditorPage = React.lazy(() => import('../../../modules/Admin/User/UserEditor/UserEditorPage'));
+const DashboardPage = React.lazy(() => import('../../../modules/Admin/Dashboard/DashboardPage'));
 
 function AdminLayout({ isAdmin, isLoggedIn }) {
   const adminLayoutPath = ['/admin', '/users', '/users/new'];
@@ -25,9 +27,9 @@ function AdminLayout({ isAdmin, isLoggedIn }) {
 
   return (
     <React.Fragment>
-      <AdminRoute exact path={adminLayoutPath[0]} component={DashboardPage} />
-      <AdminRoute exact path={adminLayoutPath[1]} component={UserListPage} />
-      <AdminRoute exact path={adminLayoutPath[2]} component={UserEditorPage} />
+      <AdminRoute exact path={adminLayoutPath[0]} component={LazyLoader(DashboardPage)} />
+      <AdminRoute exact path={adminLayoutPath[1]} component={LazyLoader(UserListPage)} />
+      <AdminRoute exact path={adminLayoutPath[2]} component={LazyLoader(UserEditorPage)} />
     </React.Fragment>
   );
 }

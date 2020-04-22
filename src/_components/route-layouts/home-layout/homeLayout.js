@@ -2,7 +2,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { Redirect } from 'react-router';
 import { Route } from 'react-router-dom';
-import HomePage from '../../../modules/Home/HomePage';
+import LazyLoader from '../../lazy-loader/LazyLoader';
+const HomePage = React.lazy(() => import('../../../modules/Home/HomePage'));
 
 function HomeLayout({ isLoggedIn }) {
   const homeLayoutPath = ['/home'];
@@ -21,7 +22,7 @@ function HomeLayout({ isLoggedIn }) {
     );
   };
 
-  return <PrivateRoute exact path={homeLayoutPath[0]} component={HomePage} />;
+  return <PrivateRoute exact path={homeLayoutPath[0]} component={LazyLoader(HomePage)} />;
 }
 
 HomeLayout.propTypes = {
