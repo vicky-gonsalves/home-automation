@@ -18,6 +18,7 @@ import config from '../../../config';
 import TableSearchForm from '../../forms/table-search-form/TableSearchForm';
 import OverlayLoading from '../../overlay-loading/OverlayLoading';
 import DateRangePicker from '../../pickers/date-range-picker/dateRangePicker';
+import TableToolbar from '../../table-toolbar/TableToolbar';
 
 const useStyles = makeStyles(theme => ({
   tableContainer: {
@@ -48,7 +49,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const ListTable = ({ tableHeaders, list, count, getList, isLoggedIn, isConnected, isFetching }) => {
+const ListTable = ({ title, tableHeaders, list, count, getList, isLoggedIn, isConnected, isFetching, buttons }) => {
   const classes = useStyles();
   const [order, setOrder] = React.useState('desc');
   const [orderBy, setOrderBy] = React.useState('createdAt');
@@ -225,6 +226,7 @@ const ListTable = ({ tableHeaders, list, count, getList, isLoggedIn, isConnected
 
   return (
     <React.Fragment>
+      <TableToolbar title={title} buttons={buttons} />
       <div className={classes.tableContainer}>
         <TableContainer>
           <Table stickyHeader className={classes.table} aria-label="Table">
@@ -280,5 +282,13 @@ ListTable.propTypes = {
   isLoggedIn: PropTypes.bool.isRequired,
   isConnected: PropTypes.bool.isRequired,
   isFetching: PropTypes.bool.isRequired,
+  buttons: PropTypes.PropTypes.arrayOf(
+    PropTypes.shape({
+      title: PropTypes.string.isRequired,
+      component: PropTypes.func.isRequired,
+      callback: PropTypes.func.isRequired,
+    })
+  ),
+  title: PropTypes.string.isRequired,
 };
 export default ListTable;

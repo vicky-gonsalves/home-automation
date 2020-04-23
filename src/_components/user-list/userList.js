@@ -1,13 +1,10 @@
-import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import AddIcon from '@material-ui/icons/Add';
 import PropTypes from 'prop-types';
 import React, { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { adminUserActions } from '../../_actions';
+import AddButton from '../buttons/add-button/addButton';
 import DeleteButton from '../buttons/delete-button/deleteButton';
 import EditButton from '../buttons/edit-button/editButton';
 import ViewButton from '../buttons/view-button/viewButton';
@@ -23,14 +20,6 @@ const useStyles = makeStyles(theme => ({
   },
   title: {
     flex: '1 1 100%',
-  },
-  toolbar: {
-    paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(1),
-  },
-  button: {
-    margin: theme.spacing(1),
-    minWidth: 130,
   },
 }));
 
@@ -107,9 +96,20 @@ const UserList = ({ isLoggedIn, isConnected }) => {
     { id: 'createdAt', sort: true, search: true, align: 'right', label: 'created at', type: 'datetime', width: 330 },
   ];
 
+  const buttons = [
+    {
+      title: 'Add User',
+      component: AddButton,
+      callback: () => {
+        // eslint-disable-next-line no-console
+        console.log('add user');
+      },
+    },
+  ];
+
   const getList = useCallback(
     (isLoggedIn, isConnected, orderBy, order, limit, page, searchFilter) => {
-      const fetchList = (_isLoggedIn, _isConnected, orderBy, order, limit, page, searchFilter) => {
+      const fetchList = (_isLoggedIn, _isConnected, orderBy, order, limit, pagbuttone, searchFilter) => {
         if (_isLoggedIn && _isConnected) {
           const sortBy = `${orderBy}:${order}`;
           dispatch(adminUserActions.getUsers({ sortBy, limit, page: page + 1, ...searchFilter }));
@@ -124,15 +124,8 @@ const UserList = ({ isLoggedIn, isConnected }) => {
     <React.Fragment>
       <div className={classes.root}>
         <Paper className={classes.paper}>
-          <Toolbar className={classes.toolbar}>
-            <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
-              Users
-            </Typography>
-            <Button variant="contained" color="primary" className={classes.button} startIcon={<AddIcon />}>
-              Add User
-            </Button>
-          </Toolbar>
           <ListTable
+            title="Users"
             tableHeaders={tableHeaders}
             count={adminUser.count}
             list={list}
@@ -140,6 +133,7 @@ const UserList = ({ isLoggedIn, isConnected }) => {
             isLoggedIn={isLoggedIn}
             isConnected={isConnected}
             isFetching={isFetching}
+            buttons={buttons}
           />
         </Paper>
       </div>
@@ -151,12 +145,10 @@ UserList.propTypes = {
   classes: PropTypes.shape({
     root: PropTypes.string.isRequired,
     paper: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired,
-    toolbar: PropTypes.string.isRequired,
-    button: PropTypes.string.isRequired,
-    isLoggedIn: PropTypes.bool.isRequired,
-    isConnected: PropTypes.bool.isRequired,
+    title: PropTypes.bool.isRequired,
   }),
+  isLoggedIn: PropTypes.bool.isRequired,
+  isConnected: PropTypes.bool.isRequired,
 };
 
 export default UserList;
