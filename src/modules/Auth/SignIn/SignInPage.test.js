@@ -1,9 +1,15 @@
-import { shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import React from 'react';
+import { Provider } from 'react-redux';
+import configureStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
 import { history } from '../../../_helpers/history/history';
-import { checkProps, clickButton, findByDataAttr } from '../../../_utils';
-import SignInPage, { SignInPage as SignInPageClass } from './SignInPage';
+import { checkProps, findByDataAttr, getStateClone } from '../../../_utils';
+import SignInPage from './SignInPage';
 
+let wrapper;
+let store;
+const mockStore = configureStore([thunk]);
 const props = {
   classes: {
     paper: '',
@@ -16,6 +22,15 @@ const props = {
   match: {},
 };
 
+const setupWrapper = (_initialState, _props) => {
+  store = mockStore(_initialState);
+  return mount(
+    <Provider store={store}>
+      <SignInPage {..._props} />
+    </Provider>
+  );
+};
+
 describe('SignInPage', () => {
   describe('Other Checks', () => {
     describe('Checking PropTypes', () => {
@@ -26,16 +41,8 @@ describe('SignInPage', () => {
     });
 
     describe('Checking Components', () => {
-      let wrapper;
       beforeEach(() => {
-        const _props = {
-          ...props,
-          signIn: jest.fn(),
-          signOut: jest.fn(),
-          isLoggedIn: false,
-        };
         history.push = jest.fn();
-        wrapper = shallow(<SignInPageClass {..._props} />);
       });
       afterEach(() => {
         wrapper.unmount();
@@ -43,48 +50,64 @@ describe('SignInPage', () => {
       });
 
       it('should have signIn container', () => {
+        const _initialState = getStateClone();
+        wrapper = setupWrapper(_initialState, props);
         const component = findByDataAttr(wrapper, 'signInContainer').first();
         expect(component.length).toBe(1);
       });
 
       it('should have signInForm component', () => {
+        const _initialState = getStateClone();
+        wrapper = setupWrapper(_initialState, props);
         const component = findByDataAttr(wrapper, 'signInFormComponent').first();
         expect(component.length).toBe(1);
       });
 
       it('should have navbar component', () => {
+        const _initialState = getStateClone();
+        wrapper = setupWrapper(_initialState, props);
         const component = findByDataAttr(wrapper, 'navbarComponent').first();
         expect(component.length).toBe(1);
       });
 
       it('should have footer component', () => {
+        const _initialState = getStateClone();
+        wrapper = setupWrapper(_initialState, props);
         const component = findByDataAttr(wrapper, 'footerComponent').first();
         expect(component.length).toBe(1);
       });
 
       it('should have forgot password button', () => {
+        const _initialState = getStateClone();
+        wrapper = setupWrapper(_initialState, props);
         const component = findByDataAttr(wrapper, 'forgotPassword').first();
         expect(component.length).toBe(1);
       });
 
       it('should navigate to forgot password page', async () => {
+        const _initialState = getStateClone();
+        wrapper = setupWrapper(_initialState, props);
         history.location = { pathname: '/signin', search: '', hash: '', state: undefined };
         const component = findByDataAttr(wrapper, 'forgotPassword').first();
-        await clickButton(component);
+        component.props().onClick();
+        expect(history.push).toHaveBeenCalledWith('/forgot-password');
         expect(history.push).toHaveBeenCalledTimes(1);
       });
 
-      it('should navigate to home page if user is logged in on componentDidUpdate', () => {
+      it('should navigate to home page if user is logged in', () => {
+        const _initialState = getStateClone();
+        _initialState.user.isLoggedIn = true;
+        _initialState.user.tokens = { access: 'access_token' };
+        wrapper = setupWrapper(_initialState, props);
         history.location = { pathname: '/signin', search: '', hash: '', state: undefined };
-        wrapper.setProps({ isLoggedIn: true, tokens: { access: 'access_token' } });
-        wrapper.instance().componentDidUpdate();
+        expect(history.push).toHaveBeenCalledWith('/home');
         expect(history.push).toHaveBeenCalledTimes(1);
       });
 
       it('should not navigate to home page if user is not logged in', () => {
+        const _initialState = getStateClone();
+        wrapper = setupWrapper(_initialState, props);
         history.location = { pathname: '/signin', search: '', hash: '', state: undefined };
-        wrapper.setProps({ isLoggedIn: false });
-        wrapper.instance().componentDidUpdate();
         expect(history.push).toHaveBeenCalledTimes(0);
       });
     });
