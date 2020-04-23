@@ -32,6 +32,7 @@ function App() {
   const currentUser = useSelector(state => state.user);
   const isFetchingDevice = useSelector(state => state.device && state.device.isFetchingDevice);
   const isLoggedIn = currentUser.isLoggedIn && currentUser.tokens !== null;
+  const isAuthorized = currentUser.isAuthorized;
   const isAdmin = isLoggedIn && currentUser.role === 'admin';
   const token =
     currentUser && currentUser.tokens && currentUser.tokens.access && currentUser.tokens.access.token
@@ -45,7 +46,7 @@ function App() {
 
   useEffect(() => {
     const fetchMe = () => {
-      if (isLoggedIn) {
+      if (isLoggedIn && !isAuthorized) {
         userActions
           .me()
           .then(response => {
@@ -65,7 +66,7 @@ function App() {
       }
     };
     fetchMe();
-  }, [token, dispatch, isLoggedIn]);
+  }, [token, dispatch, isLoggedIn, isAuthorized]);
 
   return (
     <Container maxWidth={false} disableGutters={true} className={classes.root} data-test="appContainer">

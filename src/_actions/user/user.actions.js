@@ -1,4 +1,3 @@
-import { socketActions } from '..';
 import { userConstants } from '../../_constants/user.constants';
 import { userService } from '../../_services/user/user.service';
 
@@ -40,7 +39,6 @@ const signIn = userObj => dispatch => {
         })
       );
       dispatch(setLoginError(null));
-      dispatch(socketActions.socketInit(response.tokens.access.token));
     })
     .catch(error => {
       // handle error

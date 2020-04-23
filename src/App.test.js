@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { userActions } from './_actions';
+import AppSpinner from './_components/app-spinner/appSpinner';
 import { history } from './_helpers/history/history';
 import { findByDataAttr, findByDataAttrWhenMounted, getStateClone, initialState, wait } from './_utils';
 import { userOne } from './_utils/fixtures/user.fixture';
@@ -11,11 +12,11 @@ import App from './App';
 import DashboardPage from './modules/Admin/Dashboard/DashboardPage';
 import UserEditorPage from './modules/Admin/User/UserEditor/UserEditorPage';
 import UserListPage from './modules/Admin/User/UserList/UserListPage';
+import ForgotPasswordPage from './modules/Auth/ForgotPassword/ForgotPasswordPage';
 import SignInPage from './modules/Auth/SignIn/SignInPage';
 import HomePage from './modules/Home/HomePage';
 
 jest.mock('axios');
-
 let wrapper;
 let store;
 const mockStore = configureStore([thunk]);
@@ -90,111 +91,6 @@ describe('App', () => {
     });
   });
 
-  describe('When User is Logged In', () => {
-    beforeEach(() => {
-      userActions.me = jest.fn().mockResolvedValueOnce({ data: userOne });
-      history.location = { pathname: '/', search: '', hash: '', state: undefined };
-    });
-
-    afterEach(() => {
-      wrapper.unmount();
-      store.clearActions();
-      userActions.me.mockRestore();
-    });
-
-    it('should have HomePage if user is logged in', () => {
-      const _initialState = getStateClone();
-      _initialState.user.isLoggedIn = true;
-      _initialState.user.tokens = { access: { token: '', expires: '' }, refresh: { token: '', expires: '' } };
-      wrapper = setupWrapper(_initialState);
-      const component = wrapper.find(HomePage);
-      expect(component).toHaveLength(1);
-      expect(history.location.pathname).toBe('/home');
-    });
-
-    it('should have Admin DashBoardPage if user is logged in and having role admin', () => {
-      history.location = { pathname: '/admin', search: '', hash: '', state: undefined };
-      const _initialState = getStateClone();
-      _initialState.user.isLoggedIn = true;
-      _initialState.user.role = 'admin';
-      _initialState.user.tokens = { access: { token: '', expires: '' }, refresh: { token: '', expires: '' } };
-      wrapper = setupWrapper(_initialState);
-      const component = wrapper.find(DashboardPage);
-      expect(component).toHaveLength(1);
-      expect(history.location.pathname).toBe('/admin');
-    });
-
-    it('should not have Admin DashBoardPage if user is logged in and having role user', () => {
-      history.location = { pathname: '/admin', search: '', hash: '', state: undefined };
-      const _initialState = getStateClone();
-      _initialState.user.isLoggedIn = true;
-      _initialState.user.role = 'user';
-      _initialState.user.tokens = { access: { token: '', expires: '' }, refresh: { token: '', expires: '' } };
-      wrapper = setupWrapper(_initialState);
-      const component = wrapper.find(HomePage);
-      expect(component).toHaveLength(1);
-      expect(history.location.pathname).toBe('/home');
-    });
-
-    it('should have Admin UserListPage if user is logged in and having role admin', () => {
-      history.location = { pathname: '/users', search: '', hash: '', state: undefined };
-      const _initialState = getStateClone();
-      _initialState.user.isLoggedIn = true;
-      _initialState.user.role = 'admin';
-      _initialState.user.tokens = { access: { token: '', expires: '' }, refresh: { token: '', expires: '' } };
-      wrapper = setupWrapper(_initialState);
-      const component = wrapper.find(UserListPage);
-      expect(component).toHaveLength(1);
-      expect(history.location.pathname).toBe('/users');
-    });
-
-    it('should have Admin UserEditorPage if user is logged in and having role admin', () => {
-      history.location = { pathname: '/users/new', search: '', hash: '', state: undefined };
-      const _initialState = getStateClone();
-      _initialState.user.isLoggedIn = true;
-      _initialState.user.role = 'admin';
-      _initialState.user.tokens = { access: { token: '', expires: '' }, refresh: { token: '', expires: '' } };
-      wrapper = setupWrapper(_initialState);
-      const component = wrapper.find(UserEditorPage);
-      expect(component).toHaveLength(1);
-      expect(history.location.pathname).toBe('/users/new');
-    });
-
-    it('should not have Admin UserListPage if user is logged in and having role user', () => {
-      history.location = { pathname: '/users', search: '', hash: '', state: undefined };
-      const _initialState = getStateClone();
-      _initialState.user.isLoggedIn = true;
-      _initialState.user.role = 'user';
-      _initialState.user.tokens = { access: { token: '', expires: '' }, refresh: { token: '', expires: '' } };
-      wrapper = setupWrapper(_initialState);
-      const component = wrapper.find(HomePage);
-      expect(component).toHaveLength(1);
-      expect(history.location.pathname).toBe('/home');
-    });
-
-    it('should not have Admin UserEditorPage if user is logged in and having role user', () => {
-      history.location = { pathname: '/users/new', search: '', hash: '', state: undefined };
-      const _initialState = getStateClone();
-      _initialState.user.isLoggedIn = true;
-      _initialState.user.role = 'user';
-      _initialState.user.tokens = { access: { token: '', expires: '' }, refresh: { token: '', expires: '' } };
-      wrapper = setupWrapper(_initialState);
-      const component = wrapper.find(HomePage);
-      expect(component).toHaveLength(1);
-      expect(history.location.pathname).toBe('/home');
-    });
-
-    it('should not have SignInPage if user is logged in', () => {
-      const _initialState = getStateClone();
-      _initialState.user.isLoggedIn = true;
-      _initialState.user.tokens = { access: { token: '', expires: '' }, refresh: { token: '', expires: '' } };
-      wrapper = setupWrapper(_initialState);
-      const component = wrapper.find(SignInPage);
-      expect(component).toHaveLength(0);
-      expect(history.location.pathname).toBe('/home');
-    });
-  });
-
   describe('When User is NOT Logged In', () => {
     beforeEach(() => {
       history.location = { pathname: '/home', search: '', hash: '', state: undefined };
@@ -211,6 +107,23 @@ describe('App', () => {
       const component = wrapper.find(HomePage);
       expect(component).toHaveLength(0);
       expect(history.location.pathname).toBe('/signin');
+    });
+
+    it('should render ForgotPassword Page', async () => {
+      history.location = { pathname: '/forgot-password', search: '', hash: '', state: undefined };
+      const _initialState = getStateClone();
+      wrapper = setupWrapper(_initialState);
+      await wait();
+      const component = wrapper.find('[path="/forgot-password"]');
+      expect(
+        component
+          .props()
+          .component()
+          .props.children.type._result().props['data-test']
+      ).toBe('forgotPasswordPageContainer');
+      expect(component.props().component().props.fallback).toEqual(<AppSpinner />);
+      expect(component).toHaveLength(1);
+      expect(history.location.pathname).toBe('/forgot-password');
     });
 
     it('should not have Admin DashBoardPage if user is not logged in', () => {

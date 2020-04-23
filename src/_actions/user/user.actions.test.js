@@ -38,7 +38,6 @@ describe('userActions', () => {
       { type: 'SIGN_IN' },
       { payload: { email: userOne.email, role: userOne.role, name: userOne.name, tokens: user.tokens }, type: 'SET_USER' },
       { payload: { error: null }, type: 'SET_LOGIN_ERROR' },
-      { type: 'SOCKET_INIT' },
     ]);
   });
 
