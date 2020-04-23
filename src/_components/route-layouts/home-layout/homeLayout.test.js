@@ -6,7 +6,7 @@ import { Router } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { history } from '../../../_helpers/history/history';
-import { checkProps, initialState } from '../../../_utils';
+import { checkProps, findByDataAttr, getStateClone, initialState, wait } from '../../../_utils';
 import HomeLayout from './homeLayout';
 
 const homeLayoutPath = ['/home'];
@@ -31,6 +31,24 @@ const renderLayoutPath = (component, index) => {
     .at(index)
     .props()
     .render({ location: homeLayoutPath[index] }).props.to.pathname;
+};
+
+let innerStore;
+const innerProps = {
+  history,
+  location: {},
+  match: {},
+};
+const getInnerComponent = component => component.props().component().props.children.type._result;
+const setUpInnerWrapper = (state, InnerComponent, _props = {}) => {
+  innerStore = mockStore(state);
+  return mount(
+    <Provider store={store}>
+      <Router history={history}>
+        <InnerComponent {..._props} />
+      </Router>
+    </Provider>
+  );
 };
 
 describe('HomeLayout', () => {
@@ -77,6 +95,31 @@ describe('HomeLayout', () => {
       expect(renderLayoutPath(component, 0)).toBe(signInPath);
       // eslint-disable-next-line no-console
       console.error.mockClear();
+    });
+
+    describe('Integration Test', () => {
+      let innerWrapper;
+      afterEach(() => {
+        innerWrapper.unmount();
+        innerStore.clearActions();
+      });
+
+      it('should render HomePage if isLoggedIn and route is /home', async () => {
+        const _props = { isLoggedIn: true, isAdmin: true };
+        wrapper = setupWrapper(initialState, _props);
+        history.push('/home');
+        await wait();
+        const component = wrapper.find('[path="/home"]').first();
+        const innerComponent = getInnerComponent(component);
+        const _initialState = getStateClone();
+        _initialState.user.isLoggedIn = true;
+        _initialState.user.isAuthorized = true;
+        _initialState.socket.connected = true;
+        innerWrapper = setUpInnerWrapper(_initialState, innerComponent, innerProps);
+        const itemsInInnerComponent = findByDataAttr(innerWrapper, 'homePageContainer');
+        expect(innerWrapper.props()).toBeDefined();
+        expect(itemsInInnerComponent.length).toBeTruthy();
+      });
     });
   });
 });

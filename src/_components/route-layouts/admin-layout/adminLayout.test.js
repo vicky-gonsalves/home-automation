@@ -6,7 +6,7 @@ import { Router } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { history } from '../../../_helpers/history/history';
-import { checkProps, initialState } from '../../../_utils';
+import { checkProps, findByDataAttr, getStateClone, initialState, wait } from '../../../_utils';
 import AdminLayout from './adminLayout';
 
 const adminLayoutPath = ['/admin', '/users', '/users/new'];
@@ -34,6 +34,24 @@ const renderLayoutPath = (component, index) => {
     .render({ location: adminLayoutPath[index] }).props.to.pathname;
 };
 
+let innerStore;
+const innerProps = {
+  history,
+  location: {},
+  match: {},
+};
+const getInnerComponent = component => component.props().component().props.children.type._result;
+const setUpInnerWrapper = (state, InnerComponent, _props = {}) => {
+  innerStore = mockStore(state);
+  return mount(
+    <Provider store={store}>
+      <Router history={history}>
+        <InnerComponent {..._props} />
+      </Router>
+    </Provider>
+  );
+};
+
 describe('AdminLayout', () => {
   describe('Checking PropTypes', () => {
     it('should not throw a warning', () => {
@@ -49,6 +67,7 @@ describe('AdminLayout', () => {
   describe('Component Test', () => {
     afterEach(() => {
       wrapper.unmount();
+      store.clearActions();
     });
 
     it('should render components if user has been authenticated and role is admin', () => {
@@ -106,6 +125,65 @@ describe('AdminLayout', () => {
       expect(renderLayoutPath(component, 2)).toBe(signInPath);
       // eslint-disable-next-line no-console
       console.error.mockClear();
+    });
+
+    describe('Integration Test', () => {
+      let innerWrapper;
+      afterEach(() => {
+        innerWrapper.unmount();
+        innerStore.clearActions();
+      });
+
+      it('should render UserListPage if isLoggedIn and isAdmin and route is /users', async () => {
+        const _props = { isLoggedIn: true, isAdmin: true };
+        wrapper = setupWrapper(initialState, _props);
+        history.push('/users');
+        await wait();
+        const component = wrapper.find('[path="/users"]').first();
+        const innerComponent = getInnerComponent(component);
+        const _initialState = getStateClone();
+        _initialState.user.isLoggedIn = true;
+        _initialState.user.isAuthorized = true;
+        _initialState.socket.connected = true;
+        innerWrapper = setUpInnerWrapper(_initialState, innerComponent, innerProps);
+        const itemsInInnerComponent = findByDataAttr(innerWrapper, 'userListPageContainer');
+        expect(innerWrapper.props()).toBeDefined();
+        expect(itemsInInnerComponent.length).toBeTruthy();
+      });
+
+      it('should render UserEditorPage if isLoggedIn and isAdmin and route is /users/new', async () => {
+        const _props = { isLoggedIn: true, isAdmin: true };
+        wrapper = setupWrapper(initialState, _props);
+        history.push('/users/new');
+        await wait();
+        const component = wrapper.find('[path="/users/new"]').first();
+        const innerComponent = getInnerComponent(component);
+        const _initialState = getStateClone();
+        _initialState.user.isLoggedIn = true;
+        _initialState.user.isAuthorized = true;
+        _initialState.socket.connected = true;
+        innerWrapper = setUpInnerWrapper(_initialState, innerComponent, innerProps);
+        const itemsInInnerComponent = findByDataAttr(innerWrapper, 'userEditorPageContainer');
+        expect(innerWrapper.props()).toBeDefined();
+        expect(itemsInInnerComponent.length).toBeTruthy();
+      });
+
+      it('should render DashboardPage if isLoggedIn and isAdmin and route is /admin', async () => {
+        const _props = { isLoggedIn: true, isAdmin: true };
+        wrapper = setupWrapper(initialState, _props);
+        history.push('/admin');
+        await wait();
+        const component = wrapper.find('[path="/admin"]').first();
+        const innerComponent = getInnerComponent(component);
+        const _initialState = getStateClone();
+        _initialState.user.isLoggedIn = true;
+        _initialState.user.isAuthorized = true;
+        _initialState.socket.connected = true;
+        innerWrapper = setUpInnerWrapper(_initialState, innerComponent, innerProps);
+        const itemsInInnerComponent = findByDataAttr(innerWrapper, 'dashboardPageContainer');
+        expect(innerWrapper.props()).toBeDefined();
+        expect(itemsInInnerComponent.length).toBeTruthy();
+      });
     });
   });
 });

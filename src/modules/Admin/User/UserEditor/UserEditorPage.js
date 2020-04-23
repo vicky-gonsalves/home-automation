@@ -1,5 +1,6 @@
 import { CssBaseline } from '@material-ui/core';
 import Container from '@material-ui/core/Container';
+import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import React from 'react';
 import AdminDrawer from '../../../../_components/admin-drawer/adminDrawer';
@@ -7,7 +8,7 @@ import Footer from '../../../../_components/footer';
 import Navbar from '../../../../_components/navbar/navbar';
 import config from '../../../../config';
 
-const useStyles = theme => ({
+const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
     padding: theme.spacing(2),
@@ -16,7 +17,7 @@ const useStyles = theme => ({
     padding: theme.spacing(3, 2),
     marginTop: 'auto',
   },
-});
+}));
 
 const UserEditorPage = () => {
   const classes = useStyles();
