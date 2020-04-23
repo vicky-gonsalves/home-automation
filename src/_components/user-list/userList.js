@@ -1,7 +1,10 @@
+import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
+import AddIcon from '@material-ui/icons/Add';
+import PropTypes from 'prop-types';
 import React, { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { adminUserActions } from '../../_actions';
@@ -25,6 +28,10 @@ const useStyles = makeStyles(theme => ({
     paddingLeft: theme.spacing(2),
     paddingRight: theme.spacing(1),
   },
+  button: {
+    margin: theme.spacing(1),
+    minWidth: 130,
+  },
 }));
 
 const UserList = ({ isLoggedIn, isConnected }) => {
@@ -32,7 +39,7 @@ const UserList = ({ isLoggedIn, isConnected }) => {
   const dispatch = useDispatch();
   const adminUser = useSelector(state => state.adminUser);
   const list = adminUser.users;
-  const isFetching = adminUser.isFetchingUsersList;
+  const isFetching = adminUser.isFetchingUsersList || !isConnected;
   const tableHeaders = [
     {
       id: 'actions',
@@ -121,6 +128,9 @@ const UserList = ({ isLoggedIn, isConnected }) => {
             <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
               Users
             </Typography>
+            <Button variant="contained" color="primary" className={classes.button} startIcon={<AddIcon />}>
+              Add User
+            </Button>
           </Toolbar>
           <ListTable
             tableHeaders={tableHeaders}
@@ -135,6 +145,18 @@ const UserList = ({ isLoggedIn, isConnected }) => {
       </div>
     </React.Fragment>
   );
+};
+
+UserList.propTypes = {
+  classes: PropTypes.shape({
+    root: PropTypes.string.isRequired,
+    paper: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    toolbar: PropTypes.string.isRequired,
+    button: PropTypes.string.isRequired,
+    isLoggedIn: PropTypes.bool.isRequired,
+    isConnected: PropTypes.bool.isRequired,
+  }),
 };
 
 export default UserList;

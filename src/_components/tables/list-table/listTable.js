@@ -12,12 +12,17 @@ import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Typography from '@material-ui/core/Typography';
 import SearchIcon from '@material-ui/icons/Search';
 import moment from 'moment';
+import PropTypes from 'prop-types';
 import React, { useEffect } from 'react';
 import config from '../../../config';
 import TableSearchForm from '../../forms/table-search-form/TableSearchForm';
+import OverlayLoading from '../../overlay-loading/OverlayLoading';
 import DateRangePicker from '../../pickers/date-range-picker/dateRangePicker';
 
 const useStyles = makeStyles(theme => ({
+  tableContainer: {
+    position: 'relative',
+  },
   table: {
     minWidth: 750,
   },
@@ -220,24 +225,38 @@ const ListTable = ({ tableHeaders, list, count, getList, isLoggedIn, isConnected
 
   return (
     <React.Fragment>
-      <TableContainer>
-        <Table stickyHeader className={classes.table} aria-label="Table">
-          <TableHead>
-            <TableRow>{headCells.map(headCell => renderTableHeadings(headCell))}</TableRow>
-          </TableHead>
-          <TableBody>{renderTableRows()}</TableBody>
-        </Table>
-      </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={config.table.rowsPerPageOptions}
-        component="div"
-        count={count}
-        rowsPerPage={limit}
-        page={page}
-        onChangePage={handleChangePage}
-        onChangeRowsPerPage={handleChangeLimit}
-      />
+      <div className={classes.tableContainer}>
+        <TableContainer>
+          <Table stickyHeader className={classes.table} aria-label="Table">
+            <TableHead>
+              <TableRow>{headCells.map(headCell => renderTableHeadings(headCell))}</TableRow>
+            </TableHead>
+            <TableBody>{renderTableRows()}</TableBody>
+          </Table>
+          {isFetching && <OverlayLoading />}
+        </TableContainer>
+        <TablePagination
+          rowsPerPageOptions={config.table.rowsPerPageOptions}
+          component="div"
+          count={count}
+          rowsPerPage={limit}
+          page={page}
+          onChangePage={handleChangePage}
+          onChangeRowsPerPage={handleChangeLimit}
+        />
+      </div>
     </React.Fragment>
   );
+};
+
+ListTable.propTypes = {
+  classes: PropTypes.shape({
+    tableContainer: PropTypes.string.isRequired,
+    table: PropTypes.string.isRequired,
+    visuallyHidden: PropTypes.string.isRequired,
+    margin: PropTypes.string.isRequired,
+    actions: PropTypes.string.isRequired,
+    highlight: PropTypes.string.isRequired,
+  }),
 };
 export default ListTable;
