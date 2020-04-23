@@ -258,5 +258,27 @@ ListTable.propTypes = {
     actions: PropTypes.string.isRequired,
     highlight: PropTypes.string.isRequired,
   }),
+  tableHeaders: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      align: PropTypes.string.isRequired,
+      label: PropTypes.string.isRequired,
+      width: PropTypes.number.isRequired,
+      type: PropTypes.string,
+      options: PropTypes.arrayOf(PropTypes.string),
+      actions: PropTypes.arrayOf(
+        PropTypes.shape({
+          id: PropTypes.string.isRequired,
+          component: PropTypes.element.isRequired,
+        })
+      ),
+    })
+  ).isRequired,
+  list: PropTypes.arrayOf(PropTypes.object).isRequired,
+  count: PropTypes.number.isRequired,
+  getList: PropTypes.func.isRequired,
+  isLoggedIn: PropTypes.bool.isRequired,
+  isConnected: PropTypes.bool.isRequired,
+  isFetching: PropTypes.bool.isRequired,
 };
 export default ListTable;
