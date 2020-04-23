@@ -1,36 +1,70 @@
+import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
-import Hidden from '@material-ui/core/Hidden';
 import List from '@material-ui/core/List';
 import { makeStyles } from '@material-ui/core/styles';
+import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
 import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import withWidth, { isWidthDown, isWidthUp } from '@material-ui/core/withWidth';
+import BrightnessAutoIcon from '@material-ui/icons/BrightnessAuto';
 import DevicesIcon from '@material-ui/icons/Devices';
 import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
-import React from 'react';
+import clsx from 'clsx';
+import PropTypes from 'prop-types';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { adminDrawerActions } from '../../_actions/admin-drawer/adminDrawer.actions';
 import ListItemLink from '../list-link-item/listItemLink';
-
-const drawerWidth = 240;
+import config from '../../config';
 
 const useStyles = makeStyles(theme => ({
   drawer: {
-    [theme.breakpoints.up('sm')]: {
-      width: drawerWidth,
-      flexShrink: 0,
+    width: config.drawerWidth,
+    flexShrink: 0,
+    whiteSpace: 'nowrap',
+  },
+  drawerOpen: {
+    width: config.drawerWidth,
+    transition: theme.transitions.create('width', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+    overflowX: 'hidden',
+  },
+  drawerClose: {
+    transition: theme.transitions.create('width', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    overflowX: 'hidden',
+    width: theme.spacing(7) + 1,
+    [theme.breakpoints.up('md')]: {
+      width: theme.spacing(9) + 1,
+    },
+    [theme.breakpoints.down('sm')]: {
+      width: 0,
     },
   },
   drawerPaper: {
-    width: drawerWidth,
-  },
-  drawerContainer: {
-    overflow: 'auto',
+    width: config.drawerWidth,
   },
 }));
 
-const AdminDrawer = () => {
+const AdminDrawer = ({ width }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const adminDrawer = useSelector(state => state.adminDrawer);
+
+  useEffect(() => {
+    const initDrawer = () => {
+      if (isWidthUp('md', width)) {
+        dispatch(adminDrawerActions.open());
+      } else if (isWidthDown('md', width)) {
+        dispatch(adminDrawerActions.close());
+      }
+    };
+    initDrawer();
+  }, [dispatch, width]);
 
   const menuList = [
     { name: 'Users', path: '/users', icon: <SupervisorAccountIcon /> },
@@ -51,8 +85,15 @@ const AdminDrawer = () => {
 
   const renderMenu = (
     <React.Fragment>
-      <Toolbar />
-      <div className={classes.drawerContainer} data-test="listContainer">
+      <Toolbar>
+        <BrightnessAutoIcon data-test="icon" />
+        &nbsp;
+        <Typography variant="h6" className={classes.title} color="primary" noWrap data-test="appNameMobile">
+          {config.appName}
+        </Typography>
+      </Toolbar>
+      <Divider />
+      <div className={isWidthUp('xs', width) ? classes.drawerPaper : ''} data-test="listContainer">
         <List data-test="listComponent"> {renderMenuList} </List>
       </div>
     </React.Fragment>
@@ -60,27 +101,49 @@ const AdminDrawer = () => {
 
   return (
     <React.Fragment>
-      <Hidden smUp implementation="css">
+      {isWidthUp('sm', width) && (
         <Drawer
-          className={classes.drawer}
-          variant="persistent"
-          anchor="left"
           open={adminDrawer.open}
-          classes={{ paper: classes.drawerPaper }}
           onClose={handleDrawerToggle}
-          ModalProps={{ keepMounted: true }}
+          variant="permanent"
+          className={clsx(classes.drawer, {
+            [classes.drawerOpen]: adminDrawer.open,
+            [classes.drawerClose]: !adminDrawer.open,
+          })}
+          classes={{
+            paper: clsx({
+              [classes.drawerOpen]: adminDrawer.open,
+              [classes.drawerClose]: !adminDrawer.open,
+            }),
+          }}
           data-test="mobileDrawer"
         >
           {renderMenu}
         </Drawer>
-      </Hidden>
-      <Hidden xsDown implementation="css">
-        <Drawer classes={{ paper: classes.drawerPaper }} variant="persistent" open data-test="nonMobileDrawer">
+      )}
+      {isWidthDown('sm', width) && (
+        <SwipeableDrawer
+          anchor="left"
+          open={adminDrawer.open}
+          onClose={handleDrawerToggle}
+          onOpen={handleDrawerToggle}
+          data-test="nonMobileDrawer"
+        >
           {renderMenu}
-        </Drawer>
-      </Hidden>
+        </SwipeableDrawer>
+      )}
     </React.Fragment>
   );
 };
 
-export default AdminDrawer;
+AdminDrawer.propTypes = {
+  classes: PropTypes.shape({
+    drawer: PropTypes.string.isRequired,
+    drawerOpen: PropTypes.string.isRequired,
+    drawerClose: PropTypes.string.isRequired,
+    drawerPaper: PropTypes.string.isRequired,
+  }),
+  width: PropTypes.string.isRequired,
+};
+
+export default withWidth()(AdminDrawer);

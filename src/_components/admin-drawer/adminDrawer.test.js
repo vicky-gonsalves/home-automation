@@ -20,7 +20,7 @@ const setupWrapper = _initialState => {
   return mount(
     <Provider store={store}>
       <Router history={history}>
-        <AdminDrawer {...props} />
+        <AdminDrawer {...props} width="lg" />
       </Router>
     </Provider>
   );

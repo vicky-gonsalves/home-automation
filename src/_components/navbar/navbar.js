@@ -1,5 +1,4 @@
 import AppBar from '@material-ui/core/AppBar/AppBar';
-import Hidden from '@material-ui/core/Hidden';
 import IconButton from '@material-ui/core/IconButton';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -8,14 +7,13 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import BrightnessAutoIcon from '@material-ui/icons/BrightnessAuto';
+import MenuIcon from '@material-ui/icons/Menu';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { adminDrawerActions } from '../../_actions/admin-drawer/adminDrawer.actions';
-import { authInterceptor } from '../../_interceptors/auth/auth.interceptor';
-import clsx from 'clsx';
-import MenuIcon from '@material-ui/icons/Menu';
 import { history } from '../../_helpers/history/history';
+import { authInterceptor } from '../../_interceptors/auth/auth.interceptor';
 
 const useStyles = makeStyles(theme => ({
   title: {
@@ -76,20 +74,17 @@ export default function Navbar(props) {
   };
 
   const renderAdminMenuButton = () => {
-    if (isAdmin) {
+    if (isAdmin && props.showBurgerIcon) {
       return (
-        <Hidden smUp implementation="css">
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerToggle}
-            edge="start"
-            className={clsx(classes.menuButton, { [classes.hide]: open })}
-            data-test="drawerIconButtonComponent"
-          >
-            <MenuIcon />
-          </IconButton>
-        </Hidden>
+        <IconButton
+          color="inherit"
+          aria-label="open drawer"
+          onClick={handleDrawerToggle}
+          edge="start"
+          data-test="drawerIconButtonComponent"
+        >
+          <MenuIcon />
+        </IconButton>
       );
     }
   };
@@ -140,6 +135,7 @@ export default function Navbar(props) {
       <Toolbar data-test="toolbar">
         {renderAdminMenuButton()}
         <BrightnessAutoIcon data-test="icon" />
+        &nbsp;
         <Typography variant="h6" className={classes.title} color="inherit" noWrap data-test="appName">
           {props.appName}
         </Typography>
@@ -151,5 +147,6 @@ export default function Navbar(props) {
 
 Navbar.propTypes = {
   appName: PropTypes.string.isRequired,
+  showBurgerIcon: PropTypes.bool,
   'data-test': PropTypes.string.isRequired,
 };

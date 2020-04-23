@@ -9,6 +9,7 @@ const config = {
     rowsPerPageOptions: [5, 10, 25],
     rowsPerPage: 10,
   },
+  drawerWidth: 240,
 };
 
 export default config;
