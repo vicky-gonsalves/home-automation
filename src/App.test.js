@@ -12,7 +12,6 @@ import App from './App';
 import DashboardPage from './modules/Admin/Dashboard/DashboardPage';
 import UserEditorPage from './modules/Admin/User/UserEditor/UserEditorPage';
 import UserListPage from './modules/Admin/User/UserList/UserListPage';
-import ForgotPasswordPage from './modules/Auth/ForgotPassword/ForgotPasswordPage';
 import SignInPage from './modules/Auth/SignIn/SignInPage';
 import HomePage from './modules/Home/HomePage';
 
