@@ -5,7 +5,7 @@ import Typography from '@material-ui/core/Typography';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-function NotFoundPage() {
+const NotFoundPage = () => {
   return (
     <Container component="main" maxWidth="xs" data-test="notFoundPageContainer">
       <Card variant="outlined">
@@ -17,7 +17,7 @@ function NotFoundPage() {
       </Card>
     </Container>
   );
-}
+};
 
 NotFoundPage.propTypes = {
   history: PropTypes.object.isRequired,
