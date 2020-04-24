@@ -102,7 +102,7 @@ const AdminDrawer = ({ width }) => {
       anchor="left"
       open={adminDrawer.open}
       onClose={handleDrawerToggle}
-      onOpen={handleDrawerToggle}
+      onOpen={() => {}}
       data-test="mobileDrawer"
     >
       {renderMenu}
