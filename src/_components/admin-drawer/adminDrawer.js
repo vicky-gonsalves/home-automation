@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import withWidth, { isWidthDown, isWidthUp } from '@material-ui/core/withWidth';
+import withWidth, { isWidthUp } from '@material-ui/core/withWidth';
 import BrightnessAutoIcon from '@material-ui/icons/BrightnessAuto';
 import DevicesIcon from '@material-ui/icons/Devices';
 import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
@@ -14,8 +14,8 @@ import PropTypes from 'prop-types';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { adminDrawerActions } from '../../_actions/admin-drawer/adminDrawer.actions';
-import ListItemLink from '../list-link-item/listItemLink';
 import config from '../../config';
+import ListItemLink from '../list-link-item/listItemLink';
 
 const useStyles = makeStyles(theme => ({
   drawer: {
@@ -37,12 +37,9 @@ const useStyles = makeStyles(theme => ({
       duration: theme.transitions.duration.leavingScreen,
     }),
     overflowX: 'hidden',
-    width: theme.spacing(7) + 1,
-    [theme.breakpoints.up('md')]: {
-      width: theme.spacing(9) + 1,
-    },
-    [theme.breakpoints.down('sm')]: {
-      width: 0,
+    width: 0,
+    [theme.breakpoints.up('sm')]: {
+      width: theme.spacing(7) + 1,
     },
   },
   drawerPaper: {
@@ -54,17 +51,18 @@ const AdminDrawer = ({ width }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const adminDrawer = useSelector(state => state.adminDrawer);
+  const isMobile = !isWidthUp('md', width) && !isWidthUp('lg', width) && !isWidthUp('xl', width);
 
   useEffect(() => {
     const initDrawer = () => {
-      if (isWidthUp('md', width)) {
-        dispatch(adminDrawerActions.open());
-      } else if (isWidthDown('md', width)) {
+      if (isMobile) {
         dispatch(adminDrawerActions.close());
+      } else {
+        dispatch(adminDrawerActions.open());
       }
     };
     initDrawer();
-  }, [dispatch, width]);
+  }, [dispatch, width, isMobile]);
 
   const menuList = [
     { name: 'Users', path: '/users', icon: <SupervisorAccountIcon /> },
@@ -93,47 +91,54 @@ const AdminDrawer = ({ width }) => {
         </Typography>
       </Toolbar>
       <Divider />
-      <div className={isWidthUp('xs', width) ? classes.drawerPaper : ''} data-test="listContainer">
+      <div className={isMobile ? '' : classes.drawerPaper} data-test="listContainer">
         <List data-test="listComponent"> {renderMenuList} </List>
       </div>
     </React.Fragment>
   );
 
-  return (
-    <React.Fragment>
-      {isWidthUp('sm', width) && (
-        <Drawer
-          open={adminDrawer.open}
-          onClose={handleDrawerToggle}
-          variant="permanent"
-          className={clsx(classes.drawer, {
-            [classes.drawerOpen]: adminDrawer.open,
-            [classes.drawerClose]: !adminDrawer.open,
-          })}
-          classes={{
-            paper: clsx({
-              [classes.drawerOpen]: adminDrawer.open,
-              [classes.drawerClose]: !adminDrawer.open,
-            }),
-          }}
-          data-test="mobileDrawer"
-        >
-          {renderMenu}
-        </Drawer>
-      )}
-      {isWidthDown('sm', width) && (
-        <SwipeableDrawer
-          anchor="left"
-          open={adminDrawer.open}
-          onClose={handleDrawerToggle}
-          onOpen={handleDrawerToggle}
-          data-test="nonMobileDrawer"
-        >
-          {renderMenu}
-        </SwipeableDrawer>
-      )}
-    </React.Fragment>
+  const mobileDrawer = (
+    <SwipeableDrawer
+      anchor="left"
+      open={adminDrawer.open}
+      onClose={handleDrawerToggle}
+      onOpen={handleDrawerToggle}
+      data-test="mobileDrawer"
+    >
+      {renderMenu}
+    </SwipeableDrawer>
   );
+
+  const deskTopDrawer = (
+    <Drawer
+      open={adminDrawer.open}
+      onClose={handleDrawerToggle}
+      variant="permanent"
+      className={clsx(classes.drawer, {
+        [classes.drawerOpen]: adminDrawer.open,
+        [classes.drawerClose]: !adminDrawer.open,
+      })}
+      classes={{
+        paper: clsx({
+          [classes.drawerOpen]: adminDrawer.open,
+          [classes.drawerClose]: !adminDrawer.open,
+        }),
+      }}
+      data-test="nonMobileDrawer"
+    >
+      {renderMenu}
+    </Drawer>
+  );
+
+  const renderDrawer = () => {
+    if (isMobile) {
+      return mobileDrawer;
+    } else {
+      return deskTopDrawer;
+    }
+  };
+
+  return renderDrawer();
 };
 
 AdminDrawer.propTypes = {
