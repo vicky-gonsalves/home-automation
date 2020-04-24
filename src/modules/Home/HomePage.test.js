@@ -52,9 +52,7 @@ describe('HomePage Component', () => {
       console.error = jest.fn();
       const _props = {};
       wrapper = setupWrapper(initialState, _props);
-      let component = findByDataAttr(wrapper, 'navbarComponent').first();
-      expect(component.length).toBe(1);
-      component = findByDataAttr(wrapper, 'homePageContainer').first();
+      let component = findByDataAttr(wrapper, 'homePageContainer').first();
       expect(component.length).toBe(1);
       component = findByDataAttr(wrapper, 'appSkeletonComponent');
       expect(component.length).toBe(0);
@@ -76,8 +74,6 @@ describe('HomePage Component', () => {
       expect(component.length).toBe(0);
       component = findByDataAttr(wrapper, 'settingDialogComponent');
       expect(component.length).toBe(0);
-      component = findByDataAttr(wrapper, 'footerComponent');
-      expect(component.length).toBe(1);
       // eslint-disable-next-line no-console
       console.error.mockClear();
     });
@@ -86,9 +82,7 @@ describe('HomePage Component', () => {
       const _initialState = getStateClone();
       _initialState.device.isFetchingDevice = true;
       wrapper = setupWrapper(_initialState, props);
-      let component = findByDataAttr(wrapper, 'navbarComponent').first();
-      expect(component.length).toBe(1);
-      component = findByDataAttr(wrapper, 'homePageContainer').first();
+      let component = findByDataAttr(wrapper, 'homePageContainer').first();
       expect(component.length).toBe(1);
       component = findByDataAttr(wrapper, 'appSkeletonComponent').first();
       expect(component.length).toBe(1);
@@ -110,8 +104,6 @@ describe('HomePage Component', () => {
       expect(component.length).toBe(0);
       component = findByDataAttr(wrapper, 'settingDialogComponent');
       expect(component.length).toBe(0);
-      component = findByDataAttr(wrapper, 'footerComponent');
-      expect(component.length).toBe(1);
     });
 
     it('should render or not render various components if having isFetchingDevice false and devices state', () => {
@@ -120,9 +112,7 @@ describe('HomePage Component', () => {
       _initialState.device.devices = [];
       _initialState.sharedDevice.sharedDevices = [];
       wrapper = setupWrapper(_initialState, props);
-      let component = findByDataAttr(wrapper, 'navbarComponent').first();
-      expect(component.length).toBe(1);
-      component = findByDataAttr(wrapper, 'homePageContainer').first();
+      let component = findByDataAttr(wrapper, 'homePageContainer').first();
       expect(component.length).toBe(1);
       component = findByDataAttr(wrapper, 'appSkeletonComponent');
       expect(component.length).toBe(0);
@@ -146,8 +136,6 @@ describe('HomePage Component', () => {
       expect(component.length).toBe(0);
       component = findByDataAttr(wrapper, 'settingDialogComponent');
       expect(component.length).toBe(0);
-      component = findByDataAttr(wrapper, 'footerComponent');
-      expect(component.length).toBe(1);
     });
 
     it('should render or not render various components if having isFetchingDevice true and devices state', () => {
@@ -156,9 +144,7 @@ describe('HomePage Component', () => {
       _initialState.device.devices = [deviceOne, deviceTwo];
       _initialState.sharedDevice.sharedDevices = [];
       wrapper = setupWrapper(_initialState, props);
-      let component = findByDataAttr(wrapper, 'navbarComponent').first();
-      expect(component.length).toBe(1);
-      component = findByDataAttr(wrapper, 'homePageContainer').first();
+      let component = findByDataAttr(wrapper, 'homePageContainer').first();
       expect(component.length).toBe(1);
       component = findByDataAttr(wrapper, 'appSkeletonComponent').first();
       expect(component.length).toBe(1);
@@ -182,8 +168,6 @@ describe('HomePage Component', () => {
       expect(component.length).toBe(0);
       component = findByDataAttr(wrapper, 'settingDialogComponent').first();
       expect(component.length).toBe(1);
-      component = findByDataAttr(wrapper, 'footerComponent');
-      expect(component.length).toBe(1);
     });
 
     it('should render or not render various components if having isFetchingDevice false and sharedDevice state', () => {
@@ -192,9 +176,7 @@ describe('HomePage Component', () => {
       _initialState.device.devices = [];
       _initialState.sharedDevice.sharedDevices = [];
       wrapper = setupWrapper(_initialState, props);
-      let component = findByDataAttr(wrapper, 'navbarComponent').first();
-      expect(component.length).toBe(1);
-      component = findByDataAttr(wrapper, 'homePageContainer').first();
+      let component = findByDataAttr(wrapper, 'homePageContainer').first();
       expect(component.length).toBe(1);
       component = findByDataAttr(wrapper, 'appSkeletonComponent');
       expect(component.length).toBe(0);
@@ -218,8 +200,6 @@ describe('HomePage Component', () => {
       expect(component.length).toBe(0);
       component = findByDataAttr(wrapper, 'settingDialogComponent');
       expect(component.length).toBe(0);
-      component = findByDataAttr(wrapper, 'footerComponent');
-      expect(component.length).toBe(1);
     });
 
     it('should render or not render various components if having isFetchingDevice true and sharedDevice state', () => {
@@ -228,9 +208,7 @@ describe('HomePage Component', () => {
       _initialState.device.devices = [];
       _initialState.sharedDevice.sharedDevices = [deviceOne, deviceTwo];
       wrapper = setupWrapper(_initialState, props);
-      let component = findByDataAttr(wrapper, 'navbarComponent').first();
-      expect(component.length).toBe(1);
-      component = findByDataAttr(wrapper, 'homePageContainer').first();
+      let component = findByDataAttr(wrapper, 'homePageContainer').first();
       expect(component.length).toBe(1);
       component = findByDataAttr(wrapper, 'appSkeletonComponent').first();
       expect(component.length).toBe(1);
@@ -253,8 +231,6 @@ describe('HomePage Component', () => {
       component = findByDataAttr(wrapper, 'sharedDeviceGridComponent').first();
       expect(component.length).toBe(0);
       component = findByDataAttr(wrapper, 'settingDialogComponent').first();
-      expect(component.length).toBe(1);
-      component = findByDataAttr(wrapper, 'footerComponent');
       expect(component.length).toBe(1);
     });
 

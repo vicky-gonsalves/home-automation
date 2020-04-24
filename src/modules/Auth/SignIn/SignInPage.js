@@ -8,12 +8,11 @@ import Typography from '@material-ui/core/Typography';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import PropTypes from 'prop-types';
 import React, { useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import Footer from '../../../_components/footer/footer';
+import { useDispatch, useSelector } from 'react-redux';
+import { siteSettingActions } from '../../../_actions';
+import { adminDrawerActions } from '../../../_actions/admin-drawer/adminDrawer.actions';
 import SignInForm from '../../../_components/forms/signIn-form/SignInForm';
-import Navbar from '../../../_components/navbar/navbar';
 import { history } from '../../../_helpers/history/history';
-import config from '../../../config';
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -39,6 +38,9 @@ const useStyles = makeStyles(theme => ({
 
 const SignInPage = () => {
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const adminDrawer = useSelector(state => state.adminDrawer);
+  const siteSettings = useSelector(state => state.siteSetting);
   const currentUser = useSelector(state => state.user);
   const isLoggedIn = currentUser.isLoggedIn && currentUser.tokens !== null;
 
@@ -52,13 +54,24 @@ const SignInPage = () => {
         navigateTo('/home');
       }
     };
+    const hideAdminDrawer = () => {
+      if (adminDrawer.show) {
+        dispatch(adminDrawerActions.hide());
+      }
+    };
+    const hideBurger = () => {
+      if (siteSettings && siteSettings.burger) {
+        dispatch(siteSettingActions.hideBurger());
+      }
+    };
+    hideBurger();
+    hideAdminDrawer();
     navigateToHome();
-  }, [isLoggedIn]);
+  }, [dispatch, isLoggedIn, adminDrawer, siteSettings]);
 
   return (
     <React.Fragment>
       <CssBaseline />
-      <Navbar appName={config.appName} data-test="navbarComponent" />
       <Container component="main" maxWidth="xs" data-test="signInContainer">
         <div className={classes.paper}>
           <Avatar className={classes.avatar}>
@@ -79,9 +92,6 @@ const SignInPage = () => {
           </Grid>
         </div>
       </Container>
-      <footer className={classes.footer}>
-        <Footer appName={config.appName} data-test="footerComponent" />
-      </footer>
     </React.Fragment>
   );
 };

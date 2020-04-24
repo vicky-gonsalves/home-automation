@@ -63,6 +63,10 @@ const initialState = {
   },
   adminDrawer: {
     open: false,
+    show: false,
+  },
+  siteSetting: {
+    burger: false,
   },
   adminUser: {
     count: 0,

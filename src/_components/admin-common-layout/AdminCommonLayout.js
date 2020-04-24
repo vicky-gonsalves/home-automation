@@ -5,18 +5,11 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import config from '../../config';
-import AdminDrawer from '../admin-drawer/adminDrawer';
-import Footer from '../footer';
-import Navbar from '../navbar/navbar';
 
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
     padding: theme.spacing(2),
-  },
-  footer: {
-    padding: theme.spacing(3, 2),
-    marginTop: 'auto',
   },
   content: {
     flexGrow: 1,
@@ -53,8 +46,6 @@ const AdminCommonLayout = ({ component }) => {
   return (
     <React.Fragment>
       <CssBaseline />
-      <Navbar appName={config.appName} showBurgerIcon={true} data-test="navbarComponent" />
-      <AdminDrawer data-test="adminDrawerComponent" />
       <main
         className={clsx(classes.content, {
           [classes.contentShift]: adminDrawer.open,
@@ -63,9 +54,6 @@ const AdminCommonLayout = ({ component }) => {
       >
         {renderContent()}
       </main>
-      <footer className={classes.footer}>
-        <Footer appName={config.appName} data-test="footerComponent" />
-      </footer>
     </React.Fragment>
   );
 };

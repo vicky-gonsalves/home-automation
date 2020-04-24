@@ -15,12 +15,22 @@ describe('adminDrawerActions', () => {
   });
 
   it('should dispatch OPEN_ADMIN_DRAWER action', () => {
-    store.dispatch(adminDrawerActions.open('Tank', 'someId', 'someDialogType'));
+    store.dispatch(adminDrawerActions.open());
     expect(store.getActions()).toEqual([{ type: 'OPEN_ADMIN_DRAWER' }]);
   });
 
   it('should dispatch CLOSE_ADMIN_DRAWER action', () => {
     store.dispatch(adminDrawerActions.close());
     expect(store.getActions()).toEqual([{ type: 'CLOSE_ADMIN_DRAWER' }]);
+  });
+
+  it('should dispatch SHOW_ADMIN_DRAWER action', () => {
+    store.dispatch(adminDrawerActions.show());
+    expect(store.getActions()).toEqual([{ type: 'SHOW_ADMIN_DRAWER' }]);
+  });
+
+  it('should dispatch HIDE_ADMIN_DRAWER action', () => {
+    store.dispatch(adminDrawerActions.hide());
+    expect(store.getActions()).toEqual([{ type: 'HIDE_ADMIN_DRAWER' }]);
   });
 });

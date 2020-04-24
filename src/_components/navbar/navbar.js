@@ -27,7 +27,8 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function Navbar(props) {
+const Navbar = ({ appName }) => {
+  const siteSettings = useSelector(state => state.siteSetting);
   const currentUser = useSelector(state => state.user);
   const adminDrawer = useSelector(state => state.adminDrawer);
   const isLoggedIn = currentUser.isLoggedIn && currentUser.tokens !== null;
@@ -74,7 +75,7 @@ export default function Navbar(props) {
   };
 
   const renderAdminMenuButton = () => {
-    if (isAdmin && props.showBurgerIcon) {
+    if (isAdmin && siteSettings && siteSettings.burger) {
       return (
         <IconButton
           color="inherit"
@@ -137,16 +138,18 @@ export default function Navbar(props) {
         <BrightnessAutoIcon data-test="icon" />
         &nbsp;
         <Typography variant="h6" className={classes.title} color="inherit" noWrap data-test="appName">
-          {props.appName}
+          {appName}
         </Typography>
         {renderLoggedInMenu()}
       </Toolbar>
     </AppBar>
   );
-}
+};
 
 Navbar.propTypes = {
   appName: PropTypes.string.isRequired,
   showBurgerIcon: PropTypes.bool,
   'data-test': PropTypes.string.isRequired,
 };
+
+export default Navbar;

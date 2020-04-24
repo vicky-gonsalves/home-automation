@@ -128,14 +128,36 @@ describe('Navbar Component', () => {
       expect(component).toHaveLength(0);
     });
 
-    it('should have drawerIconButtonComponent if logged in user is admin', () => {
+    it('should have drawerIconButtonComponent if logged in user is admin and burger is true', () => {
+      const _initialState = { ...initialState };
+      _initialState.user = { ...admin };
+      _initialState.user.isLoggedIn = true;
+      _initialState.user.tokens = { access: {}, refresh: {} };
+      _initialState.siteSetting.burger = true;
+      wrapper = setupWrapper(_initialState);
+      const component = findByDataAttr(wrapper, 'drawerIconButtonComponent').first();
+      expect(component.length).toBe(1);
+    });
+
+    it('should not have drawerIconButtonComponent if logged in user is admin and burger is false', () => {
+      const _initialState = { ...initialState };
+      _initialState.user = { ...admin };
+      _initialState.user.isLoggedIn = true;
+      _initialState.user.tokens = { access: {}, refresh: {} };
+      _initialState.siteSetting.burger = false;
+      wrapper = setupWrapper(_initialState);
+      const component = findByDataAttr(wrapper, 'drawerIconButtonComponent');
+      expect(component.length).toBe(0);
+    });
+
+    it('should not have drawerIconButtonComponent if logged in user is admin and no siteSetting', () => {
       const _initialState = { ...initialState };
       _initialState.user = { ...admin };
       _initialState.user.isLoggedIn = true;
       _initialState.user.tokens = { access: {}, refresh: {} };
       wrapper = setupWrapper(_initialState);
-      const component = findByDataAttr(wrapper, 'drawerIconButtonComponent').first();
-      expect(component.length).toBe(1);
+      const component = findByDataAttr(wrapper, 'drawerIconButtonComponent');
+      expect(component.length).toBe(0);
     });
 
     it('should not have adminPanelMenuItem if logged in user is not admin', () => {
@@ -164,6 +186,7 @@ describe('Navbar Component', () => {
       _initialState.adminDrawer.open = true;
       _initialState.user.isLoggedIn = true;
       _initialState.user.tokens = { access: {}, refresh: {} };
+      _initialState.siteSetting.burger = true;
       wrapper = setupWrapper(_initialState);
       const component = findByDataAttr(wrapper, 'drawerIconButtonComponent').first();
       component.props().onClick();

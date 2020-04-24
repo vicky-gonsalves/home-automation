@@ -4,7 +4,6 @@ import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { userActions } from './_actions';
-import AppSpinner from './_components/app-spinner/appSpinner';
 import { history } from './_helpers/history/history';
 import { findByDataAttr, findByDataAttrWhenMounted, getStateClone, initialState, wait } from './_utils';
 import { userOne } from './_utils/fixtures/user.fixture';
@@ -106,23 +105,6 @@ describe('App', () => {
       const component = wrapper.find(HomePage);
       expect(component).toHaveLength(0);
       expect(history.location.pathname).toBe('/signin');
-    });
-
-    it('should render ForgotPassword Page', async () => {
-      history.location = { pathname: '/forgot-password', search: '', hash: '', state: undefined };
-      const _initialState = getStateClone();
-      wrapper = setupWrapper(_initialState);
-      await wait();
-      const component = wrapper.find('[path="/forgot-password"]');
-      expect(
-        component
-          .props()
-          .component()
-          .props.children.type._result().props['data-test']
-      ).toBe('forgotPasswordPageContainer');
-      expect(component.props().component().props.fallback).toEqual(<AppSpinner />);
-      expect(component).toHaveLength(1);
-      expect(history.location.pathname).toBe('/forgot-password');
     });
 
     it('should not have Admin DashBoardPage if user is not logged in', () => {

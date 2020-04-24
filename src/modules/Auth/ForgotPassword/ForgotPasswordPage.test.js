@@ -1,13 +1,29 @@
-import { shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import React from 'react';
+import { Provider } from 'react-redux';
+import configureStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
 import { history } from '../../../_helpers/history/history';
-import { checkProps, findByDataAttr } from '../../../_utils';
+import { checkProps, findByDataAttr, getStateClone } from '../../../_utils';
 import ForgotPasswordPage from './ForgotPasswordPage';
+
+jest.mock('axios');
+let wrapper;
+let store;
 
 const props = {
   history,
   location: {},
   match: {},
+};
+const mockStore = configureStore([thunk]);
+const setupWrapper = (state, _props = {}) => {
+  store = mockStore(state);
+  return mount(
+    <Provider store={store}>
+      <ForgotPasswordPage {..._props} />
+    </Provider>
+  );
 };
 
 describe('NotFound Page', () => {
@@ -19,14 +35,14 @@ describe('NotFound Page', () => {
   });
 
   describe('Components Testing', () => {
-    let wrapper;
-    beforeEach(() => {
-      wrapper = shallow(<ForgotPasswordPage {...props} />);
+    afterEach(() => {
+      wrapper.unmount();
+      store.clearActions();
     });
 
-    afterEach(() => {});
-
     it('should render without error', () => {
+      const _initialState = getStateClone();
+      wrapper = setupWrapper(_initialState, props);
       const component = findByDataAttr(wrapper, 'forgotPasswordPageContainer').first();
       expect(component.length).toBe(1);
     });

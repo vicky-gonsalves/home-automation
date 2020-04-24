@@ -63,20 +63,6 @@ describe('SignInPage', () => {
         expect(component.length).toBe(1);
       });
 
-      it('should have navbar component', () => {
-        const _initialState = getStateClone();
-        wrapper = setupWrapper(_initialState, props);
-        const component = findByDataAttr(wrapper, 'navbarComponent').first();
-        expect(component.length).toBe(1);
-      });
-
-      it('should have footer component', () => {
-        const _initialState = getStateClone();
-        wrapper = setupWrapper(_initialState, props);
-        const component = findByDataAttr(wrapper, 'footerComponent').first();
-        expect(component.length).toBe(1);
-      });
-
       it('should have forgot password button', () => {
         const _initialState = getStateClone();
         wrapper = setupWrapper(_initialState, props);

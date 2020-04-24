@@ -5,10 +5,10 @@ import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import PropTypes from 'prop-types';
 import React, { useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { siteSettingActions } from '../../_actions';
+import { adminDrawerActions } from '../../_actions/admin-drawer/adminDrawer.actions';
 import SignInButton from '../../_components/buttons/signIn-button/signInButton';
-import Footer from '../../_components/footer/footer';
-import Navbar from '../../_components/navbar/navbar';
 import { history } from '../../_helpers/history/history';
 import config from '../../config';
 
@@ -34,6 +34,9 @@ const useStyles = makeStyles(theme => ({
 
 const PublicPage = () => {
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const adminDrawer = useSelector(state => state.adminDrawer);
+  const siteSettings = useSelector(state => state.siteSetting);
   const currentUser = useSelector(state => state.user);
   const isLoggedIn = currentUser.isLoggedIn && currentUser.tokens !== null;
 
@@ -47,14 +50,25 @@ const PublicPage = () => {
         navigateTo('/home');
       }
     };
+    const hideAdminDrawer = () => {
+      if (adminDrawer.show) {
+        dispatch(adminDrawerActions.hide());
+      }
+    };
+    const hideBurger = () => {
+      if (siteSettings && siteSettings.burger) {
+        dispatch(siteSettingActions.hideBurger());
+      }
+    };
+    hideBurger();
+    hideAdminDrawer();
     navigateToHome();
-  }, [isLoggedIn]);
+  }, [dispatch, isLoggedIn, adminDrawer, siteSettings]);
 
   return (
     <React.Fragment>
       <CssBaseline />
       <div data-test="publicPageContainer">
-        <Navbar appName={config.appName} data-test="navbarComponent" />
         <main className={classes.main}>
           <div className={classes.heroContent}>
             <Container maxWidth="sm">
@@ -74,9 +88,6 @@ const PublicPage = () => {
             </Container>
           </div>
         </main>
-        <footer className={classes.footer}>
-          <Footer appName={config.appName} data-test="footerComponent" />
-        </footer>
       </div>
     </React.Fragment>
   );

@@ -79,11 +79,15 @@ describe('appActions', () => {
       },
       adminDrawer: {
         open: true,
+        show: true,
       },
       adminUser: {
         count: 1,
         isFetchingUsersList: false,
         users: [userOne],
+      },
+      siteSetting: {
+        burger: true,
       },
     };
 

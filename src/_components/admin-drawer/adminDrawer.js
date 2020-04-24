@@ -78,7 +78,7 @@ const AdminDrawer = ({ width }) => {
   };
 
   const renderMenuList = menuList.map(menu => (
-    <ListItemLink key={menu.name} icon={menu.icon} primary={menu.name} to={menu.path} />
+    <ListItemLink key={menu.name} icon={menu.icon} primary={menu.name} to={menu.path} isMobile={isMobile} />
   ));
 
   const renderMenu = (

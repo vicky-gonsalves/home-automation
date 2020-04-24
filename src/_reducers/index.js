@@ -10,6 +10,7 @@ import settingDialog from './dialog/settingDialog.reducer';
 import log from './log/log.reducer';
 import onlineDevice from './online-device/onlineDevice.reducer';
 import sharedDevice from './shared-device/sharedDevice.reducer';
+import siteSetting from './site-setting/siteSetting.reducer';
 import socket from './socket/socket.reducer';
 import subDeviceParam from './sub-device-param/subDeviceParam.reducer';
 import subDeviceSetting from './sub-device-setting/subDeviceSetting.reducer';
@@ -31,6 +32,7 @@ const appReducer = combineReducers({
   log,
   adminDrawer,
   adminUser,
+  siteSetting,
 });
 
 const rootReducer = (state, action) => {

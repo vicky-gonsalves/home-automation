@@ -7,15 +7,13 @@ import AlertTitle from '@material-ui/lab/AlertTitle';
 import PropTypes from 'prop-types';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { userActions } from '../../_actions';
+import { siteSettingActions, userActions } from '../../_actions';
+import { adminDrawerActions } from '../../_actions/admin-drawer/adminDrawer.actions';
 import { deviceActions } from '../../_actions/device/device.actions';
 import AppSkeleton from '../../_components/app-skeleton/AppSkeleton';
 import SmartSwitchCard from '../../_components/cards/smart-switch-card/SmartSwitchCard';
 import TankCard from '../../_components/cards/tank-card/TankCard';
 import SettingDialog from '../../_components/dialogs/setting-dialog/settingDialog';
-import Footer from '../../_components/footer';
-import Navbar from '../../_components/navbar/navbar';
-import config from '../../config';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -34,6 +32,8 @@ const HomePage = () => {
   const device = useSelector(state => state.device);
   const sharedDevice = useSelector(state => state.sharedDevice);
   const sockets = useSelector(state => state.socket);
+  const adminDrawer = useSelector(state => state.adminDrawer);
+  const siteSettings = useSelector(state => state.siteSetting);
 
   const isFetchingDevice = device.isFetchingDevice;
   const isLoggedIn = currentUser.isLoggedIn && currentUser.tokens !== null;
@@ -53,8 +53,20 @@ const HomePage = () => {
         dispatch(userActions.setDevicesFetched(true));
       }
     };
+    const hideAdminDrawer = () => {
+      if (adminDrawer.show) {
+        dispatch(adminDrawerActions.hide());
+      }
+    };
+    const hideBurger = () => {
+      if (siteSettings && siteSettings.burger) {
+        dispatch(siteSettingActions.hideBurger());
+      }
+    };
+    hideBurger();
+    hideAdminDrawer();
     fetchDevices();
-  }, [dispatch, hasFetchedDevices, isFetchingDevice, connected, isLoggedIn, isAuthorized]);
+  }, [dispatch, hasFetchedDevices, isFetchingDevice, connected, isLoggedIn, isAuthorized, adminDrawer, siteSettings]);
 
   const renderAppSkeleton = () => {
     if (isFetchingDevice || isSocketFetching) {
@@ -138,7 +150,6 @@ const HomePage = () => {
   return (
     <React.Fragment>
       <CssBaseline />
-      <Navbar appName={config.appName} data-test="navbarComponent" />
       <Container disableGutters={true} maxWidth="xl" data-test="homePageContainer">
         <div className={classes.root}>
           {renderAppSkeleton()}
@@ -150,9 +161,6 @@ const HomePage = () => {
         </div>
       </Container>
       {renderSettingDialogComponent()}
-      <footer className={classes.footer}>
-        <Footer appName={config.appName} data-test="footerComponent" />
-      </footer>
     </React.Fragment>
   );
 };
