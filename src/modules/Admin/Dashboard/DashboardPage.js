@@ -3,7 +3,8 @@ import React from 'react';
 import AdminCommonLayout from '../../../_components/admin-common-layout/AdminCommonLayout';
 
 const DashboardPage = () => {
-  return <AdminCommonLayout />;
+  const DashboardComponent = <div data-test="dashboardPageContainer">Dashboard Page</div>;
+  return <AdminCommonLayout component={DashboardComponent} />;
 };
 
 DashboardPage.propTypes = {

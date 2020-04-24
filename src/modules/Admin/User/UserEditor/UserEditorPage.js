@@ -3,7 +3,8 @@ import React from 'react';
 import AdminCommonLayout from '../../../../_components/admin-common-layout/AdminCommonLayout';
 
 const UserEditorPage = () => {
-  return <AdminCommonLayout />;
+  const UserEditorComponent = <div data-test="userEditorPageContainer">User Editor Page</div>;
+  return <AdminCommonLayout component={UserEditorComponent} />;
 };
 
 UserEditorPage.propTypes = {
