@@ -96,6 +96,46 @@ describe('SignInPage', () => {
         history.location = { pathname: '/signin', search: '', hash: '', state: undefined };
         expect(history.push).toHaveBeenCalledTimes(0);
       });
+
+      it('should hide drawer if its not already hidden', () => {
+        const _initialState = getStateClone();
+        _initialState.socket.connected = true;
+        _initialState.user.isLoggedIn = true;
+        _initialState.user.isAuthorized = true;
+        _initialState.adminDrawer.show = true;
+        wrapper = setupWrapper(_initialState, props);
+        expect(store.getActions()).toEqual([{ type: 'HIDE_ADMIN_DRAWER' }]);
+      });
+
+      it('should not hide drawer if its already hidden', () => {
+        const _initialState = getStateClone();
+        _initialState.socket.connected = true;
+        _initialState.user.isLoggedIn = true;
+        _initialState.user.isAuthorized = true;
+        _initialState.adminDrawer.show = false;
+        wrapper = setupWrapper(_initialState, props);
+        expect(store.getActions()).toHaveLength(0);
+      });
+
+      it('should hide burger if its not already hidden', () => {
+        const _initialState = getStateClone();
+        _initialState.socket.connected = true;
+        _initialState.user.isLoggedIn = true;
+        _initialState.user.isAuthorized = true;
+        _initialState.siteSetting.burger = true;
+        wrapper = setupWrapper(_initialState, props);
+        expect(store.getActions()).toEqual([{ type: 'HIDE_BURGER' }]);
+      });
+
+      it('should not hide burger if its already hidden', () => {
+        const _initialState = getStateClone();
+        _initialState.socket.connected = true;
+        _initialState.user.isLoggedIn = true;
+        _initialState.user.isAuthorized = true;
+        _initialState.siteSetting.burger = false;
+        wrapper = setupWrapper(_initialState, props);
+        expect(store.getActions()).toHaveLength(0);
+      });
     });
   });
 });

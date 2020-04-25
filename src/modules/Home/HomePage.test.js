@@ -745,5 +745,59 @@ describe('HomePage Component', () => {
       const component = findByDataAttr(wrapper, 'sharedSmartSwitchCardComponent');
       expect(component).toHaveLength(0);
     });
+
+    it('should hide drawer if its not already hidden', () => {
+      const _initialState = getStateClone();
+      _initialState.socket.connected = true;
+      _initialState.user.isLoggedIn = true;
+      _initialState.user.isAuthorized = true;
+      _initialState.adminDrawer.show = true;
+      wrapper = setupWrapper(_initialState, props);
+      expect(store.getActions()).toEqual([
+        { type: 'HIDE_ADMIN_DRAWER' },
+        { payload: true, type: 'DEVICE_UPDATE_FETCHING' },
+        { payload: true, type: 'SET_FETCHED_DEVICES' },
+      ]);
+    });
+
+    it('should not hide drawer if its already hidden', () => {
+      const _initialState = getStateClone();
+      _initialState.socket.connected = true;
+      _initialState.user.isLoggedIn = true;
+      _initialState.user.isAuthorized = true;
+      _initialState.adminDrawer.show = false;
+      wrapper = setupWrapper(_initialState, props);
+      expect(store.getActions()).toEqual([
+        { payload: true, type: 'DEVICE_UPDATE_FETCHING' },
+        { payload: true, type: 'SET_FETCHED_DEVICES' },
+      ]);
+    });
+
+    it('should hide burger if its not already hidden', () => {
+      const _initialState = getStateClone();
+      _initialState.socket.connected = true;
+      _initialState.user.isLoggedIn = true;
+      _initialState.user.isAuthorized = true;
+      _initialState.siteSetting.burger = true;
+      wrapper = setupWrapper(_initialState, props);
+      expect(store.getActions()).toEqual([
+        { type: 'HIDE_BURGER' },
+        { payload: true, type: 'DEVICE_UPDATE_FETCHING' },
+        { payload: true, type: 'SET_FETCHED_DEVICES' },
+      ]);
+    });
+
+    it('should not hide burger if its already hidden', () => {
+      const _initialState = getStateClone();
+      _initialState.socket.connected = true;
+      _initialState.user.isLoggedIn = true;
+      _initialState.user.isAuthorized = true;
+      _initialState.siteSetting.burger = false;
+      wrapper = setupWrapper(_initialState, props);
+      expect(store.getActions()).toEqual([
+        { payload: true, type: 'DEVICE_UPDATE_FETCHING' },
+        { payload: true, type: 'SET_FETCHED_DEVICES' },
+      ]);
+    });
   });
 });
