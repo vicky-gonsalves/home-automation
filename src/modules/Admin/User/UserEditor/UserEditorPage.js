@@ -11,7 +11,7 @@ const UserEditorPage = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     const showAdminDrawer = () => {
-      if (!adminDrawer.show) {
+      if (adminDrawer && !adminDrawer.show) {
         dispatch(adminDrawerActions.show());
       }
     };
@@ -24,7 +24,7 @@ const UserEditorPage = () => {
     showAdminDrawer();
   }, [dispatch, adminDrawer, siteSettings]);
   const UserEditorComponent = <div data-test="userEditorPageContainer">User Editor Page</div>;
-  return <AdminCommonLayout component={UserEditorComponent} />;
+  return <AdminCommonLayout component={UserEditorComponent} data-test="adminPageContainerForUserEditor" />;
 };
 
 UserEditorPage.propTypes = {

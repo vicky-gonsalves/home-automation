@@ -11,7 +11,7 @@ const DashboardPage = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     const showAdminDrawer = () => {
-      if (!adminDrawer.show) {
+      if (adminDrawer && !adminDrawer.show) {
         dispatch(adminDrawerActions.show());
       }
     };
@@ -25,7 +25,7 @@ const DashboardPage = () => {
   }, [dispatch, adminDrawer, siteSettings]);
 
   const DashboardComponent = <div data-test="dashboardPageContainer">Dashboard Page</div>;
-  return <AdminCommonLayout component={DashboardComponent} />;
+  return <AdminCommonLayout component={DashboardComponent} data-test="adminPageContainerForDashboard" />;
 };
 
 DashboardPage.propTypes = {
