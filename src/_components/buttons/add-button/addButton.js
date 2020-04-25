@@ -19,11 +19,19 @@ const AddButton = ({ title, callback }) => {
   const renderButton = () => {
     if (title && typeof callback === 'function') {
       return (
-        <Button className={classes.button} variant="contained" color="primary" startIcon={<AddIcon />} onClick={callback}>
+        <Button
+          className={classes.button}
+          variant="contained"
+          color="primary"
+          startIcon={<AddIcon />}
+          onClick={callback}
+          data-test="addButtonComponent"
+        >
           {title}
         </Button>
       );
     }
+    return null;
   };
   return renderButton();
 };
