@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import uniqid from 'uniqid';
 import { deviceOne, deviceTwo } from './device.fixture';
 import { deviceParamOne } from './deviceParam.fixture';

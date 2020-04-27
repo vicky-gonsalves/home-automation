@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import faker from 'faker';
 
 const userOne = {

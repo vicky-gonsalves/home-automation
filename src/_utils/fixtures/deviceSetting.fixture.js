@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import uniqid from 'uniqid';
 import { admin } from './user.fixture';
 import { deviceOne, deviceTwo, deviceThree, deviceFour } from './device.fixture';
