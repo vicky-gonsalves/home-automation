@@ -3,11 +3,14 @@ import PropTypes from 'prop-types';
 import AppSpinner from '../app-spinner/appSpinner';
 
 const LazyLoader = Component => {
-  return props => (
-    <Suspense fallback={<AppSpinner />}>
-      <Component {...props} />
-    </Suspense>
-  );
+  if (Component && typeof Component === 'object') {
+    return props => (
+      <Suspense fallback={<AppSpinner />} data-test="suspenseComponent">
+        <Component {...props} />
+      </Suspense>
+    );
+  }
+  return null;
 };
 
 LazyLoader.propTypes = {

@@ -2,6 +2,7 @@
 import { act } from '@testing-library/react';
 import * as axios from 'axios';
 import checkPropTypes from 'check-prop-types';
+import React from 'react';
 
 const initialState = {
   user: {
