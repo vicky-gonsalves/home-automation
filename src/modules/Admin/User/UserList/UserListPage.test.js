@@ -49,9 +49,19 @@ describe('UserListPage Component', () => {
 
     it('should render adminPageContainerForUserList', () => {
       const _initialState = getStateClone();
+      _initialState.user.isLoggedIn = true;
+      _initialState.user.tokens = { access: {} };
+      _initialState.socket.connected = true;
       wrapper = setupWrapper(_initialState, props);
       const component = findByDataAttr(wrapper, 'adminPageContainerForUserList').first();
       expect(component.length).toBe(1);
+    });
+
+    it('should not render userListPageComponent if not logged in and not connected', () => {
+      const _initialState = getStateClone();
+      wrapper = setupWrapper(_initialState, props);
+      const component = findByDataAttr(wrapper, 'adminPageContainerForUserList').first();
+      expect(component).toHaveLength(0);
     });
 
     it('should not render userListPageComponent if not logged in and not connected', () => {

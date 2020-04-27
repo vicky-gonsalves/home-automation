@@ -41,10 +41,10 @@ const innerProps = {
   match: {},
 };
 const getInnerComponent = component => component.props().component().props.children.type._result;
-const setUpInnerWrapper = (state, InnerComponent, _props = {}) => {
-  innerStore = mockStore(state);
+const setUpInnerWrapper = (_state, InnerComponent, _props = {}) => {
+  innerStore = mockStore(_state);
   return mount(
-    <Provider store={store}>
+    <Provider store={innerStore}>
       <Router history={history}>
         <InnerComponent {..._props} />
       </Router>
@@ -144,9 +144,10 @@ describe('AdminLayout', () => {
         const _initialState = getStateClone();
         _initialState.user.isLoggedIn = true;
         _initialState.user.isAuthorized = true;
+        _initialState.user.tokens = { access: {} };
         _initialState.socket.connected = true;
         innerWrapper = setUpInnerWrapper(_initialState, innerComponent, innerProps);
-        const itemsInInnerComponent = findByDataAttr(innerWrapper, 'userListPageContainer');
+        const itemsInInnerComponent = findByDataAttr(innerWrapper, 'userListPageComponent');
         expect(innerWrapper.props()).toBeDefined();
         expect(itemsInInnerComponent.length).toBeTruthy();
       });

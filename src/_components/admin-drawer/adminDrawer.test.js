@@ -5,7 +5,7 @@ import { Router } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { history } from '../../_helpers/history/history';
-import { checkProps, findByDataAttr, getStateClone, initialState, wait } from '../../_utils';
+import { checkProps, findByDataAttr, getStateClone, initialState } from '../../_utils';
 import AdminDrawer from './adminDrawer';
 
 jest.mock('axios');
@@ -135,6 +135,18 @@ describe('AdminDrawer', () => {
       expect(component.props().open).toBe(false);
       component.props().onClose();
       expect(store.getActions().pop()).toEqual({ type: 'OPEN_ADMIN_DRAWER' });
+    });
+
+    it('should handle onOpen on mobile drawer and do nothing', () => {
+      const _initialState = getStateClone();
+      _initialState.adminDrawer.open = false;
+      wrapper = setupWrapper(_initialState, 'xs');
+      const component = findByDataAttr(wrapper, 'mobileDrawer').first();
+      expect(component.props().open).toBe(false);
+      component.props().onClose();
+      const spy = jest.spyOn(component.props(), 'onOpen');
+      component.props().onOpen();
+      expect(spy).toHaveBeenCalled();
     });
 
     it('should open mobile drawer on sm screen', () => {

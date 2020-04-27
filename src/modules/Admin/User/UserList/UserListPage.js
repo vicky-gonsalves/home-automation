@@ -9,6 +9,9 @@ import UserList from '../../../../_components/user-list/userList';
 const UserListPage = () => {
   const adminDrawer = useSelector(state => state.adminDrawer);
   const siteSettings = useSelector(state => state.siteSetting);
+  const currentUser = useSelector(state => state.user);
+  const isConnected = useSelector(state => state.socket && state.socket.connected);
+  const isLoggedIn = currentUser.isLoggedIn && currentUser.tokens !== null;
   const dispatch = useDispatch();
   useEffect(() => {
     const showAdminDrawer = () => {
@@ -24,16 +27,22 @@ const UserListPage = () => {
     showBurger();
     showAdminDrawer();
   }, [dispatch, adminDrawer, siteSettings]);
-  const currentUser = useSelector(state => state.user);
-  const isConnected = useSelector(state => state.socket && state.socket.connected);
-  const isLoggedIn = currentUser.isLoggedIn && currentUser.tokens !== null;
+
   const innerComponent = () => {
     if (isLoggedIn && isConnected) {
       return <UserList isLoggedIn={isLoggedIn} isConnected={isConnected} data-test="userListPageComponent" />;
     }
     return null;
   };
-  return <AdminCommonLayout component={innerComponent()} data-test="adminPageContainerForUserList" />;
+
+  const renderAdminCommonLayout = component => {
+    if (component && typeof component === 'object') {
+      return <AdminCommonLayout component={component} data-test="adminPageContainerForUserList" />;
+    }
+    return null;
+  };
+
+  return renderAdminCommonLayout(innerComponent());
 };
 
 UserListPage.propTypes = {

@@ -37,25 +37,26 @@ const AdminCommonLayout = ({ component }) => {
   const classes = useStyles();
   const adminDrawer = useSelector(state => state.adminDrawer);
 
-  const renderContent = () => {
+  const renderAdminCommonLayout = () => {
     if (typeof component === 'object') {
-      return <div>{component}</div>;
+      return (
+        <React.Fragment>
+          <CssBaseline />
+          <main
+            className={clsx(classes.content, {
+              [classes.contentShift]: adminDrawer.open,
+            })}
+            data-test="adminCommonLayoutContainer"
+          >
+            <div>{component}</div>
+          </main>
+        </React.Fragment>
+      );
     }
+    return null;
   };
 
-  return (
-    <React.Fragment>
-      <CssBaseline />
-      <main
-        className={clsx(classes.content, {
-          [classes.contentShift]: adminDrawer.open,
-        })}
-        data-test="userListPageContainer"
-      >
-        {renderContent()}
-      </main>
-    </React.Fragment>
-  );
+  return renderAdminCommonLayout();
 };
 
 AdminCommonLayout.propTypes = {
@@ -65,7 +66,7 @@ AdminCommonLayout.propTypes = {
     content: PropTypes.string.isRequired,
     contentShift: PropTypes.string.isRequired,
   }),
-  component: PropTypes.object,
+  component: PropTypes.object.isRequired,
 };
 
 export default AdminCommonLayout;
