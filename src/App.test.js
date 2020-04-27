@@ -13,6 +13,7 @@ import UserEditorPage from './modules/Admin/User/UserEditor/UserEditorPage';
 import UserListPage from './modules/Admin/User/UserList/UserListPage';
 import SignInPage from './modules/Auth/SignIn/SignInPage';
 import HomePage from './modules/Home/HomePage';
+import { find } from 'lodash';
 
 jest.mock('axios');
 let wrapper;
@@ -155,7 +156,7 @@ describe('App', () => {
       userActions.me = jest.fn().mockRejectedValueOnce('Error');
       const _initialState = getStateClone();
       _initialState.user.isLoggedIn = true;
-      _initialState.user.tokens = { access: { token: '', expires: '' }, refresh: { token: '', expires: '' } };
+      _initialState.user.tokens = { access: { token: 'sometoken', expires: '' }, refresh: { token: '', expires: '' } };
       wrapper = setupWrapper(_initialState);
       await wait();
       expect(store.getActions()).toEqual([{ type: 'SIGN_OUT' }, { type: 'DISCONNECTED' }, { type: 'CLEAR_DATA' }]);
@@ -165,7 +166,7 @@ describe('App', () => {
       userActions.me = jest.fn().mockResolvedValueOnce();
       const _initialState = getStateClone();
       _initialState.user.isLoggedIn = true;
-      _initialState.user.tokens = { access: { token: '', expires: '' }, refresh: { token: '', expires: '' } };
+      _initialState.user.tokens = { access: { token: 'sometoken', expires: '' }, refresh: { token: '', expires: '' } };
       wrapper = setupWrapper(_initialState);
       await wait();
       expect(store.getActions()).toEqual([{ type: 'SIGN_OUT' }, { type: 'DISCONNECTED' }, { type: 'CLEAR_DATA' }]);
@@ -175,10 +176,20 @@ describe('App', () => {
       userActions.me = jest.fn().mockResolvedValueOnce({ data: userOne });
       const _initialState = getStateClone();
       _initialState.user.isLoggedIn = true;
-      _initialState.user.tokens = { access: { token: '', expires: '' }, refresh: { token: '', expires: '' } };
+      _initialState.user.tokens = { access: { token: 'sometoken', expires: '' }, refresh: { token: '', expires: '' } };
       wrapper = setupWrapper(_initialState);
       await wait();
       expect(store.getActions()).toEqual([{ payload: { ...userOne }, type: 'GET_ME' }, { type: 'SOCKET_INIT' }]);
+    });
+
+    it('should not dispatch socket init action if no token', async () => {
+      userActions.me = jest.fn().mockResolvedValueOnce({ data: userOne });
+      const _initialState = getStateClone();
+      _initialState.user.isLoggedIn = true;
+      _initialState.user.tokens = {};
+      wrapper = setupWrapper(_initialState);
+      await wait();
+      expect(find(store.getActions(), ['type', 'SOCKET_INIT'])).toBeUndefined();
     });
   });
 });

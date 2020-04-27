@@ -55,7 +55,9 @@ function App() {
                 type: userConstants.GET_ME,
                 payload: { ...response.data },
               });
-              dispatch(socketActions.socketInit(token));
+              if (token) {
+                dispatch(socketActions.socketInit(token));
+              }
             } else {
               dispatch(authInterceptor.disconnect());
             }
