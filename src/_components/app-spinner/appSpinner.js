@@ -3,7 +3,7 @@ import './AppSpinner.scss';
 
 const AppSpinner = () => {
   return (
-    <div id="loader">
+    <div id="loader" data-test="appSpinner">
       <div className="center">
         <div className="logo" />
         <div className="spinner-wrapper">
