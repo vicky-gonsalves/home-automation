@@ -14,7 +14,8 @@ let wrapper;
 let store;
 const mockStore = configureStore([thunk]);
 const props = {
-  callback: jest.fn(),
+  item: {},
+  type: 'user',
 };
 
 const setupWrapper = (_initialState, _props) => {
@@ -58,11 +59,14 @@ describe('DeleteButton', () => {
     });
 
     it('should call callback on click', () => {
+      // eslint-disable-next-line no-console
+      console.log = jest.fn();
       const _initialState = getStateClone();
       wrapper = setupWrapper(_initialState, props);
       const component = findByDataAttr(wrapper, 'deleteIconButtonComponent').first();
       component.props().onClick();
-      expect(props.callback).toHaveBeenCalled();
+      // eslint-disable-next-line no-console
+      expect(console.log).toHaveBeenCalled();
     });
   });
 });

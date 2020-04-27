@@ -25,7 +25,7 @@ const TableToolbar = ({ title, buttons }) => {
     if (buttons && buttons.length) {
       return buttons.map((button, index) => (
         <div key={index}>
-          <button.component callback={button.callback} title={button.title} />
+          <button.component path={button.path} title={button.title} />
         </div>
       ));
     }
@@ -51,8 +51,8 @@ TableToolbar.propTypes = {
   buttons: PropTypes.arrayOf(
     PropTypes.shape({
       component: PropTypes.func.isRequired,
-      callback: PropTypes.func.isRequired,
       title: PropTypes.string.isRequired,
+      buttonType: PropTypes.string.isRequired,
     })
   ),
 };

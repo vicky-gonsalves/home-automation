@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import EditIcon from '@material-ui/icons/Edit';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { history } from '../../../_helpers/history/history';
 
 const useStyles = makeStyles(theme => ({
   margin: {
@@ -10,14 +11,17 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const EditButton = ({ callback }) => {
+const EditButton = ({ path }) => {
   const classes = useStyles();
+  const handleClick = () => {
+    history.push(path);
+  };
   return (
     <IconButton
       aria-label="edit"
       className={classes.margin}
       size="small"
-      onClick={callback}
+      onClick={handleClick}
       data-test="editIconButtonComponent"
     >
       <EditIcon fontSize="small" data-test="editIconComponent" />
@@ -26,7 +30,7 @@ const EditButton = ({ callback }) => {
 };
 
 EditButton.propTypes = {
-  callback: PropTypes.func.isRequired,
+  path: PropTypes.string.isRequired,
 };
 
 export default EditButton;

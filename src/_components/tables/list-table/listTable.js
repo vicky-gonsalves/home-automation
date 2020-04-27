@@ -49,7 +49,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const ListTable = ({ title, tableHeaders, list, count, getList, isLoggedIn, isConnected, isFetching, buttons }) => {
+const ListTable = ({ title, tableHeaders, list, count, getList, isLoggedIn, isConnected, isFetching, buttons, type }) => {
   const classes = useStyles();
   const [order, setOrder] = React.useState('desc');
   const [orderBy, setOrderBy] = React.useState('createdAt');
@@ -61,7 +61,7 @@ const ListTable = ({ title, tableHeaders, list, count, getList, isLoggedIn, isCo
   const performFilter = _searchFilter => {
     setSearchFilter(_searchFilter);
     setPage(0);
-    getList(isLoggedIn, isConnected, orderBy, order, limit, page, searchFilter);
+    getList(isLoggedIn, isConnected, `${orderBy}:${order}`, limit, page + 1, searchFilter);
   };
 
   const handleRequestSort = (event, property) => {
@@ -193,15 +193,23 @@ const ListTable = ({ title, tableHeaders, list, count, getList, isLoggedIn, isCo
     );
   };
 
-  const renderActions = actions =>
-    actions.map(action => <React.Fragment key={action.id}>{action.component}</React.Fragment>);
+  const renderActions = (actions, item) => {
+    const generateComponent = action => {
+      if (action.buttonType && (action.buttonType === 'view' || action.buttonType === 'edit')) {
+        return <action.component path={`${action.path}${item.id}`} />;
+      } else if (action.buttonType && action.buttonType === 'delete') {
+        return <action.component item={item} type={type} />;
+      }
+    };
+    return actions.map(action => <React.Fragment key={action.id}>{generateComponent(action)}</React.Fragment>);
+  };
 
   const renderRowCells = item =>
     headCells.map(headCell => {
       if (headCell.id === 'actions') {
         return (
           <TableCell key={headCell.id} className={classes.actions}>
-            <div>{renderActions(headCell.actions)}</div>
+            <div>{renderActions(headCell.actions, item)}</div>
           </TableCell>
         );
       } else {
@@ -220,8 +228,14 @@ const ListTable = ({ title, tableHeaders, list, count, getList, isLoggedIn, isCo
     return list.map(item => <TableRow key={item.id}>{renderRowCells(item)}</TableRow>);
   };
 
+  const renderOverlay = () => {
+    if (isFetching) {
+      return <OverlayLoading />;
+    }
+  };
+
   useEffect(() => {
-    getList(isLoggedIn, isConnected, orderBy, order, limit, page, searchFilter);
+    getList(isLoggedIn, isConnected, `${orderBy}:${order}`, limit, page + 1, searchFilter);
   }, [isLoggedIn, isConnected, getList, order, orderBy, page, limit, searchFilter]);
 
   return (
@@ -235,7 +249,7 @@ const ListTable = ({ title, tableHeaders, list, count, getList, isLoggedIn, isCo
             </TableHead>
             <TableBody>{renderTableRows()}</TableBody>
           </Table>
-          {isFetching && <OverlayLoading />}
+          {renderOverlay()}
         </TableContainer>
         <TablePagination
           rowsPerPageOptions={config.table.rowsPerPageOptions}
@@ -271,7 +285,9 @@ ListTable.propTypes = {
       actions: PropTypes.arrayOf(
         PropTypes.shape({
           id: PropTypes.string.isRequired,
-          component: PropTypes.element.isRequired,
+          component: PropTypes.func.isRequired,
+          path: PropTypes.string,
+          buttonType: PropTypes.string.isRequired,
         })
       ),
     })
@@ -286,9 +302,11 @@ ListTable.propTypes = {
     PropTypes.shape({
       title: PropTypes.string.isRequired,
       component: PropTypes.func.isRequired,
-      callback: PropTypes.func.isRequired,
+      path: PropTypes.string.isRequired,
+      buttonType: PropTypes.string.isRequired,
     })
   ),
   title: PropTypes.string.isRequired,
+  type: PropTypes.string.isRequired,
 };
 export default ListTable;

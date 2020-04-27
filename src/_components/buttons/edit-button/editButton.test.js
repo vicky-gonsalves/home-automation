@@ -14,7 +14,7 @@ let wrapper;
 let store;
 const mockStore = configureStore([thunk]);
 const props = {
-  callback: jest.fn(),
+  path: '/',
 };
 
 const setupWrapper = (_initialState, _props) => {
@@ -58,11 +58,12 @@ describe('EditButton', () => {
     });
 
     it('should call callback on click', () => {
+      history.push = jest.fn();
       const _initialState = getStateClone();
       wrapper = setupWrapper(_initialState, props);
       const component = findByDataAttr(wrapper, 'editIconButtonComponent').first();
       component.props().onClick();
-      expect(props.callback).toHaveBeenCalled();
+      expect(history.push).toHaveBeenCalled();
     });
   });
 });

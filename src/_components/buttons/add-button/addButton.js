@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { history } from '../../../_helpers/history/history';
 
 const useStyles = makeStyles(theme => ({
   margin: {
@@ -14,17 +15,20 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const AddButton = ({ title, callback }) => {
+const AddButton = ({ title, path }) => {
   const classes = useStyles();
+  const handleClick = () => {
+    history.push(path);
+  };
   const renderButton = () => {
-    if (title && typeof callback === 'function') {
+    if (title && path) {
       return (
         <Button
           className={classes.button}
           variant="contained"
           color="primary"
           startIcon={<AddIcon />}
-          onClick={callback}
+          onClick={handleClick}
           data-test="addButtonComponent"
         >
           {title}
@@ -41,8 +45,8 @@ AddButton.propTypes = {
     margin: PropTypes.string.isRequired,
     button: PropTypes.string.isRequired,
   }),
+  path: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
-  callback: PropTypes.func.isRequired,
 };
 
 export default AddButton;

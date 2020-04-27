@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import React from 'react';
 import PropTypes from 'prop-types';
+import { history } from '../../../_helpers/history/history';
 
 const useStyles = makeStyles(theme => ({
   margin: {
@@ -10,14 +11,18 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const ViewButton = ({ callback }) => {
+const ViewButton = ({ path }) => {
   const classes = useStyles();
+  const handleClick = () => {
+    history.push(path);
+  };
+
   return (
     <IconButton
       aria-label="view"
       className={classes.margin}
       size="small"
-      onClick={callback}
+      onClick={handleClick}
       data-test="viewIconButtonComponent"
     >
       <VisibilityIcon fontSize="small" data-test="viewIconComponent" />
@@ -26,7 +31,7 @@ const ViewButton = ({ callback }) => {
 };
 
 ViewButton.propTypes = {
-  callback: PropTypes.func.isRequired,
+  path: PropTypes.string.isRequired,
 };
 
 export default ViewButton;

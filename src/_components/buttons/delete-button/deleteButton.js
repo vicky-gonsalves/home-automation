@@ -10,14 +10,18 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const DeleteButton = ({ callback }) => {
+const DeleteButton = ({ item, type }) => {
   const classes = useStyles();
+  const handleClick = () => {
+    // eslint-disable-next-line no-console
+    console.log(item, type);
+  };
   return (
     <IconButton
       aria-label="delete"
       className={classes.margin}
       size="small"
-      onClick={callback}
+      onClick={handleClick}
       data-test="deleteIconButtonComponent"
     >
       <DeleteIcon fontSize="small" data-test="deleteIconComponent" />
@@ -26,7 +30,8 @@ const DeleteButton = ({ callback }) => {
 };
 
 DeleteButton.propTypes = {
-  callback: PropTypes.func.isRequired,
+  item: PropTypes.object.isRequired,
+  type: PropTypes.string,
 };
 
 export default DeleteButton;

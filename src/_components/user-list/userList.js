@@ -36,39 +36,9 @@ const UserList = ({ isLoggedIn, isConnected }) => {
       label: 'Actions',
       width: 150,
       actions: [
-        {
-          id: 'view',
-          component: (
-            <ViewButton
-              callback={() => {
-                // eslint-disable-next-line no-console
-                console.log('View Button');
-              }}
-            />
-          ),
-        },
-        {
-          id: 'edit',
-          component: (
-            <EditButton
-              callback={() => {
-                // eslint-disable-next-line no-console
-                console.log('Edit Button');
-              }}
-            />
-          ),
-        },
-        {
-          id: 'delete',
-          component: (
-            <DeleteButton
-              callback={() => {
-                // eslint-disable-next-line no-console
-                console.log('Delete Button');
-              }}
-            />
-          ),
-        },
+        { id: 'view', component: ViewButton, path: '/users/view/', buttonType: 'view' },
+        { id: 'edit', component: EditButton, path: '/users/edit/', buttonType: 'edit' },
+        { id: 'delete', component: DeleteButton, buttonType: 'delete' },
       ],
     },
     { id: 'name', sort: true, search: true, align: 'left', label: 'Name', type: 'text', width: 300 },
@@ -96,35 +66,23 @@ const UserList = ({ isLoggedIn, isConnected }) => {
     { id: 'createdAt', sort: true, search: true, align: 'right', label: 'created at', type: 'datetime', width: 330 },
   ];
 
-  const buttons = [
-    {
-      title: 'Add User',
-      component: AddButton,
-      callback: () => {
-        // eslint-disable-next-line no-console
-        console.log('add user');
-      },
-    },
-  ];
+  const buttons = [{ title: 'Add User', type: 'user', component: AddButton, path: '/users/add', buttonType: 'add' }];
 
   const getList = useCallback(
-    (isLoggedIn, isConnected, orderBy, order, limit, page, searchFilter) => {
-      const fetchList = (_isLoggedIn, _isConnected, orderBy, order, limit, pagbuttone, searchFilter) => {
-        if (_isLoggedIn && _isConnected) {
-          const sortBy = `${orderBy}:${order}`;
-          dispatch(adminUserActions.getUsers({ sortBy, limit, page: page + 1, ...searchFilter }));
-        }
-      };
-      fetchList(isLoggedIn, isConnected, orderBy, order, limit, page, searchFilter);
+    (isLoggedIn, isConnected, sortBy, limit, page, searchFilter) => {
+      if (isLoggedIn && isConnected) {
+        dispatch(adminUserActions.getUsers({ sortBy, limit, page, ...searchFilter }));
+      }
     },
     [dispatch]
   );
 
   return (
     <React.Fragment>
-      <div className={classes.root}>
-        <Paper className={classes.paper}>
+      <div className={classes.root} data-test="listTableContainer">
+        <Paper className={classes.paper} data-test="paperComponent">
           <ListTable
+            type="user"
             title="Users"
             tableHeaders={tableHeaders}
             count={adminUser.count}
@@ -134,6 +92,7 @@ const UserList = ({ isLoggedIn, isConnected }) => {
             isConnected={isConnected}
             isFetching={isFetching}
             buttons={buttons}
+            data-test="listTableComponent"
           />
         </Paper>
       </div>
@@ -145,7 +104,7 @@ UserList.propTypes = {
   classes: PropTypes.shape({
     root: PropTypes.string.isRequired,
     paper: PropTypes.string.isRequired,
-    title: PropTypes.bool.isRequired,
+    title: PropTypes.string.isRequired,
   }),
   isLoggedIn: PropTypes.bool.isRequired,
   isConnected: PropTypes.bool.isRequired,
