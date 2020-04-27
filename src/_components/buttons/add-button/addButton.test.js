@@ -15,7 +15,7 @@ let store;
 const mockStore = configureStore([thunk]);
 const props = {
   title: 'Add Something',
-  callback: jest.fn(),
+  path: '/',
 };
 
 const setupWrapper = (_initialState, _props) => {
@@ -44,14 +44,14 @@ describe('AddButton', () => {
       store.clearActions();
     });
 
-    it('should render addButtonComponent if title and callback are passed', () => {
+    it('should render addButtonComponent if title and path are passed', () => {
       const _initialState = getStateClone();
       wrapper = setupWrapper(_initialState, props);
       const component = findByDataAttr(wrapper, 'addButtonComponent').first();
       expect(component.length).toBe(1);
     });
 
-    it('should not render addButtonComponent if title and callback are not passed', () => {
+    it('should not render addButtonComponent if title and path are not passed', () => {
       // eslint-disable-next-line no-console
       console.error = jest.fn();
       const _initialState = getStateClone();
@@ -63,11 +63,12 @@ describe('AddButton', () => {
     });
 
     it('should call callback on click', () => {
+      history.push = jest.fn();
       const _initialState = getStateClone();
       wrapper = setupWrapper(_initialState, props);
       const component = findByDataAttr(wrapper, 'addButtonComponent').first();
       component.props().onClick();
-      expect(props.callback).toHaveBeenCalled();
+      expect(history.push).toHaveBeenCalled();
     });
   });
 });
