@@ -54,11 +54,40 @@ describe('UserListPage Component', () => {
       expect(component.length).toBe(1);
     });
 
-    it('should render userListPageContainer', () => {
+    it('should not render userListPageComponent if not logged in and not connected', () => {
       const _initialState = getStateClone();
       wrapper = setupWrapper(_initialState, props);
-      const component = findByDataAttr(wrapper, 'userListPageContainer').first();
-      expect(component.length).toBe(1);
+      const component = findByDataAttr(wrapper, 'userListPageComponent');
+      expect(component).toHaveLength(0);
+    });
+
+    it('should  render userListPageComponent if logged in, has token and connected', () => {
+      const _initialState = getStateClone();
+      _initialState.user.isLoggedIn = true;
+      _initialState.user.tokens = { access: {} };
+      _initialState.socket.connected = true;
+      wrapper = setupWrapper(_initialState, props);
+      const component = findByDataAttr(wrapper, 'userListPageComponent').first();
+      expect(component).toHaveLength(1);
+    });
+
+    it('should not render userListPageComponent if not logged in, has token and connected', () => {
+      const _initialState = getStateClone();
+      _initialState.user.isLoggedIn = false;
+      _initialState.user.tokens = { access: {} };
+      _initialState.socket.connected = true;
+      wrapper = setupWrapper(_initialState, props);
+      const component = findByDataAttr(wrapper, 'userListPageComponent');
+      expect(component).toHaveLength(0);
+    });
+
+    it('should not render userListPageComponent if not logged in, has no token and connected', () => {
+      const _initialState = getStateClone();
+      _initialState.user.isLoggedIn = false;
+      _initialState.socket.connected = true;
+      wrapper = setupWrapper(_initialState, props);
+      const component = findByDataAttr(wrapper, 'userListPageComponent');
+      expect(component).toHaveLength(0);
     });
 
     it('should show drawer if its not already shown', () => {

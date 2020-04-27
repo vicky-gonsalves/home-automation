@@ -27,8 +27,13 @@ const UserListPage = () => {
   const currentUser = useSelector(state => state.user);
   const isConnected = useSelector(state => state.socket && state.socket.connected);
   const isLoggedIn = currentUser.isLoggedIn && currentUser.tokens !== null;
-  const innerComponent = <UserList isLoggedIn={isLoggedIn} isConnected={isConnected} data-test="userListPageContainer" />;
-  return <AdminCommonLayout component={innerComponent} data-test="adminPageContainerForUserList" />;
+  const innerComponent = () => {
+    if (isLoggedIn && isConnected) {
+      return <UserList isLoggedIn={isLoggedIn} isConnected={isConnected} data-test="userListPageComponent" />;
+    }
+    return null;
+  };
+  return <AdminCommonLayout component={innerComponent()} data-test="adminPageContainerForUserList" />;
 };
 
 UserListPage.propTypes = {
