@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import { deviceOne, deviceTwo } from './device.fixture';
 
 const dialogOne = {

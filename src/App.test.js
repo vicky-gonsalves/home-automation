@@ -8,11 +8,14 @@ import { history } from './_helpers/history/history';
 import { findByDataAttr, findByDataAttrWhenMounted, getStateClone, initialState, wait } from './_utils';
 import { userOne } from './_utils/fixtures/user.fixture';
 import App from './App';
+import DashboardPage from './modules/Admin/Dashboard/DashboardPage';
+import UserEditorPage from './modules/Admin/User/UserEditor/UserEditorPage';
+import UserListPage from './modules/Admin/User/UserList/UserListPage';
 import SignInPage from './modules/Auth/SignIn/SignInPage';
 import HomePage from './modules/Home/HomePage';
+import { find } from 'lodash';
 
 jest.mock('axios');
-
 let wrapper;
 let store;
 const mockStore = configureStore([thunk]);
@@ -56,12 +59,6 @@ describe('App', () => {
       expect(component).toHaveLength(1);
     });
 
-    it('should have publicRouterPath', () => {
-      wrapper = setupWrapper(initialState);
-      const component = findByDataAttr(wrapper, 'publicRouterPath').first();
-      expect(component).toHaveLength(1);
-    });
-
     it('should not have linearProgressComponent visible', () => {
       const _initialState = getStateClone();
       _initialState.user.isFetching = false;
@@ -93,41 +90,6 @@ describe('App', () => {
     });
   });
 
-  describe('When User is Logged In', () => {
-    beforeEach(() => {
-      userActions.me = jest.fn().mockResolvedValueOnce({ data: userOne });
-      history.location = { pathname: '/', search: '', hash: '', state: undefined };
-    });
-
-    afterEach(() => {
-      wrapper.unmount();
-      store.clearActions();
-      userActions.me.mockRestore();
-    });
-
-    it('should have HomePage if user is logged in', () => {
-      const _initialState = getStateClone();
-      _initialState.user.isLoggedIn = true;
-      _initialState.user.tokens = { access: { token: '', expires: '' }, refresh: { token: '', expires: '' } };
-      wrapper = setupWrapper(_initialState);
-      const component = wrapper.find(HomePage);
-      const path = wrapper.find('Route').prop('location').pathname;
-      expect(component).toHaveLength(1);
-      expect(path).toBe('/home');
-    });
-
-    it('should not have SignInPage if user is logged in', () => {
-      const _initialState = getStateClone();
-      _initialState.user.isLoggedIn = true;
-      _initialState.user.tokens = { access: { token: '', expires: '' }, refresh: { token: '', expires: '' } };
-      wrapper = setupWrapper(_initialState);
-      const component = wrapper.find(SignInPage);
-      const path = wrapper.find('Route').prop('location').pathname;
-      expect(component).toHaveLength(0);
-      expect(path).toBe('/home');
-    });
-  });
-
   describe('When User is NOT Logged In', () => {
     beforeEach(() => {
       history.location = { pathname: '/home', search: '', hash: '', state: undefined };
@@ -142,18 +104,40 @@ describe('App', () => {
       const _initialState = getStateClone();
       wrapper = setupWrapper(_initialState);
       const component = wrapper.find(HomePage);
-      const path = wrapper.find('Route').prop('location').pathname;
       expect(component).toHaveLength(0);
-      expect(path).toBe('/signin');
+      expect(history.location.pathname).toBe('/signin');
+    });
+
+    it('should not have Admin DashBoardPage if user is not logged in', () => {
+      const _initialState = getStateClone();
+      wrapper = setupWrapper(_initialState);
+      const component = wrapper.find(DashboardPage);
+      expect(component).toHaveLength(0);
+      expect(history.location.pathname).toBe('/signin');
+    });
+
+    it('should not have Admin UserListPage if user is not logged in', () => {
+      const _initialState = getStateClone();
+      wrapper = setupWrapper(_initialState);
+      const component = wrapper.find(UserListPage);
+      expect(component).toHaveLength(0);
+      expect(history.location.pathname).toBe('/signin');
+    });
+
+    it('should not have Admin UserEditorPage if user is not logged in', () => {
+      const _initialState = getStateClone();
+      wrapper = setupWrapper(_initialState);
+      const component = wrapper.find(UserEditorPage);
+      expect(component).toHaveLength(0);
+      expect(history.location.pathname).toBe('/signin');
     });
 
     it('should have SignInPage if user is not logged in', () => {
       const _initialState = getStateClone();
       wrapper = setupWrapper(_initialState);
       const component = wrapper.find(SignInPage);
-      const path = wrapper.find('Route').prop('location').pathname;
       expect(component).toHaveLength(1);
-      expect(path).toBe('/signin');
+      expect(history.location.pathname).toBe('/signin');
     });
   });
 
@@ -172,46 +156,40 @@ describe('App', () => {
       userActions.me = jest.fn().mockRejectedValueOnce('Error');
       const _initialState = getStateClone();
       _initialState.user.isLoggedIn = true;
-      _initialState.user.tokens = { access: { token: '', expires: '' }, refresh: { token: '', expires: '' } };
+      _initialState.user.tokens = { access: { token: 'sometoken', expires: '' }, refresh: { token: '', expires: '' } };
       wrapper = setupWrapper(_initialState);
       await wait();
-      expect(store.getActions()).toEqual([
-        { payload: true, type: 'DEVICE_UPDATE_FETCHING' },
-        { type: 'SIGN_OUT' },
-        { type: 'DISCONNECTED' },
-        { type: 'DEVICE_REMOVE_ALL' },
-        { type: 'SHARED_DEVICE_REMOVE_ALL' },
-        { type: 'SUB_DEVICE_REMOVE_ALL' },
-        { type: 'DEVICE_PARAM_REMOVE_ALL' },
-        { type: 'SUB_DEVICE_PARAM_REMOVE_ALL' },
-        { type: 'DEVICE_SETTING_REMOVE_ALL' },
-        { type: 'SUB_DEVICE_SETTING_REMOVE_ALL' },
-        { type: 'ONLINE_DEVICE_REMOVE_ALL' },
-        { type: 'LOG_REMOVE_ALL' },
-      ]);
+      expect(store.getActions()).toEqual([{ type: 'SIGN_OUT' }, { type: 'DISCONNECTED' }, { type: 'CLEAR_DATA' }]);
     });
 
     it('should disconnect and dispatch reset state actions if user is logged in but received no data from getMe Api', async () => {
       userActions.me = jest.fn().mockResolvedValueOnce();
       const _initialState = getStateClone();
       _initialState.user.isLoggedIn = true;
-      _initialState.user.tokens = { access: { token: '', expires: '' }, refresh: { token: '', expires: '' } };
+      _initialState.user.tokens = { access: { token: 'sometoken', expires: '' }, refresh: { token: '', expires: '' } };
       wrapper = setupWrapper(_initialState);
       await wait();
-      expect(store.getActions()).toEqual([
-        { payload: true, type: 'DEVICE_UPDATE_FETCHING' },
-        { type: 'SIGN_OUT' },
-        { type: 'DISCONNECTED' },
-        { type: 'DEVICE_REMOVE_ALL' },
-        { type: 'SHARED_DEVICE_REMOVE_ALL' },
-        { type: 'SUB_DEVICE_REMOVE_ALL' },
-        { type: 'DEVICE_PARAM_REMOVE_ALL' },
-        { type: 'SUB_DEVICE_PARAM_REMOVE_ALL' },
-        { type: 'DEVICE_SETTING_REMOVE_ALL' },
-        { type: 'SUB_DEVICE_SETTING_REMOVE_ALL' },
-        { type: 'ONLINE_DEVICE_REMOVE_ALL' },
-        { type: 'LOG_REMOVE_ALL' },
-      ]);
+      expect(store.getActions()).toEqual([{ type: 'SIGN_OUT' }, { type: 'DISCONNECTED' }, { type: 'CLEAR_DATA' }]);
+    });
+
+    it('should connect to socket when received data from getMe api and user is logged in', async () => {
+      userActions.me = jest.fn().mockResolvedValueOnce({ data: userOne });
+      const _initialState = getStateClone();
+      _initialState.user.isLoggedIn = true;
+      _initialState.user.tokens = { access: { token: 'sometoken', expires: '' }, refresh: { token: '', expires: '' } };
+      wrapper = setupWrapper(_initialState);
+      await wait();
+      expect(store.getActions()).toEqual([{ payload: { ...userOne }, type: 'GET_ME' }, { type: 'SOCKET_INIT' }]);
+    });
+
+    it('should not dispatch socket init action if no token', async () => {
+      userActions.me = jest.fn().mockResolvedValueOnce({ data: userOne });
+      const _initialState = getStateClone();
+      _initialState.user.isLoggedIn = true;
+      _initialState.user.tokens = {};
+      wrapper = setupWrapper(_initialState);
+      await wait();
+      expect(find(store.getActions(), ['type', 'SOCKET_INIT'])).toBeUndefined();
     });
   });
 });

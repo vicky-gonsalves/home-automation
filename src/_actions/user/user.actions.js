@@ -34,6 +34,7 @@ const signIn = userObj => dispatch => {
         setUser({
           name: response.user.name,
           email: response.user.email,
+          role: response.user.role,
           tokens: response.tokens,
         })
       );
@@ -56,6 +57,13 @@ const me = () => {
   return userService.getMe();
 };
 
+const setDevicesFetched = flag => dispatch => {
+  dispatch({
+    type: userConstants.SET_FETCHED_DEVICES,
+    payload: flag,
+  });
+};
+
 export const userActions = {
   setUser,
   setLoginError,
@@ -63,4 +71,5 @@ export const userActions = {
   signOut,
   me,
   setUserTokens,
+  setDevicesFetched,
 };

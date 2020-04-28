@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import uniqid from 'uniqid';
 import { subDeviceFive, subDeviceFour, subDeviceSix, subDeviceThree } from './subDevice.fixture';
 import { deviceFour, deviceTwo } from './device.fixture';

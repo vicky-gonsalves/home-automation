@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import faker from 'faker';
 import uniqid from 'uniqid';
 import { deviceOne, deviceTwo } from './device.fixture';

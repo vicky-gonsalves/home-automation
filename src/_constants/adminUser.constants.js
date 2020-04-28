@@ -1,0 +1,5 @@
+export const adminUserConstants = {
+  GET_USERS: 'GET_USERS',
+  STORE_USERS: 'STORE_USERS',
+  SET_FETCHING_USERS: 'SET_FETCHING_USERS',
+};

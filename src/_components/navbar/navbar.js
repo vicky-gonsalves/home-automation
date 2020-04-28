@@ -7,20 +7,32 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import BrightnessAutoIcon from '@material-ui/icons/BrightnessAuto';
+import MenuIcon from '@material-ui/icons/Menu';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { adminDrawerActions } from '../../_actions/admin-drawer/adminDrawer.actions';
+import { history } from '../../_helpers/history/history';
 import { authInterceptor } from '../../_interceptors/auth/auth.interceptor';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
   title: {
     flexGrow: 1,
   },
+  appBar: {
+    zIndex: theme.zIndex.drawer + 1,
+  },
+  hide: {
+    display: 'none',
+  },
 }));
 
-export default function Navbar(props) {
+const Navbar = ({ appName }) => {
+  const siteSettings = useSelector(state => state.siteSetting);
   const currentUser = useSelector(state => state.user);
+  const adminDrawer = useSelector(state => state.adminDrawer);
   const isLoggedIn = currentUser.isLoggedIn && currentUser.tokens !== null;
+  const isAdmin = isLoggedIn && currentUser.role === 'admin';
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -37,6 +49,45 @@ export default function Navbar(props) {
   const handleLogout = () => {
     handleClose();
     dispatch(authInterceptor.disconnect());
+  };
+
+  const handleDrawerToggle = () => {
+    if (adminDrawer.open) {
+      dispatch(adminDrawerActions.close());
+    } else {
+      dispatch(adminDrawerActions.open());
+    }
+  };
+
+  const handleNavigation = path => () => {
+    handleClose();
+    history.push(path);
+  };
+
+  const renderAdminMenu = () => {
+    if (isAdmin) {
+      return (
+        <MenuItem onClick={handleNavigation('/admin')} data-test="adminPanelMenuItem">
+          Admin Panel
+        </MenuItem>
+      );
+    }
+  };
+
+  const renderAdminMenuButton = () => {
+    if (isAdmin && siteSettings && siteSettings.burger) {
+      return (
+        <IconButton
+          color="inherit"
+          aria-label="open drawer"
+          onClick={handleDrawerToggle}
+          edge="start"
+          data-test="drawerIconButtonComponent"
+        >
+          <MenuIcon />
+        </IconButton>
+      );
+    }
   };
 
   const renderLoggedInMenu = () => {
@@ -70,6 +121,7 @@ export default function Navbar(props) {
             data-test="MenuComponent"
           >
             <MenuItem>{currentUser.name}</MenuItem>
+            {renderAdminMenu()}
             <MenuItem onClick={handleLogout} data-test="MenuItemComponent">
               Logout
             </MenuItem>
@@ -80,19 +132,24 @@ export default function Navbar(props) {
   };
 
   return (
-    <AppBar position="fixed" data-test="navbar">
+    <AppBar position="fixed" className={classes.appBar} data-test="navbar">
       <Toolbar data-test="toolbar">
+        {renderAdminMenuButton()}
         <BrightnessAutoIcon data-test="icon" />
+        &nbsp;
         <Typography variant="h6" className={classes.title} color="inherit" noWrap data-test="appName">
-          {props.appName}
+          {appName}
         </Typography>
         {renderLoggedInMenu()}
       </Toolbar>
     </AppBar>
   );
-}
+};
 
 Navbar.propTypes = {
   appName: PropTypes.string.isRequired,
+  showBurgerIcon: PropTypes.bool,
   'data-test': PropTypes.string.isRequired,
 };
+
+export default Navbar;

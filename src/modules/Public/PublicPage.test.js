@@ -1,16 +1,16 @@
-import { mount, shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import React from 'react';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { history } from '../../_helpers/history/history';
-import { initialState, checkProps, findByDataAttr } from '../../_utils';
+import { checkProps, findByDataAttr, getStateClone } from '../../_utils';
 import config from '../../config';
-import DefaultPublicPage, { PublicPage } from './PublicPage';
+import PublicPage from './PublicPage';
 
+let wrapper;
+let store;
 const mockStore = configureStore([thunk]);
-
 const props = {
   classes: {
     main: '',
@@ -22,9 +22,15 @@ const props = {
   history,
   location: {},
   match: {},
-  isFetching: false,
-  isLoggedIn: false,
-  tokens: {},
+};
+
+const setupWrapper = (_initialState, _props) => {
+  store = mockStore(_initialState);
+  return mount(
+    <Provider store={store}>
+      <PublicPage {..._props} />
+    </Provider>
+  );
 };
 
 describe('Public Page', () => {
@@ -36,35 +42,29 @@ describe('Public Page', () => {
   });
 
   describe('Components Testing', () => {
-    let wrapper;
     beforeEach(() => {
       history.push = jest.fn();
-      wrapper = shallow(<PublicPage {...props} />);
     });
     afterEach(() => {
       history.push.mockClear();
     });
     it('should render without error', () => {
+      const _initialState = getStateClone();
+      wrapper = setupWrapper(_initialState, props);
       const component = findByDataAttr(wrapper, 'publicPageContainer').first();
       expect(component.length).toBe(1);
     });
 
-    it('should have navbar component', () => {
-      const component = findByDataAttr(wrapper, 'navbarComponent').first();
-      expect(component.length).toBe(1);
-    });
-
-    it('should have footer component', () => {
-      const component = findByDataAttr(wrapper, 'footerComponent').first();
-      expect(component.length).toBe(1);
-    });
-
     it('should have signIn button component', () => {
+      const _initialState = getStateClone();
+      wrapper = setupWrapper(_initialState, props);
       const component = findByDataAttr(wrapper, 'signInButtonComponent').first();
       expect(component.length).toBe(1);
     });
 
     it('should have message', () => {
+      const _initialState = getStateClone();
+      wrapper = setupWrapper(_initialState, props);
       const component = findByDataAttr(wrapper, 'message').first();
       expect(component.length).toBe(1);
       expect(component.text()).toEqual(
@@ -73,48 +73,61 @@ describe('Public Page', () => {
     });
 
     it('should have app name', () => {
+      const _initialState = getStateClone();
+      wrapper = setupWrapper(_initialState, props);
       const component = findByDataAttr(wrapper, 'appName').first();
       expect(component.length).toBe(1);
       expect(component.text()).toEqual(config.appName);
     });
 
     it('should redirect to home page if already logged in', () => {
-      wrapper.setProps({ isLoggedIn: true, tokens: { access: 'access_token' } });
-      expect(wrapper.text()).toContain('<Redirect />');
-      expect(wrapper.props()).toEqual({ to: '/home' });
-    });
-  });
-
-  describe('Store Checks', () => {
-    let wrapper;
-    let store;
-    beforeEach(() => {
-      const _initialState = {
-        ...initialState,
-      };
-      _initialState.user.tokens = { access_tokens: 'sometoken' };
-      store = mockStore(_initialState);
-      wrapper = mount(
-        <Provider store={store}>
-          <Router history={history}>
-            <DefaultPublicPage {...props} />
-          </Router>
-        </Provider>
-      );
-      // clear SIGN_OUT
-      store.clearActions();
+      const _initialState = getStateClone();
+      _initialState.user.isLoggedIn = true;
+      _initialState.user.tokens = { access: 'access_token' };
+      wrapper = setupWrapper(_initialState, props);
+      history.location = { pathname: '/', search: '', hash: '', state: undefined };
+      expect(history.push).toHaveBeenCalledWith('/home');
+      expect(history.push).toHaveBeenCalledTimes(1);
     });
 
-    afterEach(() => {
-      wrapper.unmount();
-      store.clearActions();
+    it('should hide drawer if its not already hidden', () => {
+      const _initialState = getStateClone();
+      _initialState.socket.connected = true;
+      _initialState.user.isLoggedIn = true;
+      _initialState.user.isAuthorized = true;
+      _initialState.adminDrawer.show = true;
+      wrapper = setupWrapper(_initialState, props);
+      expect(store.getActions()).toEqual([{ type: 'HIDE_ADMIN_DRAWER' }]);
     });
 
-    it('should have store', () => {
-      const component = wrapper.find('PublicPage');
-      expect(component.props().isFetching).toEqual(false);
-      expect(component.props().isLoggedIn).toEqual(false);
-      expect(component.props().tokens).toEqual({ access_tokens: 'sometoken' });
+    it('should not hide drawer if its already hidden', () => {
+      const _initialState = getStateClone();
+      _initialState.socket.connected = true;
+      _initialState.user.isLoggedIn = true;
+      _initialState.user.isAuthorized = true;
+      _initialState.adminDrawer.show = false;
+      wrapper = setupWrapper(_initialState, props);
+      expect(store.getActions()).toHaveLength(0);
+    });
+
+    it('should hide burger if its not already hidden', () => {
+      const _initialState = getStateClone();
+      _initialState.socket.connected = true;
+      _initialState.user.isLoggedIn = true;
+      _initialState.user.isAuthorized = true;
+      _initialState.siteSetting.burger = true;
+      wrapper = setupWrapper(_initialState, props);
+      expect(store.getActions()).toEqual([{ type: 'HIDE_BURGER' }]);
+    });
+
+    it('should not hide burger if its already hidden', () => {
+      const _initialState = getStateClone();
+      _initialState.socket.connected = true;
+      _initialState.user.isLoggedIn = true;
+      _initialState.user.isAuthorized = true;
+      _initialState.siteSetting.burger = false;
+      wrapper = setupWrapper(_initialState, props);
+      expect(store.getActions()).toHaveLength(0);
     });
   });
 });

@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 export const meData = {
   devices: {
     myDevices: [
@@ -693,6 +694,10 @@ export const meData = {
 };
 
 export const myDeviceState = [
+  {
+    type: 'SET_FETCHED_DEVICES',
+    payload: true,
+  },
   {
     type: 'DEVICE_STORE_ALL',
     payload: meData.devices.myDevices,

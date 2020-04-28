@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import uniqid from 'uniqid';
 import { admin, userOne } from './user.fixture';
 

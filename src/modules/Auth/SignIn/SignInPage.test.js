@@ -1,18 +1,15 @@
-import { mount, shallow } from 'enzyme';
-import faker from 'faker';
+import { mount } from 'enzyme';
 import React from 'react';
 import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { userConstants } from '../../../_constants';
 import { history } from '../../../_helpers/history/history';
-import { checkProps, clickButton, findByDataAttr, initialState } from '../../../_utils';
-import SignInPage, { SignInPage as SignInPageClass } from './SignInPage';
+import { checkProps, findByDataAttr, getStateClone } from '../../../_utils';
+import SignInPage from './SignInPage';
 
+let wrapper;
+let store;
 const mockStore = configureStore([thunk]);
-const name = faker.name.firstName();
-const email = faker.internet.email();
-
 const props = {
   classes: {
     paper: '',
@@ -25,43 +22,16 @@ const props = {
   match: {},
 };
 
+const setupWrapper = (_initialState, _props) => {
+  store = mockStore(_initialState);
+  return mount(
+    <Provider store={store}>
+      <SignInPage {..._props} />
+    </Provider>
+  );
+};
+
 describe('SignInPage', () => {
-  describe('Store Checks', () => {
-    let component;
-    let store;
-    beforeEach(() => {
-      store = mockStore(initialState);
-      component = mount(
-        <Provider store={store}>
-          <SignInPage {...props} />
-        </Provider>
-      );
-      // clear SIGN_OUT
-      store.clearActions();
-    });
-
-    afterEach(() => {
-      component.unmount();
-      store.clearActions();
-    });
-
-    it('should dispatch SET_USER', () => {
-      const fakeUser = {
-        name,
-        email,
-      };
-      const expectedPayload = {
-        type: 'SET_USER',
-        payload: { ...fakeUser },
-      };
-      store.dispatch({
-        type: userConstants.SET_USER,
-        payload: fakeUser,
-      });
-      expect(store.getActions()).toEqual([expectedPayload]);
-    });
-  });
-
   describe('Other Checks', () => {
     describe('Checking PropTypes', () => {
       it('should not throw a warning', () => {
@@ -71,16 +41,8 @@ describe('SignInPage', () => {
     });
 
     describe('Checking Components', () => {
-      let wrapper;
       beforeEach(() => {
-        const _props = {
-          ...props,
-          signIn: jest.fn(),
-          signOut: jest.fn(),
-          isLoggedIn: false,
-        };
         history.push = jest.fn();
-        wrapper = shallow(<SignInPageClass {..._props} />);
       });
       afterEach(() => {
         wrapper.unmount();
@@ -88,46 +50,91 @@ describe('SignInPage', () => {
       });
 
       it('should have signIn container', () => {
+        const _initialState = getStateClone();
+        wrapper = setupWrapper(_initialState, props);
         const component = findByDataAttr(wrapper, 'signInContainer').first();
         expect(component.length).toBe(1);
       });
 
       it('should have signInForm component', () => {
+        const _initialState = getStateClone();
+        wrapper = setupWrapper(_initialState, props);
         const component = findByDataAttr(wrapper, 'signInFormComponent').first();
         expect(component.length).toBe(1);
       });
 
-      it('should have navbar component', () => {
-        const component = findByDataAttr(wrapper, 'navbarComponent').first();
-        expect(component.length).toBe(1);
-      });
-
-      it('should have footer component', () => {
-        const component = findByDataAttr(wrapper, 'footerComponent').first();
-        expect(component.length).toBe(1);
-      });
-
       it('should have forgot password button', () => {
+        const _initialState = getStateClone();
+        wrapper = setupWrapper(_initialState, props);
         const component = findByDataAttr(wrapper, 'forgotPassword').first();
         expect(component.length).toBe(1);
       });
 
       it('should navigate to forgot password page', async () => {
+        const _initialState = getStateClone();
+        wrapper = setupWrapper(_initialState, props);
+        history.location = { pathname: '/signin', search: '', hash: '', state: undefined };
         const component = findByDataAttr(wrapper, 'forgotPassword').first();
-        await clickButton(component);
+        component.props().onClick();
+        expect(history.push).toHaveBeenCalledWith('/forgot-password');
         expect(history.push).toHaveBeenCalledTimes(1);
       });
 
       it('should navigate to home page if user is logged in', () => {
-        wrapper.setProps({ isLoggedIn: true, tokens: { access: 'access_token' } });
-        wrapper.instance().componentDidUpdate();
+        const _initialState = getStateClone();
+        _initialState.user.isLoggedIn = true;
+        _initialState.user.tokens = { access: 'access_token' };
+        wrapper = setupWrapper(_initialState, props);
+        history.location = { pathname: '/signin', search: '', hash: '', state: undefined };
+        expect(history.push).toHaveBeenCalledWith('/home');
         expect(history.push).toHaveBeenCalledTimes(1);
       });
 
       it('should not navigate to home page if user is not logged in', () => {
-        wrapper.setProps({ isLoggedIn: false });
-        wrapper.instance().componentDidUpdate();
+        const _initialState = getStateClone();
+        wrapper = setupWrapper(_initialState, props);
+        history.location = { pathname: '/signin', search: '', hash: '', state: undefined };
         expect(history.push).toHaveBeenCalledTimes(0);
+      });
+
+      it('should hide drawer if its not already hidden', () => {
+        const _initialState = getStateClone();
+        _initialState.socket.connected = true;
+        _initialState.user.isLoggedIn = true;
+        _initialState.user.isAuthorized = true;
+        _initialState.adminDrawer.show = true;
+        wrapper = setupWrapper(_initialState, props);
+        expect(store.getActions()).toEqual([{ type: 'HIDE_ADMIN_DRAWER' }]);
+      });
+
+      it('should not hide drawer if its already hidden', () => {
+        const _initialState = getStateClone();
+        _initialState.socket.connected = true;
+        _initialState.user.isLoggedIn = true;
+        _initialState.user.isAuthorized = true;
+        _initialState.adminDrawer.show = false;
+        wrapper = setupWrapper(_initialState, props);
+        expect(store.getActions()).toHaveLength(0);
+      });
+
+      it('should hide burger if its not already hidden', () => {
+        const _initialState = getStateClone();
+        _initialState.socket.connected = true;
+        _initialState.user.isLoggedIn = true;
+        _initialState.user.isAuthorized = true;
+        _initialState.siteSetting.burger = true;
+        wrapper = setupWrapper(_initialState, props);
+        expect(store.getActions()).toEqual([{ type: 'HIDE_BURGER' }]);
+      });
+
+      it('should not hide burger if its already hidden', () => {
+        const _initialState = getStateClone();
+        _initialState.socket.connected = true;
+        _initialState.user.isLoggedIn = true;
+        _initialState.user.isAuthorized = true;
+        _initialState.siteSetting.burger = false;
+        wrapper = setupWrapper(_initialState, props);
+        expect(store.getActions()).toHaveLength(0);
       });
     });
   });

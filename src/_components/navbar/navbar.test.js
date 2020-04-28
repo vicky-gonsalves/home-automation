@@ -3,8 +3,9 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import { history } from '../../_helpers/history/history';
 import { checkProps, findByDataAttr, initialState } from '../../_utils';
-import { userOne } from '../../_utils/fixtures/user.fixture';
+import { admin, userOne } from '../../_utils/fixtures/user.fixture';
 import config from '../../config';
 import Navbar from './navbar';
 
@@ -114,19 +115,107 @@ describe('Navbar Component', () => {
       wrapper = setupWrapper(_initialState);
       const component = findByDataAttr(wrapper, 'MenuItemComponent').first();
       component.props().onClick();
-      expect(store.getActions()).toEqual([
-        { type: 'SIGN_OUT' },
-        { type: 'DISCONNECTED' },
-        { type: 'DEVICE_REMOVE_ALL' },
-        { type: 'SHARED_DEVICE_REMOVE_ALL' },
-        { type: 'SUB_DEVICE_REMOVE_ALL' },
-        { type: 'DEVICE_PARAM_REMOVE_ALL' },
-        { type: 'SUB_DEVICE_PARAM_REMOVE_ALL' },
-        { type: 'DEVICE_SETTING_REMOVE_ALL' },
-        { type: 'SUB_DEVICE_SETTING_REMOVE_ALL' },
-        { type: 'ONLINE_DEVICE_REMOVE_ALL' },
-        { type: 'LOG_REMOVE_ALL' },
-      ]);
+      expect(store.getActions()).toEqual([{ type: 'SIGN_OUT' }, { type: 'DISCONNECTED' }, { type: 'CLEAR_DATA' }]);
+    });
+
+    it('should not have drawerIconButtonComponent if logged in user is not admin', () => {
+      const _initialState = { ...initialState };
+      _initialState.user = { ...userOne };
+      _initialState.user.isLoggedIn = true;
+      _initialState.user.tokens = { access: {}, refresh: {} };
+      wrapper = setupWrapper(_initialState);
+      const component = findByDataAttr(wrapper, 'drawerIconButtonComponent');
+      expect(component).toHaveLength(0);
+    });
+
+    it('should have drawerIconButtonComponent if logged in user is admin and burger is true', () => {
+      const _initialState = { ...initialState };
+      _initialState.user = { ...admin };
+      _initialState.user.isLoggedIn = true;
+      _initialState.user.tokens = { access: {}, refresh: {} };
+      _initialState.siteSetting.burger = true;
+      wrapper = setupWrapper(_initialState);
+      const component = findByDataAttr(wrapper, 'drawerIconButtonComponent').first();
+      expect(component.length).toBe(1);
+    });
+
+    it('should not have drawerIconButtonComponent if logged in user is admin and burger is false', () => {
+      const _initialState = { ...initialState };
+      _initialState.user = { ...admin };
+      _initialState.user.isLoggedIn = true;
+      _initialState.user.tokens = { access: {}, refresh: {} };
+      _initialState.siteSetting.burger = false;
+      wrapper = setupWrapper(_initialState);
+      const component = findByDataAttr(wrapper, 'drawerIconButtonComponent');
+      expect(component.length).toBe(0);
+    });
+
+    it('should not have drawerIconButtonComponent if logged in user is admin and no siteSetting', () => {
+      const _initialState = { ...initialState };
+      _initialState.user = { ...admin };
+      _initialState.user.isLoggedIn = true;
+      _initialState.user.tokens = { access: {}, refresh: {} };
+      wrapper = setupWrapper(_initialState);
+      const component = findByDataAttr(wrapper, 'drawerIconButtonComponent');
+      expect(component.length).toBe(0);
+    });
+
+    it('should not have adminPanelMenuItem if logged in user is not admin', () => {
+      const _initialState = { ...initialState };
+      _initialState.user = { ...userOne };
+      _initialState.user.isLoggedIn = true;
+      _initialState.user.tokens = { access: {}, refresh: {} };
+      wrapper = setupWrapper(_initialState);
+      const component = findByDataAttr(wrapper, 'adminPanelMenuItem');
+      expect(component).toHaveLength(0);
+    });
+
+    it('should have adminPanelMenuItem if logged in user is admin', () => {
+      const _initialState = { ...initialState };
+      _initialState.user = { ...admin };
+      _initialState.user.isLoggedIn = true;
+      _initialState.user.tokens = { access: {}, refresh: {} };
+      wrapper = setupWrapper(_initialState);
+      const component = findByDataAttr(wrapper, 'adminPanelMenuItem').first();
+      expect(component.length).toBe(1);
+    });
+
+    it('should have close drawer if logged in user is admin and adminDrawer is open', async () => {
+      const _initialState = { ...initialState };
+      _initialState.user = { ...admin };
+      _initialState.adminDrawer.open = true;
+      _initialState.user.isLoggedIn = true;
+      _initialState.user.tokens = { access: {}, refresh: {} };
+      _initialState.siteSetting.burger = true;
+      wrapper = setupWrapper(_initialState);
+      const component = findByDataAttr(wrapper, 'drawerIconButtonComponent').first();
+      component.props().onClick();
+      expect(store.getActions()).toEqual([{ type: 'CLOSE_ADMIN_DRAWER' }]);
+    });
+
+    it('should have open drawer if logged in user is admin and adminDrawer is closed', async () => {
+      const _initialState = { ...initialState };
+      _initialState.user = { ...admin };
+      _initialState.adminDrawer.open = false;
+      _initialState.user.isLoggedIn = true;
+      _initialState.user.tokens = { access: {}, refresh: {} };
+      wrapper = setupWrapper(_initialState);
+      const component = findByDataAttr(wrapper, 'drawerIconButtonComponent').first();
+      component.props().onClick();
+      expect(store.getActions()).toEqual([{ type: 'OPEN_ADMIN_DRAWER' }]);
+    });
+
+    it('should navigate to specified path', async () => {
+      history.push = jest.fn();
+      const _initialState = { ...initialState };
+      _initialState.user = { ...admin };
+      _initialState.user.isLoggedIn = true;
+      _initialState.user.tokens = { access: {}, refresh: {} };
+      wrapper = setupWrapper(_initialState);
+      const component = findByDataAttr(wrapper, 'adminPanelMenuItem').first();
+      component.props().onClick('/admin');
+      expect(history.push).toHaveBeenCalled();
+      history.push.mockClear();
     });
   });
 });

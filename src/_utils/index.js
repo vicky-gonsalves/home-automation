@@ -2,17 +2,20 @@
 import { act } from '@testing-library/react';
 import * as axios from 'axios';
 import checkPropTypes from 'check-prop-types';
+import React from 'react';
 
 const initialState = {
   user: {
     name: null,
     email: null,
-    remember: null,
+    role: null,
+    remember: false,
     isLoggedIn: false,
     isFetching: false,
-    tokens: null,
+    tokens: {},
     loginError: null,
-    isAuthorized: false,
+    isAuthorized: null,
+    hasFetchedDevices: false,
   },
   socket: {
     isSocketFetching: false,
@@ -58,6 +61,18 @@ const initialState = {
   },
   log: {
     logs: [],
+  },
+  adminDrawer: {
+    open: false,
+    show: false,
+  },
+  siteSetting: {
+    burger: false,
+  },
+  adminUser: {
+    count: 0,
+    isFetchingUsersList: false,
+    users: [],
   },
 };
 
@@ -137,6 +152,15 @@ const mockEmptyErrorResponse = (status = 400, method = 'GET') => axios[method.to
 const mockStatusTextErrorResponse = (status = 400, method = 'GET', returnBody = {}) =>
   axios[method.toLowerCase()].mockRejectedValue({ response: { status, statusText: returnBody } });
 
+const simulateSelectChange = (selectInput, name, value) => {
+  act(() => {
+    selectInput.props().onChange({
+      persist: () => {},
+      target: { name, value },
+    });
+  });
+};
+
 module.exports = {
   initialState,
   getStateClone,
@@ -151,4 +175,5 @@ module.exports = {
   mockErrorResponse,
   mockEmptyErrorResponse,
   mockStatusTextErrorResponse,
+  simulateSelectChange,
 };

@@ -7,6 +7,7 @@ import {
   subDeviceConstants,
   subDeviceParamConstants,
   subDeviceSettingConstants,
+  userConstants,
 } from '../../_constants';
 import { deviceParamConstants } from '../../_constants/deviecParam.constants';
 import { deviceService } from '../../_services';
@@ -84,6 +85,10 @@ const setDeviceFetching = flag => dispatch => {
 const myDevices = () => async dispatch => {
   try {
     const data = await deviceService.getMyDevices();
+    dispatch({
+      type: userConstants.SET_FETCHED_DEVICES,
+      payload: true,
+    });
     if (data && data.devices && data.devices.myDevices) {
       dispatch(setDevices(data.devices.myDevices));
     }
@@ -115,6 +120,10 @@ const myDevices = () => async dispatch => {
     }
   } catch (e) {
     dispatch({
+      type: userConstants.SET_FETCHED_DEVICES,
+      payload: true,
+    });
+    dispatch({
       type: deviceConstants.DEVICE_GET_ERROR,
     });
   }
@@ -123,6 +132,10 @@ const myDevices = () => async dispatch => {
 const removeAllDevices = () => dispatch => {
   dispatch({
     type: deviceConstants.DEVICE_REMOVE_ALL,
+  });
+  dispatch({
+    type: userConstants.SET_FETCHED_DEVICES,
+    payload: false,
   });
 };
 
