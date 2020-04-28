@@ -57,7 +57,7 @@ export const SimpleTableSearchForm = props => {
           onBlur={handleBlur}
           disabled={isFetching}
           error={errors[headCell.id] && touched[headCell.id]}
-          data-test="fieldInput"
+          data-test="tableSearchFormFieldInput"
         />
       );
     }
@@ -84,7 +84,7 @@ export const SimpleTableSearchForm = props => {
             onChange={handleChange}
             disabled={isFetching}
             error={errors[headCell.id] && touched[headCell.id]}
-            data-test="fieldSelectInput"
+            data-test="tableSearchFormFieldSelectInput"
             inputProps={{ 'aria-label': headCell.label }}
           >
             <MenuItem value="" disabled>
@@ -108,11 +108,18 @@ export const SimpleTableSearchForm = props => {
         variant="contained"
         color="primary"
         disabled={isFetching}
-        data-test="submitButton"
+        data-test="tableSearchFormSubmitButton"
       >
         <CheckIcon fontSize="small" />
       </IconButton>
-      <IconButton disabled={isFetching} type="button" aria-label="search" size="small" onClick={handleCancel}>
+      <IconButton
+        disabled={isFetching}
+        type="button"
+        aria-label="search"
+        size="small"
+        onClick={handleCancel}
+        data-test="tableSearchFormCancelButton"
+      >
         <CloseIcon fontSize="small" />
       </IconButton>
     </form>
@@ -124,7 +131,10 @@ export const TableSearchForm = withFormik({
   mapPropsToValues: props => ({ [props.headCell.id]: '' }),
   validationSchema: props =>
     yup.object().shape({
-      [props.headCell.id]: yup.string().required(`Please enter ${props.headCell.id}`),
+      [props.headCell.id]: yup
+        .string()
+        .required(`Please enter ${props.headCell.id}`)
+        .min(0),
     }),
   handleSubmit: (values, bag) => {
     bag.props.handleSubmit(bag.props.headCell.id, values[bag.props.headCell.id]);

@@ -152,6 +152,15 @@ const mockEmptyErrorResponse = (status = 400, method = 'GET') => axios[method.to
 const mockStatusTextErrorResponse = (status = 400, method = 'GET', returnBody = {}) =>
   axios[method.toLowerCase()].mockRejectedValue({ response: { status, statusText: returnBody } });
 
+const simulateSelectChange = (selectInput, name, value) => {
+  act(() => {
+    selectInput.props().onChange({
+      persist: () => {},
+      target: { name, value },
+    });
+  });
+};
+
 module.exports = {
   initialState,
   getStateClone,
@@ -166,4 +175,5 @@ module.exports = {
   mockErrorResponse,
   mockEmptyErrorResponse,
   mockStatusTextErrorResponse,
+  simulateSelectChange,
 };
