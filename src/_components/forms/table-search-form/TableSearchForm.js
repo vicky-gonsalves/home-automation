@@ -146,6 +146,7 @@ SimpleTableSearchForm.propTypes = {
   headCell: PropTypes.object.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   handleCancel: PropTypes.func.isRequired,
+  isFetching: PropTypes.bool.isRequired,
 };
 
 export default TableSearchForm;

@@ -55,6 +55,7 @@ describe('TableSearchForm', () => {
         headCell: headCells[0],
         handleSubmit: jest.fn(),
         handleCancel: jest.fn(),
+        isFetching: false,
       };
       const propsErr = checkProps(SimpleTableSearchForm, props);
       expect(propsErr).toBeUndefined();
@@ -74,6 +75,7 @@ describe('TableSearchForm', () => {
         headCell: headCells[0],
         handleSubmit: jest.fn(),
         handleCancel: jest.fn(),
+        isFetching: false,
       };
       wrapper = setupWrapper(initialState, props);
       const component = findByDataAttr(wrapper, 'tableSearchFormFieldInput').first();
@@ -85,6 +87,7 @@ describe('TableSearchForm', () => {
         headCell: headCells[1],
         handleSubmit: jest.fn(),
         handleCancel: jest.fn(),
+        isFetching: false,
       };
       wrapper = setupWrapper(initialState, props);
       const component = findByDataAttr(wrapper, 'tableSearchFormFieldInput').first();
@@ -96,6 +99,7 @@ describe('TableSearchForm', () => {
         headCell: headCells[2],
         handleSubmit: jest.fn(),
         handleCancel: jest.fn(),
+        isFetching: false,
       };
       wrapper = setupWrapper(initialState, props);
       const component = findByDataAttr(wrapper, 'tableSearchFormFieldInput').first();
@@ -107,6 +111,7 @@ describe('TableSearchForm', () => {
         headCell: headCells[0],
         handleSubmit: jest.fn(),
         handleCancel: jest.fn(),
+        isFetching: false,
       };
       wrapper = setupWrapper(initialState, props);
       const component = findByDataAttr(wrapper, 'tableSearchFormFieldSelectInput');
@@ -118,6 +123,7 @@ describe('TableSearchForm', () => {
         headCell: headCells[1],
         handleSubmit: jest.fn(),
         handleCancel: jest.fn(),
+        isFetching: false,
       };
       wrapper = setupWrapper(initialState, props);
       const component = findByDataAttr(wrapper, 'tableSearchFormFieldSelectInput');
@@ -129,6 +135,7 @@ describe('TableSearchForm', () => {
         headCell: headCells[2],
         handleSubmit: jest.fn(),
         handleCancel: jest.fn(),
+        isFetching: false,
       };
       wrapper = setupWrapper(initialState, props);
       const component = findByDataAttr(wrapper, 'tableSearchFormFieldSelectInput');
@@ -140,6 +147,7 @@ describe('TableSearchForm', () => {
         headCell: headCells[3],
         handleSubmit: jest.fn(),
         handleCancel: jest.fn(),
+        isFetching: false,
       };
       wrapper = setupWrapper(initialState, props);
       const component = findByDataAttr(wrapper, 'tableSearchFormFieldSelectInput').first();
@@ -151,6 +159,7 @@ describe('TableSearchForm', () => {
         headCell: headCells[0],
         handleSubmit: jest.fn(),
         handleCancel: jest.fn(),
+        isFetching: false,
       };
       wrapper = setupWrapper(initialState, props);
       const component = findByDataAttr(wrapper, 'tableSearchFormSubmitButton').first();
@@ -162,6 +171,7 @@ describe('TableSearchForm', () => {
         headCell: headCells[0],
         handleSubmit: jest.fn(),
         handleCancel: jest.fn(),
+        isFetching: false,
       };
       wrapper = setupWrapper(initialState, props);
       const component = findByDataAttr(wrapper, 'tableSearchFormCancelButton').first();
@@ -176,6 +186,7 @@ describe('TableSearchForm', () => {
         headCell,
         handleSubmit: jest.fn(),
         handleCancel: jest.fn(),
+        isFetching: false,
       };
       wrapper = setupWrapper(initialState, props);
       const form = wrapper.find(`form`).first();
@@ -197,6 +208,7 @@ describe('TableSearchForm', () => {
         headCell,
         handleSubmit: jest.fn(),
         handleCancel: jest.fn(),
+        isFetching: false,
       };
       wrapper = setupWrapper(initialState, props);
       const form = wrapper.find(`form`).first();
@@ -218,6 +230,7 @@ describe('TableSearchForm', () => {
         headCell,
         handleSubmit: jest.fn(),
         handleCancel: jest.fn(),
+        isFetching: false,
       };
       wrapper = setupWrapper(initialState, props);
       const form = wrapper.find(`form`).first();
@@ -239,6 +252,7 @@ describe('TableSearchForm', () => {
         headCell,
         handleSubmit: jest.fn(),
         handleCancel: jest.fn(),
+        isFetching: false,
       };
       wrapper = setupWrapper(initialState, props);
       const form = wrapper.find(`form`).first();
@@ -260,6 +274,7 @@ describe('TableSearchForm', () => {
         headCell,
         handleSubmit: jest.fn(),
         handleCancel: jest.fn(),
+        isFetching: false,
       };
       wrapper = setupWrapper(initialState, props);
       const form = wrapper.find(`form`).first();
@@ -281,6 +296,7 @@ describe('TableSearchForm', () => {
         headCell,
         handleSubmit: jest.fn(),
         handleCancel: jest.fn(),
+        isFetching: false,
       };
       wrapper = setupWrapper(initialState, props);
       const form = wrapper.find(`form`).first();
@@ -302,6 +318,7 @@ describe('TableSearchForm', () => {
         headCell,
         handleSubmit: jest.fn(),
         handleCancel: jest.fn(),
+        isFetching: false,
       };
       wrapper = setupWrapper(initialState, props);
       const form = wrapper.find(`form`).first();
@@ -320,6 +337,7 @@ describe('TableSearchForm', () => {
         headCell,
         handleSubmit: jest.fn(),
         handleCancel: jest.fn(),
+        isFetching: false,
       };
       wrapper = setupWrapper(initialState, props);
       const form = wrapper.find(`form`).first();
@@ -336,6 +354,7 @@ describe('TableSearchForm', () => {
         headCell,
         handleSubmit: jest.fn(),
         handleCancel: jest.fn(),
+        isFetching: false,
       };
       wrapper = setupWrapper(initialState, props);
       const spy = jest.spyOn(wrapper.props().children.props, 'handleCancel');
