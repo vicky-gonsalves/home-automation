@@ -17,7 +17,7 @@ const DateRangePicker = ({ headCell, handleSubmit, handleCancel, isFetching }) =
 
   return (
     <React.Fragment>
-      <MuiPickersUtilsProvider utils={MomentUtils}>
+      <MuiPickersUtilsProvider utils={MomentUtils} data-test="muiPickersUtilsProviderComponent">
         <DateTimePicker
           disabled={isFetching}
           value={from}
@@ -26,6 +26,7 @@ const DateRangePicker = ({ headCell, handleSubmit, handleCancel, isFetching }) =
           label="From"
           format="YYYY/MM/DD hh:mm A"
           onChange={setFrom}
+          data-test="dateTimePickerFromDateTime"
         />
         <DateTimePicker
           disabled={isFetching}
@@ -35,6 +36,7 @@ const DateRangePicker = ({ headCell, handleSubmit, handleCancel, isFetching }) =
           label="To"
           format="YYYY/MM/DD hh:mm A"
           onChange={setTo}
+          data-test="dateTimePickerToDateTime"
         />
       </MuiPickersUtilsProvider>
       <IconButton
@@ -49,7 +51,14 @@ const DateRangePicker = ({ headCell, handleSubmit, handleCancel, isFetching }) =
       >
         <CheckIcon fontSize="small" />
       </IconButton>
-      <IconButton disabled={isFetching} type="button" aria-label="search" size="small" onClick={handleCancel}>
+      <IconButton
+        disabled={isFetching}
+        type="button"
+        aria-label="search"
+        size="small"
+        onClick={handleCancel}
+        data-test="dateRangeCancelButton"
+      >
         <CloseIcon fontSize="small" />
       </IconButton>
     </React.Fragment>
@@ -60,6 +69,7 @@ DateRangePicker.propTypes = {
   headCell: PropTypes.object.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   handleCancel: PropTypes.func.isRequired,
+  isFetching: PropTypes.bool.isRequired,
 };
 
 export default DateRangePicker;
