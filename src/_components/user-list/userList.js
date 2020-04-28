@@ -92,6 +92,7 @@ const UserList = ({ isLoggedIn, isConnected }) => {
             isConnected={isConnected}
             isFetching={isFetching}
             buttons={buttons}
+            initialSort={{ order: 'desc', orderBy: 'createdAt' }}
             data-test="listTableComponent"
           />
         </Paper>

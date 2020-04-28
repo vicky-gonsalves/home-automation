@@ -49,10 +49,22 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const ListTable = ({ title, tableHeaders, list, count, getList, isLoggedIn, isConnected, isFetching, buttons, type }) => {
+const ListTable = ({
+  title,
+  tableHeaders,
+  list,
+  count,
+  getList,
+  isLoggedIn,
+  isConnected,
+  isFetching,
+  buttons,
+  type,
+  initialSort,
+}) => {
   const classes = useStyles();
-  const [order, setOrder] = React.useState('desc');
-  const [orderBy, setOrderBy] = React.useState('createdAt');
+  const [order, setOrder] = React.useState(initialSort.order);
+  const [orderBy, setOrderBy] = React.useState(initialSort.orderBy);
   const [page, setPage] = React.useState(0);
   const [limit, setLimit] = React.useState(config.table.rowsPerPage);
   const [searchFilter, setSearchFilter] = React.useState({});
@@ -89,7 +101,7 @@ const ListTable = ({ title, tableHeaders, list, count, getList, isLoggedIn, isCo
     performFilter(_searchFilter);
   };
 
-  const handleSearch = (headCell, cancel = false) => () => {
+  const handleSearch = (headCell, cancel) => () => {
     const newHeadcells = [];
     headCells.forEach(_headCell => {
       if (_headCell.id === headCell.id) {
@@ -119,6 +131,7 @@ const ListTable = ({ title, tableHeaders, list, count, getList, isLoggedIn, isCo
           active={orderBy === headCell.id}
           direction={orderBy === headCell.id ? order : 'asc'}
           onClick={createSortHandler(headCell.id)}
+          data-test="tableSortLabelComponent"
         >
           {headCell.label}
           {renderOrderBy()}
@@ -130,7 +143,7 @@ const ListTable = ({ title, tableHeaders, list, count, getList, isLoggedIn, isCo
   const renderSearchIcons = headCell => {
     if (headCell.search) {
       return (
-        <IconButton aria-label="search" size="small" onClick={handleSearch(headCell)}>
+        <IconButton aria-label="search" size="small" onClick={handleSearch(headCell, false)} data-test="searchIconButton">
           <SearchIcon fontSize="small" />
         </IconButton>
       );
@@ -160,6 +173,7 @@ const ListTable = ({ title, tableHeaders, list, count, getList, isLoggedIn, isCo
             headCell={headCell}
             handleCancel={handleSearch(headCell, true)}
             isFetching={isFetching}
+            data-test="dateRangePickerComponent"
           />
         );
       }
@@ -173,6 +187,7 @@ const ListTable = ({ title, tableHeaders, list, count, getList, isLoggedIn, isCo
             headCell={headCell}
             handleCancel={handleSearch(headCell, true)}
             isFetching={isFetching}
+            data-test="normalFormComponent"
           />
         );
       }
@@ -180,7 +195,12 @@ const ListTable = ({ title, tableHeaders, list, count, getList, isLoggedIn, isCo
 
     if (!headCell.searchClicked) {
       return (
-        <TableCell key={headCell.id} align={headCell.align} style={{ minWidth: headCell.width }}>
+        <TableCell
+          key={headCell.id}
+          align={headCell.align}
+          style={{ minWidth: headCell.width }}
+          data-test="sortLabelComponent"
+        >
           {renderSortLabel(headCell)}
         </TableCell>
       );
@@ -196,9 +216,9 @@ const ListTable = ({ title, tableHeaders, list, count, getList, isLoggedIn, isCo
   const renderActions = (actions, item) => {
     const generateComponent = action => {
       if (action.buttonType && (action.buttonType === 'view' || action.buttonType === 'edit')) {
-        return <action.component path={`${action.path}${item.id}`} />;
+        return <action.component path={`${action.path}${item.id}`} data-test="actionButtonComponent" />;
       } else if (action.buttonType && action.buttonType === 'delete') {
-        return <action.component item={item} type={type} />;
+        return <action.component item={item} type={type} data-test="actionButtonComponent" />;
       }
     };
     return actions.map(action => <React.Fragment key={action.id}>{generateComponent(action)}</React.Fragment>);
@@ -225,12 +245,16 @@ const ListTable = ({ title, tableHeaders, list, count, getList, isLoggedIn, isCo
     });
 
   const renderTableRows = () => {
-    return list.map(item => <TableRow key={item.id}>{renderRowCells(item)}</TableRow>);
+    return list.map(item => (
+      <TableRow key={item.id} data-test="tableRowComponent">
+        {renderRowCells(item)}
+      </TableRow>
+    ));
   };
 
   const renderOverlay = () => {
     if (isFetching) {
-      return <OverlayLoading />;
+      return <OverlayLoading data-test="overlayComponent" />;
     }
   };
 
@@ -240,10 +264,10 @@ const ListTable = ({ title, tableHeaders, list, count, getList, isLoggedIn, isCo
 
   return (
     <React.Fragment>
-      <TableToolbar title={title} buttons={buttons} />
-      <div className={classes.tableContainer}>
-        <TableContainer>
-          <Table stickyHeader className={classes.table} aria-label="Table">
+      <TableToolbar title={title} buttons={buttons} data-test="tableToolbarComponent" />
+      <div className={classes.tableContainer} data-test="tableContainer">
+        <TableContainer data-test="tableContainerComponent">
+          <Table stickyHeader className={classes.table} aria-label="Table" data-test="tableComponent">
             <TableHead>
               <TableRow>{headCells.map(headCell => renderTableHeadings(headCell))}</TableRow>
             </TableHead>
@@ -259,6 +283,7 @@ const ListTable = ({ title, tableHeaders, list, count, getList, isLoggedIn, isCo
           page={page}
           onChangePage={handleChangePage}
           onChangeRowsPerPage={handleChangeLimit}
+          data-test="tablePaginationComponent"
         />
       </div>
     </React.Fragment>
@@ -308,5 +333,9 @@ ListTable.propTypes = {
   ),
   title: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
+  initialSort: PropTypes.shape({
+    order: PropTypes.string.isRequired,
+    orderBy: PropTypes.string.isRequired,
+  }),
 };
 export default ListTable;

@@ -57,7 +57,6 @@ TableToolbar.propTypes = {
   buttons: PropTypes.arrayOf(
     PropTypes.shape({
       component: PropTypes.func.isRequired,
-      type: PropTypes.string.isRequired,
       title: PropTypes.string.isRequired,
       buttonType: PropTypes.string.isRequired,
       path: PropTypes.string.isRequired,
