@@ -5,7 +5,7 @@ import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { checkProps, findByDataAttr, getStateClone } from '../../_utils';
 import AddButton from '../buttons/add-button/addButton';
-import TableToolbar from './TableToolbar';
+import PageToolbar from './PageToolbar';
 
 jest.mock('axios');
 
@@ -34,15 +34,15 @@ const setupWrapper = (_initialState, _props) => {
   store = mockStore(_initialState);
   return mount(
     <Provider store={store}>
-      <TableToolbar {..._props} />
+      <PageToolbar {..._props} />
     </Provider>
   );
 };
 
-describe('TableToolbar Component', () => {
+describe('PageToolbar Component', () => {
   describe('Checking PropTypes', () => {
     it('should not throw a warning', () => {
-      const propsErr = checkProps(TableToolbar, props);
+      const propsErr = checkProps(PageToolbar, props);
       expect(propsErr).toBeUndefined();
     });
   });
@@ -70,7 +70,14 @@ describe('TableToolbar Component', () => {
       expect(component.length).toBe(1);
     });
 
-    it('should not render toolbarContainer if no buttons', () => {
+    it('should render toolBarButtons', () => {
+      const _initialState = getStateClone();
+      wrapper = setupWrapper(_initialState, props);
+      const component = findByDataAttr(wrapper, 'toolBarButtons').first();
+      expect(component.length).toBe(1);
+    });
+
+    it('should not render toolBarButtons if no buttons', () => {
       const _props = {
         classes: {
           title: '',
@@ -82,7 +89,7 @@ describe('TableToolbar Component', () => {
       };
       const _initialState = getStateClone();
       wrapper = setupWrapper(_initialState, _props);
-      const component = findByDataAttr(wrapper, 'toolbarContainer');
+      const component = findByDataAttr(wrapper, 'toolBarButtons');
       expect(component).toHaveLength(0);
     });
 

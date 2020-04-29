@@ -154,7 +154,7 @@ const props = {
   isLoggedIn: true,
   isConnected: true,
   isFetching: false,
-  buttons: [{ title: 'Add User', type: 'user', component: AddButton, path: '/users/add', buttonType: 'add' }],
+  buttons: [{ title: 'Add User', type: 'user', component: AddButton, path: '/users/new', buttonType: 'add' }],
   title: 'Users',
   type: 'user',
   initialSort: { order: 'desc', orderBy: 'createdAt' },

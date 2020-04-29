@@ -18,7 +18,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const TableToolbar = ({ title, buttons }) => {
+const PageToolbar = ({ title, buttons }) => {
   const classes = useStyles();
 
   const renderButton = button => {
@@ -28,26 +28,32 @@ const TableToolbar = ({ title, buttons }) => {
     return null;
   };
 
-  const renderButtons = () => buttons.map((button, index) => <div key={index}>{renderButton(button)}</div>);
-
-  const renderButtonsContainer = () => {
+  const renderButtons = () => {
     if (buttons && buttons.length) {
-      return (
-        <Toolbar className={classes.toolbar} data-test="toolbarContainer">
-          <Typography className={classes.title} variant="h6" id="tableTitle" component="div" data-test="tableTitleComponent">
-            {title}
-          </Typography>
-          {renderButtons()}
-        </Toolbar>
-      );
+      return buttons.map((button, index) => (
+        <div key={index} data-test="toolBarButtons">
+          {renderButton(button)}
+        </div>
+      ));
     }
     return null;
+  };
+
+  const renderButtonsContainer = () => {
+    return (
+      <Toolbar className={classes.toolbar} data-test="toolbarContainer">
+        <Typography className={classes.title} variant="h6" id="tableTitle" component="div" data-test="tableTitleComponent">
+          {title}
+        </Typography>
+        {renderButtons()}
+      </Toolbar>
+    );
   };
 
   return renderButtonsContainer();
 };
 
-TableToolbar.propTypes = {
+PageToolbar.propTypes = {
   classes: PropTypes.shape({
     title: PropTypes.string.isRequired,
     toolbar: PropTypes.string.isRequired,
@@ -64,4 +70,4 @@ TableToolbar.propTypes = {
   ),
 };
 
-export default TableToolbar;
+export default PageToolbar;

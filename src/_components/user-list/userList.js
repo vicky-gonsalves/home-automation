@@ -18,9 +18,6 @@ const useStyles = makeStyles(theme => ({
     width: '100%',
     marginBottom: theme.spacing(2),
   },
-  title: {
-    flex: '1 1 100%',
-  },
 }));
 
 const UserList = ({ isLoggedIn, isConnected }) => {
@@ -66,7 +63,7 @@ const UserList = ({ isLoggedIn, isConnected }) => {
     { id: 'createdAt', sort: true, search: true, align: 'right', label: 'created at', type: 'datetime', width: 330 },
   ];
 
-  const buttons = [{ title: 'Add User', type: 'user', component: AddButton, path: '/users/add', buttonType: 'add' }];
+  const buttons = [{ title: 'Add User', type: 'user', component: AddButton, path: '/users/new', buttonType: 'add' }];
 
   const getList = useCallback(
     (isLoggedIn, isConnected, sortBy, limit, page, searchFilter) => {
@@ -105,7 +102,6 @@ UserList.propTypes = {
   classes: PropTypes.shape({
     root: PropTypes.string.isRequired,
     paper: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired,
   }),
   isLoggedIn: PropTypes.bool.isRequired,
   isConnected: PropTypes.bool.isRequired,

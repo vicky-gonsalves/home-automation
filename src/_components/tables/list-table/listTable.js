@@ -18,7 +18,7 @@ import config from '../../../config';
 import TableSearchForm from '../../forms/table-search-form/TableSearchForm';
 import OverlayLoading from '../../overlay-loading/OverlayLoading';
 import DateRangePicker from '../../pickers/date-range-picker/dateRangePicker';
-import TableToolbar from '../../table-toolbar/TableToolbar';
+import PageToolbar from '../../page-toolbar/PageToolbar';
 
 const useStyles = makeStyles(theme => ({
   tableContainer: {
@@ -264,7 +264,7 @@ const ListTable = ({
 
   return (
     <React.Fragment>
-      <TableToolbar title={title} buttons={buttons} data-test="tableToolbarComponent" />
+      <PageToolbar title={title} buttons={buttons} data-test="tableToolbarComponent" />
       <div className={classes.tableContainer} data-test="tableContainer">
         <TableContainer data-test="tableContainerComponent">
           <Table stickyHeader className={classes.table} aria-label="Table" data-test="tableComponent">

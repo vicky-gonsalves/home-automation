@@ -9,7 +9,7 @@ const UserEditorPage = React.lazy(() => import('../../../modules/Admin/User/User
 const DashboardPage = React.lazy(() => import('../../../modules/Admin/Dashboard/DashboardPage'));
 
 function AdminLayout({ isAdmin, isLoggedIn }) {
-  const adminLayoutPath = ['/admin', '/users', '/users/new'];
+  const adminLayoutPath = ['/admin', '/users', '/users/new', '/users/edit/:id'];
   const AdminRoute = ({ component: Component, ...rest }) => {
     return (
       <Route
@@ -30,6 +30,7 @@ function AdminLayout({ isAdmin, isLoggedIn }) {
       <AdminRoute exact path={adminLayoutPath[0]} component={LazyLoader(DashboardPage)} />
       <AdminRoute exact path={adminLayoutPath[1]} component={LazyLoader(UserListPage)} />
       <AdminRoute exact path={adminLayoutPath[2]} component={LazyLoader(UserEditorPage)} />
+      <AdminRoute exact path={adminLayoutPath[3]} component={LazyLoader(UserEditorPage)} />
     </React.Fragment>
   );
 }

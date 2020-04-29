@@ -8,6 +8,7 @@ import { history } from '../../../../_helpers/history/history';
 import { checkProps, findByDataAttr, getStateClone } from '../../../../_utils';
 import UserEditorPage from './UserEditorPage';
 
+jest.mock('../../../../_components/user-editor/userEditor', () => () => <div>Mock UserEditor</div>);
 let wrapper;
 let store;
 const mockStore = configureStore([thunk]);
@@ -49,16 +50,55 @@ describe('UserEditorPage Component', () => {
 
     it('should render adminPageContainerForUserEditor', () => {
       const _initialState = getStateClone();
+      _initialState.user.isLoggedIn = true;
+      _initialState.user.tokens = { access: {} };
+      _initialState.socket.connected = true;
       wrapper = setupWrapper(_initialState, props);
       const component = findByDataAttr(wrapper, 'adminPageContainerForUserEditor').first();
       expect(component.length).toBe(1);
     });
 
-    it('should render userEditorPageContainer', () => {
+    it('should not render userEditorPageContainer if not logged in and not connected', () => {
       const _initialState = getStateClone();
       wrapper = setupWrapper(_initialState, props);
+      const component = findByDataAttr(wrapper, 'adminPageContainerForUserEditor').first();
+      expect(component).toHaveLength(0);
+    });
+
+    it('should not render userEditorPageContainer if not logged in and not connected', () => {
+      const _initialState = getStateClone();
+      wrapper = setupWrapper(_initialState, props);
+      const component = findByDataAttr(wrapper, 'userEditorPageContainer');
+      expect(component).toHaveLength(0);
+    });
+
+    it('should  render userEditorPageContainer if logged in, has token and connected', () => {
+      const _initialState = getStateClone();
+      _initialState.user.isLoggedIn = true;
+      _initialState.user.tokens = { access: {} };
+      _initialState.socket.connected = true;
+      wrapper = setupWrapper(_initialState, props);
       const component = findByDataAttr(wrapper, 'userEditorPageContainer').first();
-      expect(component.length).toBe(1);
+      expect(component).toHaveLength(1);
+    });
+
+    it('should not render userEditorPageContainer if not logged in, has token and connected', () => {
+      const _initialState = getStateClone();
+      _initialState.user.isLoggedIn = false;
+      _initialState.user.tokens = { access: {} };
+      _initialState.socket.connected = true;
+      wrapper = setupWrapper(_initialState, props);
+      const component = findByDataAttr(wrapper, 'userEditorPageContainer');
+      expect(component).toHaveLength(0);
+    });
+
+    it('should not render userEditorPageContainer if not logged in, has no token and connected', () => {
+      const _initialState = getStateClone();
+      _initialState.user.isLoggedIn = false;
+      _initialState.socket.connected = true;
+      wrapper = setupWrapper(_initialState, props);
+      const component = findByDataAttr(wrapper, 'userEditorPageContainer');
+      expect(component).toHaveLength(0);
     });
 
     it('should show drawer if its not already shown', () => {

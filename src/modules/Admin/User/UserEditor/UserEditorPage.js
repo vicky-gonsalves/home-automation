@@ -4,10 +4,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { siteSettingActions } from '../../../../_actions';
 import { adminDrawerActions } from '../../../../_actions/admin-drawer/adminDrawer.actions';
 import AdminCommonLayout from '../../../../_components/admin-common-layout/AdminCommonLayout';
+import UserEditor from '../../../../_components/user-editor/userEditor';
 
 const UserEditorPage = () => {
   const adminDrawer = useSelector(state => state.adminDrawer);
   const siteSettings = useSelector(state => state.siteSetting);
+  const currentUser = useSelector(state => state.user);
+  const isConnected = useSelector(state => state.socket && state.socket.connected);
+  const isLoggedIn = currentUser.isLoggedIn && currentUser.tokens !== null;
   const dispatch = useDispatch();
   useEffect(() => {
     const showAdminDrawer = () => {
@@ -23,8 +27,22 @@ const UserEditorPage = () => {
     showBurger();
     showAdminDrawer();
   }, [dispatch, adminDrawer, siteSettings]);
-  const UserEditorComponent = <div data-test="userEditorPageContainer">User Editor Page</div>;
-  return <AdminCommonLayout component={UserEditorComponent} data-test="adminPageContainerForUserEditor" />;
+
+  const innerComponent = () => {
+    if (isLoggedIn && isConnected) {
+      return <UserEditor isLoggedIn={isLoggedIn} isConnected={isConnected} data-test="userEditorPageContainer" />;
+    }
+    return null;
+  };
+
+  const renderAdminCommonLayout = component => {
+    if (component && typeof component === 'object') {
+      return <AdminCommonLayout component={component} data-test="adminPageContainerForUserEditor" />;
+    }
+    return null;
+  };
+
+  return renderAdminCommonLayout(innerComponent());
 };
 
 UserEditorPage.propTypes = {

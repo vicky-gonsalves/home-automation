@@ -15,7 +15,6 @@ const props = {
   classes: {
     root: '',
     paper: '',
-    title: '',
   },
   isLoggedIn: true,
   isConnected: true,
