@@ -5,7 +5,7 @@ import { Router } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { history } from '../../../_helpers/history/history';
-import { checkProps, findByDataAttr, getStateClone, initialState } from '../../../_utils';
+import { checkProps, findByDataAttr, getStateClone } from '../../../_utils';
 import AdminLayout from '../admin-layout/adminLayout';
 import AuthLayout from '../auth-layout/authLayout';
 import HomeLayout from '../home-layout/homeLayout';

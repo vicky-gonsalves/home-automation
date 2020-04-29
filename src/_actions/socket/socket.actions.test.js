@@ -13,6 +13,14 @@ const mockStore = configureStore([thunk]);
 store = mockStore(initialState);
 
 describe('socketActions', () => {
+  beforeAll(() => {
+    // eslint-disable-next-line no-console
+    console.error = jest.fn();
+  });
+  afterAll(() => {
+    // eslint-disable-next-line no-console
+    console.error.mockClear();
+  });
   it('should dispatch DISCONNECTED action on disconnection even if not connected', () => {
     store.dispatch(socketActions.socketDisconnect());
     expect(store.getActions()).toEqual([{ type: 'DISCONNECTED' }]);
