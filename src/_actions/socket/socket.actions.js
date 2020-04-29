@@ -14,6 +14,9 @@ import {
 import config from '../../config';
 
 let socket;
+
+const url = config.env === 'test' ? '' : /* istanbul ignore next */ config.socketUrl;
+
 const socketInit = accessToken => dispatch => {
   dispatch({
     type: socketConstants.SOCKET_INIT,
@@ -21,7 +24,7 @@ const socketInit = accessToken => dispatch => {
   const options = {
     query: { auth_token: accessToken },
   };
-  socket = socketIOClient(config.socketUrl, options);
+  socket = socketIOClient(url, options);
 
   socket.on('error', function(err) {
     // eslint-disable-next-line no-console
