@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Alert from '@material-ui/lab/Alert';
 import AlertTitle from '@material-ui/lab/AlertTitle';
 import PropTypes from 'prop-types';
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { siteSettingActions, userActions } from '../../_actions';
 import { adminDrawerActions } from '../../_actions/admin-drawer/adminDrawer.actions';
@@ -34,6 +34,7 @@ const HomePage = () => {
   const sockets = useSelector(state => state.socket);
   const adminDrawer = useSelector(state => state.adminDrawer);
   const siteSettings = useSelector(state => state.siteSetting);
+  const [renderLayout, setRenderLayout] = useState(false);
 
   const isFetchingDevice = device.isFetchingDevice;
   const isLoggedIn = currentUser.isLoggedIn && currentUser.tokens !== null;
@@ -45,7 +46,7 @@ const HomePage = () => {
   const sharedDevices = sharedDevice.sharedDevices;
   const dispatch = useDispatch();
 
-  useEffect(() => {
+  const init = useCallback(() => {
     const fetchDevices = () => {
       if (!hasFetchedDevices && !isFetchingDevice && connected && (isLoggedIn || isAuthorized)) {
         dispatch(deviceActions.setDeviceFetching(true));
@@ -63,10 +64,30 @@ const HomePage = () => {
         dispatch(siteSettingActions.hideBurger());
       }
     };
+
+    /*Prevent from re-rendering*/
+    if (!renderLayout) {
+      setRenderLayout(true);
+    }
+
     hideBurger();
     hideAdminDrawer();
     fetchDevices();
-  }, [dispatch, hasFetchedDevices, isFetchingDevice, connected, isLoggedIn, isAuthorized, adminDrawer, siteSettings]);
+  }, [
+    renderLayout,
+    dispatch,
+    hasFetchedDevices,
+    isFetchingDevice,
+    connected,
+    isLoggedIn,
+    isAuthorized,
+    adminDrawer,
+    siteSettings,
+  ]);
+
+  useEffect(() => {
+    init();
+  }, [init]);
 
   const renderAppSkeleton = () => {
     if (isFetchingDevice || isSocketFetching) {
@@ -147,22 +168,29 @@ const HomePage = () => {
     }
   };
 
-  return (
-    <React.Fragment>
-      <CssBaseline />
-      <Container disableGutters={true} maxWidth="xl" data-test="homePageContainer">
-        <div className={classes.root}>
-          {renderAppSkeleton()}
-          {renderNoDeviceAlertComponent()}
-          <Grid container spacing={3} data-test="deviceGridComponent">
-            {renderMyDeviceGridComponent()}
-            {renderSharedDeviceGridComponent()}
-          </Grid>
-        </div>
-      </Container>
-      {renderSettingDialogComponent()}
-    </React.Fragment>
-  );
+  const renderHomeLayout = () => {
+    if (renderLayout) {
+      return (
+        <React.Fragment>
+          <CssBaseline />
+          <Container disableGutters={true} maxWidth="xl" data-test="homePageContainer">
+            <div className={classes.root}>
+              {renderAppSkeleton()}
+              {renderNoDeviceAlertComponent()}
+              <Grid container spacing={3} data-test="deviceGridComponent">
+                {renderMyDeviceGridComponent()}
+                {renderSharedDeviceGridComponent()}
+              </Grid>
+            </div>
+          </Container>
+          {renderSettingDialogComponent()}
+        </React.Fragment>
+      );
+    }
+    return null;
+  };
+
+  return renderHomeLayout();
 };
 
 HomePage.propTypes = {

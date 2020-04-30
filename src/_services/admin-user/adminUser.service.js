@@ -32,6 +32,36 @@ const getUsers = async params => {
   }
 };
 
+const getUser = async id => {
+  try {
+    const response = await axios.get(`${config.apiUrl}/users/${id}`);
+    return handleResponse(response);
+  } catch (error) {
+    return handleError(error);
+  }
+};
+
+const addUser = async params => {
+  try {
+    const response = await axios.post(`${config.apiUrl}/users`, { ...params });
+    return handleResponse(response);
+  } catch (error) {
+    return handleError(error);
+  }
+};
+
+const updateUser = async (params, id) => {
+  try {
+    const response = await axios.patch(`${config.apiUrl}/users/${id}`, { ...params });
+    return handleResponse(response);
+  } catch (error) {
+    return handleError(error);
+  }
+};
+
 export const adminUserService = {
   getUsers,
+  getUser,
+  addUser,
+  updateUser,
 };

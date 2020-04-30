@@ -88,6 +88,7 @@ const UserList = ({ isLoggedIn, isConnected }) => {
             isLoggedIn={isLoggedIn}
             isConnected={isConnected}
             isFetching={isFetching}
+            hasFetchedList={adminUser.fetchedUsersList}
             buttons={buttons}
             initialSort={{ order: 'desc', orderBy: 'createdAt' }}
             data-test="listTableComponent"

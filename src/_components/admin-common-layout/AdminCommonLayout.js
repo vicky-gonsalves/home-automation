@@ -3,7 +3,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { useSelector } from 'react-redux';
 import config from '../../config';
 
 const useStyles = makeStyles(theme => ({
@@ -33,9 +32,8 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const AdminCommonLayout = ({ component }) => {
+const AdminCommonLayout = ({ component, drawerOpen }) => {
   const classes = useStyles();
-  const adminDrawer = useSelector(state => state.adminDrawer);
 
   const renderAdminCommonLayout = () => {
     if (typeof component === 'object') {
@@ -44,7 +42,7 @@ const AdminCommonLayout = ({ component }) => {
           <CssBaseline />
           <main
             className={clsx(classes.content, {
-              [classes.contentShift]: adminDrawer.open,
+              [classes.contentShift]: drawerOpen,
             })}
             data-test="adminCommonLayoutContainer"
           >
@@ -67,6 +65,7 @@ AdminCommonLayout.propTypes = {
     contentShift: PropTypes.string.isRequired,
   }),
   component: PropTypes.object.isRequired,
+  drawerOpen: PropTypes.bool.isRequired,
 };
 
 export default AdminCommonLayout;

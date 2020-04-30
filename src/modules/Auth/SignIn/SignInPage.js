@@ -7,7 +7,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import PropTypes from 'prop-types';
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { siteSettingActions } from '../../../_actions';
 import { adminDrawerActions } from '../../../_actions/admin-drawer/adminDrawer.actions';
@@ -39,6 +39,7 @@ const useStyles = makeStyles(theme => ({
 const SignInPage = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
+  const [renderLayout, setRenderLayout] = useState(false);
   const adminDrawer = useSelector(state => state.adminDrawer);
   const siteSettings = useSelector(state => state.siteSetting);
   const currentUser = useSelector(state => state.user);
@@ -48,7 +49,7 @@ const SignInPage = () => {
     history.push(path);
   };
 
-  useEffect(() => {
+  const init = useCallback(() => {
     const navigateToHome = () => {
       if (isLoggedIn) {
         navigateTo('/home');
@@ -64,36 +65,57 @@ const SignInPage = () => {
         dispatch(siteSettingActions.hideBurger());
       }
     };
+
+    /*Prevent from re-rendering*/
+    if (!renderLayout) {
+      setRenderLayout(true);
+    }
     hideBurger();
     hideAdminDrawer();
     navigateToHome();
-  }, [dispatch, isLoggedIn, adminDrawer, siteSettings]);
+  }, [renderLayout, dispatch, isLoggedIn, adminDrawer, siteSettings]);
 
-  return (
-    <React.Fragment>
-      <CssBaseline />
-      <Container component="main" maxWidth="xs" data-test="signInContainer">
-        <div className={classes.paper}>
-          <Avatar className={classes.avatar}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign in
-          </Typography>
-          <div data-test="signInFormComponent">
-            <SignInForm />
-          </div>
-          <Grid container>
-            <Grid item xs>
-              <Button color="primary" size="small" onClick={() => navigateTo('/forgot-password')} data-test="forgotPassword">
-                Forgot password?
-              </Button>
-            </Grid>
-          </Grid>
-        </div>
-      </Container>
-    </React.Fragment>
-  );
+  useEffect(() => {
+    init();
+  }, [init]);
+
+  const renderSigninLayout = () => {
+    if (renderLayout) {
+      return (
+        <React.Fragment>
+          <CssBaseline />
+          <Container component="main" maxWidth="xs" data-test="signInContainer">
+            <div className={classes.paper}>
+              <Avatar className={classes.avatar}>
+                <LockOutlinedIcon />
+              </Avatar>
+              <Typography component="h1" variant="h5">
+                Sign in
+              </Typography>
+              <div data-test="signInFormComponent">
+                <SignInForm />
+              </div>
+              <Grid container>
+                <Grid item xs>
+                  <Button
+                    color="primary"
+                    size="small"
+                    onClick={() => navigateTo('/forgot-password')}
+                    data-test="forgotPassword"
+                  >
+                    Forgot password?
+                  </Button>
+                </Grid>
+              </Grid>
+            </div>
+          </Container>
+        </React.Fragment>
+      );
+    }
+    return null;
+  };
+
+  return renderSigninLayout();
 };
 
 SignInPage.propTypes = {

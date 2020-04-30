@@ -16,7 +16,7 @@ import NotFoundPage from './modules/NotFound/NotFoundPage';
 
 const useStyles = makeStyles(theme => ({
   root: {
-    backgroundColor: theme.palette.background.paper,
+    backgroundColor: theme.palette.background.default,
     display: 'flex',
     flexDirection: 'column',
     minHeight: '100vh',
@@ -31,6 +31,7 @@ function App() {
   const classes = useStyles();
   const currentUser = useSelector(state => state.user);
   const isFetchingDevice = useSelector(state => state.device && state.device.isFetchingDevice);
+  const connected = useSelector(state => state.socket && state.socket.connected);
   const isLoggedIn = currentUser.isLoggedIn && currentUser.tokens !== null;
   const isAuthorized = currentUser.isAuthorized;
   const isAdmin = isLoggedIn && currentUser.role === 'admin';
@@ -76,7 +77,7 @@ function App() {
       <LinearProgress color="secondary" className={showProgress ? '' : classes.hidden} data-test="linearProgressComponent" />
       <Router history={history} data-test="routerComponent">
         <Switch data-test="switchComponent">
-          <Layout isAdmin={isAdmin} isLoggedIn={isLoggedIn} />
+          <Layout isAdmin={isAdmin} isLoggedIn={isLoggedIn} connected={connected} />
           <Route component={NotFoundPage} />
         </Switch>
       </Router>

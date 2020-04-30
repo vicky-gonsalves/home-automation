@@ -4,7 +4,7 @@ import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import PropTypes from 'prop-types';
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { siteSettingActions } from '../../_actions';
 import { adminDrawerActions } from '../../_actions/admin-drawer/adminDrawer.actions';
@@ -35,6 +35,7 @@ const useStyles = makeStyles(theme => ({
 const PublicPage = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
+  const [renderLayout, setRenderLayout] = useState(false);
   const adminDrawer = useSelector(state => state.adminDrawer);
   const siteSettings = useSelector(state => state.siteSetting);
   const currentUser = useSelector(state => state.user);
@@ -44,7 +45,7 @@ const PublicPage = () => {
     history.push(path);
   };
 
-  useEffect(() => {
+  const init = useCallback(() => {
     const navigateToHome = () => {
       if (isLoggedIn) {
         navigateTo('/home');
@@ -60,37 +61,61 @@ const PublicPage = () => {
         dispatch(siteSettingActions.hideBurger());
       }
     };
+
+    /*Prevent from re-rendering*/
+    if (!renderLayout) {
+      setRenderLayout(true);
+    }
+
     hideBurger();
     hideAdminDrawer();
     navigateToHome();
-  }, [dispatch, isLoggedIn, adminDrawer, siteSettings]);
+  }, [renderLayout, dispatch, isLoggedIn, adminDrawer, siteSettings]);
 
-  return (
-    <React.Fragment>
-      <CssBaseline />
-      <div data-test="publicPageContainer">
-        <main className={classes.main}>
-          <div className={classes.heroContent}>
-            <Container maxWidth="sm">
-              <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom data-test="appName">
-                {config.appName}
-              </Typography>
-              <Typography variant="h6" align="center" color="textSecondary" paragraph data-test="message">
-                This is restricted site. If you have credentials please proceed with Sign In else please EXIT.
-              </Typography>
-              <div className={classes.heroButtons}>
-                <Grid container spacing={2} justify="center">
-                  <Grid item>
-                    <SignInButton data-test="signInButtonComponent" />
-                  </Grid>
-                </Grid>
+  useEffect(() => {
+    init();
+  }, [init]);
+
+  const renderPublicLayout = () => {
+    if (renderLayout) {
+      return (
+        <React.Fragment>
+          <CssBaseline />
+          <div data-test="publicPageContainer">
+            <main className={classes.main}>
+              <div className={classes.heroContent}>
+                <Container maxWidth="sm">
+                  <Typography
+                    component="h1"
+                    variant="h2"
+                    align="center"
+                    color="textPrimary"
+                    gutterBottom
+                    data-test="appName"
+                  >
+                    {config.appName}
+                  </Typography>
+                  <Typography variant="h6" align="center" color="textSecondary" paragraph data-test="message">
+                    This is restricted site. If you have credentials please proceed with Sign In else please EXIT.
+                  </Typography>
+                  <div className={classes.heroButtons}>
+                    <Grid container spacing={2} justify="center">
+                      <Grid item>
+                        <SignInButton data-test="signInButtonComponent" />
+                      </Grid>
+                    </Grid>
+                  </div>
+                </Container>
               </div>
-            </Container>
+            </main>
           </div>
-        </main>
-      </div>
-    </React.Fragment>
-  );
+        </React.Fragment>
+      );
+    }
+    return null;
+  };
+
+  return renderPublicLayout();
 };
 
 PublicPage.propTypes = {

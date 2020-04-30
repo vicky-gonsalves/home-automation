@@ -13,7 +13,7 @@ import Typography from '@material-ui/core/Typography';
 import SearchIcon from '@material-ui/icons/Search';
 import moment from 'moment';
 import PropTypes from 'prop-types';
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import config from '../../../config';
 import TableSearchForm from '../../forms/table-search-form/TableSearchForm';
 import OverlayLoading from '../../overlay-loading/OverlayLoading';
@@ -58,6 +58,7 @@ const ListTable = ({
   isLoggedIn,
   isConnected,
   isFetching,
+  hasFetchedList,
   buttons,
   type,
   initialSort,
@@ -80,6 +81,7 @@ const ListTable = ({
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
+    performFilter(searchFilter);
   };
 
   const createSortHandler = property => event => {
@@ -258,9 +260,15 @@ const ListTable = ({
     }
   };
 
+  const init = useCallback(() => {
+    if (!hasFetchedList) {
+      getList(isLoggedIn, isConnected, `${orderBy}:${order}`, limit, page + 1, searchFilter);
+    }
+  }, [hasFetchedList, getList, isConnected, isLoggedIn, limit, order, orderBy, page, searchFilter]);
+
   useEffect(() => {
-    getList(isLoggedIn, isConnected, `${orderBy}:${order}`, limit, page + 1, searchFilter);
-  }, [isLoggedIn, isConnected, getList, order, orderBy, page, limit, searchFilter]);
+    init();
+  }, [init]);
 
   return (
     <React.Fragment>

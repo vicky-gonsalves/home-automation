@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { siteSettingActions } from '../../../_actions';
 import { adminDrawerActions } from '../../../_actions/admin-drawer/adminDrawer.actions';
@@ -8,8 +8,11 @@ import AdminCommonLayout from '../../../_components/admin-common-layout/AdminCom
 const DashboardPage = () => {
   const adminDrawer = useSelector(state => state.adminDrawer);
   const siteSettings = useSelector(state => state.siteSetting);
+  const [renderAdminCommonLayout, setRenderAdminCommonLayout] = useState(false);
+
   const dispatch = useDispatch();
-  useEffect(() => {
+
+  const init = useCallback(() => {
     const showAdminDrawer = () => {
       if (adminDrawer && !adminDrawer.show) {
         dispatch(adminDrawerActions.show());
@@ -20,12 +23,31 @@ const DashboardPage = () => {
         dispatch(siteSettingActions.showBurger());
       }
     };
+
+    /*Prevent from re-rendering*/
+    if (!renderAdminCommonLayout) {
+      setRenderAdminCommonLayout(true);
+    }
     showBurger();
     showAdminDrawer();
-  }, [dispatch, adminDrawer, siteSettings]);
+  }, [adminDrawer, dispatch, renderAdminCommonLayout, siteSettings]);
 
-  const DashboardComponent = <div data-test="dashboardPageContainer">Dashboard Page</div>;
-  return <AdminCommonLayout component={DashboardComponent} data-test="adminPageContainerForDashboard" />;
+  useEffect(() => {
+    init();
+  }, [init]);
+
+  const innerComponent = <div data-test="dashboardPageContainer">Dashboard Page</div>;
+
+  const renderAdminCommonLayoutComp = component => {
+    if (component && typeof component === 'object' && renderAdminCommonLayout) {
+      return (
+        <AdminCommonLayout component={component} drawerOpen={adminDrawer.open} data-test="adminPageContainerForDashboard" />
+      );
+    }
+    return null;
+  };
+
+  return renderAdminCommonLayoutComp(innerComponent);
 };
 
 DashboardPage.propTypes = {

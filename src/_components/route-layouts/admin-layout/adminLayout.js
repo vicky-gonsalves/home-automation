@@ -1,7 +1,9 @@
 import PropTypes from 'prop-types';
-import React from 'react';
-import { Redirect } from 'react-router';
+import React, { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { Redirect, useLocation } from 'react-router';
 import { Route } from 'react-router-dom';
+import { adminUserActions } from '../../../_actions';
 import LazyLoader from '../../lazy-loader/LazyLoader';
 
 const UserListPage = React.lazy(() => import('../../../modules/Admin/User/UserList/UserListPage'));
@@ -10,6 +12,9 @@ const DashboardPage = React.lazy(() => import('../../../modules/Admin/Dashboard/
 
 function AdminLayout({ isAdmin, isLoggedIn }) {
   const adminLayoutPath = ['/admin', '/users', '/users/new', '/users/edit/:id'];
+  const location = useLocation();
+  const dispatch = useDispatch();
+
   const AdminRoute = ({ component: Component, ...rest }) => {
     return (
       <Route
@@ -24,6 +29,10 @@ function AdminLayout({ isAdmin, isLoggedIn }) {
       />
     );
   };
+
+  useEffect(() => {
+    adminUserActions.clearUser(dispatch); // Cleanup
+  }, [dispatch, location]);
 
   return (
     <React.Fragment>

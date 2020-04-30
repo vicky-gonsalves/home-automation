@@ -18,6 +18,7 @@ jest.mock('react-router', () => ({
 }));
 
 jest.mock('../page-toolbar/PageToolbar', () => ({ title }) => <div>{title}</div>);
+jest.mock('../forms/user-form/UserForm', () => ({ isFetching }) => <div>{isFetching}</div>);
 
 let wrapper;
 let store;
@@ -29,6 +30,7 @@ const props = {
   },
   isLoggedIn: true,
   isConnected: true,
+  isFetching: false,
 };
 
 const setupWrapper = (_initialState, _props) => {
@@ -60,6 +62,13 @@ describe('UserEditor Edit User Component', () => {
       wrapper = setupWrapper(_initialState, props);
       const component = findByDataAttr(wrapper, 'userEditorToolbarComponent').first();
       expect(component.props().title).toBe('Edit User');
+    });
+
+    it('should have correct submitButtonTitle on userFormComponent when page is Edit User', () => {
+      const _initialState = getStateClone();
+      wrapper = setupWrapper(_initialState, props);
+      const component = findByDataAttr(wrapper, 'userFormComponent').first();
+      expect(component.props().submitButtonTitle).toBe('Save User');
     });
   });
 });

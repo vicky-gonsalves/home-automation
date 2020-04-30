@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { history } from '../../_helpers/history/history';
 import config from '../../config';
 
 const getCurrentUser = () => {
@@ -43,6 +44,7 @@ const signOutService = () => {
   // remove user from local/Session storage to log user out
   localStorage.removeItem('user');
   sessionStorage.removeItem('user');
+  history.push('/signin');
 };
 
 const handleResponse = (response, remember) => {

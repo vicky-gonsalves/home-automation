@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { siteSettingActions } from '../../../../_actions';
 import { adminDrawerActions } from '../../../../_actions/admin-drawer/adminDrawer.actions';
@@ -9,11 +9,10 @@ import UserEditor from '../../../../_components/user-editor/userEditor';
 const UserEditorPage = () => {
   const adminDrawer = useSelector(state => state.adminDrawer);
   const siteSettings = useSelector(state => state.siteSetting);
-  const currentUser = useSelector(state => state.user);
-  const isConnected = useSelector(state => state.socket && state.socket.connected);
-  const isLoggedIn = currentUser.isLoggedIn && currentUser.tokens !== null;
+  const [renderAdminCommonLayout, setRenderAdminCommonLayout] = useState(false);
   const dispatch = useDispatch();
-  useEffect(() => {
+
+  const init = useCallback(() => {
     const showAdminDrawer = () => {
       if (adminDrawer && !adminDrawer.show) {
         dispatch(adminDrawerActions.show());
@@ -24,25 +23,31 @@ const UserEditorPage = () => {
         dispatch(siteSettingActions.showBurger());
       }
     };
+
+    /*Prevent from re-rendering*/
+    if (!renderAdminCommonLayout) {
+      setRenderAdminCommonLayout(true);
+    }
     showBurger();
     showAdminDrawer();
-  }, [dispatch, adminDrawer, siteSettings]);
+  }, [adminDrawer, dispatch, renderAdminCommonLayout, siteSettings]);
 
-  const innerComponent = () => {
-    if (isLoggedIn && isConnected) {
-      return <UserEditor isLoggedIn={isLoggedIn} isConnected={isConnected} data-test="userEditorPageContainer" />;
+  useEffect(() => {
+    init();
+  }, [init]);
+
+  const innerComponent = <UserEditor data-test="userEditorPageContainer" />;
+
+  const renderAdminCommonLayoutComp = component => {
+    if (component && typeof component === 'object' && renderAdminCommonLayout) {
+      return (
+        <AdminCommonLayout component={component} drawerOpen={adminDrawer.open} data-test="adminPageContainerForUserEditor" />
+      );
     }
     return null;
   };
 
-  const renderAdminCommonLayout = component => {
-    if (component && typeof component === 'object') {
-      return <AdminCommonLayout component={component} data-test="adminPageContainerForUserEditor" />;
-    }
-    return null;
-  };
-
-  return renderAdminCommonLayout(innerComponent());
+  return renderAdminCommonLayoutComp(innerComponent);
 };
 
 UserEditorPage.propTypes = {

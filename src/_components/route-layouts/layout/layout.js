@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import config from '../../../config';
 import AdminDrawer from '../../admin-drawer/adminDrawer';
@@ -9,8 +9,10 @@ import AdminLayout from '../admin-layout/adminLayout';
 import AuthLayout from '../auth-layout/authLayout';
 import HomeLayout from '../home-layout/homeLayout';
 
-function Layout({ isAdmin, isLoggedIn }) {
+function Layout({ isAdmin, isLoggedIn, connected }) {
   const adminDrawer = useSelector(state => state.adminDrawer);
+  const [renderHomeLayout, setRenderHomeLayout] = useState(false);
+  const [renderAdminLayout, setRenderAdminLayout] = useState(false);
 
   const renderDrawer = () => {
     if (adminDrawer.show) {
@@ -18,12 +20,21 @@ function Layout({ isAdmin, isLoggedIn }) {
     }
   };
 
+  useEffect(() => {
+    if (isLoggedIn && connected) {
+      setRenderHomeLayout(true);
+      if (isAdmin) {
+        setRenderAdminLayout(true);
+      }
+    }
+  }, [isLoggedIn, connected, isAdmin]);
+
   return (
     <React.Fragment>
       <Navbar appName={config.appName} showBurgerIcon={true} data-test="navbarComponent" />
-      {renderDrawer()}
-      <HomeLayout isLoggedIn={isLoggedIn} />
-      <AdminLayout isAdmin={isAdmin} isLoggedIn={isLoggedIn} />
+      {(renderHomeLayout || renderAdminLayout) && renderDrawer()}
+      {renderHomeLayout && <HomeLayout isLoggedIn={isLoggedIn} />}
+      {renderAdminLayout && <AdminLayout isAdmin={isAdmin} isLoggedIn={isLoggedIn} />}
       <AuthLayout />
       <Footer appName={config.appName} data-test="footerComponent" />
     </React.Fragment>

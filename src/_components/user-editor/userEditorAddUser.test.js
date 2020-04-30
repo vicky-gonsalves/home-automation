@@ -11,6 +11,7 @@ import UserEditor from './userEditor';
 jest.mock('axios');
 
 jest.mock('../page-toolbar/PageToolbar', () => ({ title }) => <div>{title}</div>);
+jest.mock('../forms/user-form/UserForm', () => ({ isFetching }) => <div>{isFetching}</div>);
 
 let wrapper;
 let store;
@@ -22,6 +23,7 @@ const props = {
   },
   isLoggedIn: true,
   isConnected: true,
+  isFetching: false,
 };
 
 const setupWrapper = (_initialState, _props) => {
@@ -76,11 +78,25 @@ describe('UserEditor Add User Component', () => {
       expect(component.length).toBe(1);
     });
 
+    it('should render userFormComponent', () => {
+      const _initialState = getStateClone();
+      wrapper = setupWrapper(_initialState, props);
+      const component = findByDataAttr(wrapper, 'userFormComponent').first();
+      expect(component.length).toBe(1);
+    });
+
     it('should have correct page title on userEditorToolbarComponent when page is Add New User', () => {
       const _initialState = getStateClone();
       wrapper = setupWrapper(_initialState, props);
       const component = findByDataAttr(wrapper, 'userEditorToolbarComponent').first();
       expect(component.props().title).toBe('Add New User');
+    });
+
+    it('should have correct submitButtonTitle on userFormComponent when page is Add New User', () => {
+      const _initialState = getStateClone();
+      wrapper = setupWrapper(_initialState, props);
+      const component = findByDataAttr(wrapper, 'userFormComponent').first();
+      expect(component.props().submitButtonTitle).toBe('Add User');
     });
   });
 });
