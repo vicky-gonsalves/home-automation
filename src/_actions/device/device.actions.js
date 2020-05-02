@@ -84,6 +84,7 @@ const setDeviceFetching = flag => dispatch => {
 
 const myDevices = () => async dispatch => {
   try {
+    dispatch(deviceActions.setDeviceFetching(true));
     const data = await deviceService.getMyDevices();
     dispatch({
       type: userConstants.SET_FETCHED_DEVICES,

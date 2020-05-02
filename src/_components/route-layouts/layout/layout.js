@@ -1,49 +1,72 @@
-import PropTypes from 'prop-types';
-import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import config from '../../../config';
+import React, { useContext, useMemo } from 'react';
+import DeviceContextProvider from '../../../_contexts/device/DeviceContext.provider';
+import { SiteSettingContext } from '../../../_contexts/site-setting/SiteSettingContext.provider';
+import { UserContext } from '../../../_contexts/user/UserContext.provider';
 import AdminDrawer from '../../admin-drawer/adminDrawer';
-import Footer from '../../footer';
-import Navbar from '../../navbar/navbar';
 import AdminLayout from '../admin-layout/adminLayout';
 import AuthLayout from '../auth-layout/authLayout';
 import HomeLayout from '../home-layout/homeLayout';
 
-function Layout({ isAdmin, isLoggedIn, connected }) {
-  const adminDrawer = useSelector(state => state.adminDrawer);
-  const [renderHomeLayout, setRenderHomeLayout] = useState(false);
-  const [renderAdminLayout, setRenderAdminLayout] = useState(false);
+function Layout() {
+  const userContext = useContext(UserContext);
+  const siteSettingContext = useContext(SiteSettingContext);
 
-  const renderDrawer = () => {
-    if (adminDrawer.show) {
+  const isAuth = useMemo(() => {
+    return (
+      userContext.isLoggedIn &&
+      userContext.connected &&
+      userContext.token !== null &&
+      userContext.isAuthorized &&
+      !userContext.isSocketFetching
+    );
+  }, [
+    userContext.connected,
+    userContext.isAuthorized,
+    userContext.isLoggedIn,
+    userContext.isSocketFetching,
+    userContext.token,
+  ]);
+
+  const isAdmin = useMemo(() => {
+    return isAuth && userContext.isAdmin;
+  }, [isAuth, userContext.isAdmin]);
+
+  const renderAdminLayout = useMemo(() => {
+    if (isAdmin) {
+      return <AdminLayout />;
+    }
+  }, [isAdmin]);
+
+  const renderHomeLayout = useMemo(() => {
+    if (isAuth) {
+      return <HomeLayout />;
+    }
+  }, [isAuth]);
+
+  const renderAuthLayout = useMemo(() => {
+    if (!userContext.token) {
+      return <AuthLayout />;
+    }
+  }, [userContext.token]);
+
+  const showDrawer = useMemo(() => {
+    if (siteSettingContext && siteSettingContext.drawer && siteSettingContext.drawer.show) {
       return <AdminDrawer data-test="adminDrawerComponent" />;
     }
-  };
-
-  useEffect(() => {
-    if (isLoggedIn && connected) {
-      setRenderHomeLayout(true);
-      if (isAdmin) {
-        setRenderAdminLayout(true);
-      }
-    }
-  }, [isLoggedIn, connected, isAdmin]);
+  }, [siteSettingContext]);
 
   return (
     <React.Fragment>
-      <Navbar appName={config.appName} showBurgerIcon={true} data-test="navbarComponent" />
-      {(renderHomeLayout || renderAdminLayout) && renderDrawer()}
-      {renderHomeLayout && <HomeLayout isLoggedIn={isLoggedIn} />}
-      {renderAdminLayout && <AdminLayout isAdmin={isAdmin} isLoggedIn={isLoggedIn} />}
-      <AuthLayout />
-      <Footer appName={config.appName} data-test="footerComponent" />
+      {showDrawer}
+      <DeviceContextProvider>
+        {renderHomeLayout}
+        {renderAdminLayout}
+      </DeviceContextProvider>
+      {renderAuthLayout}
     </React.Fragment>
   );
 }
 
-Layout.propTypes = {
-  isAdmin: PropTypes.bool.isRequired,
-  isLoggedIn: PropTypes.bool.isRequired,
-};
+Layout.propTypes = {};
 
 export default Layout;

@@ -3,8 +3,8 @@ import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import Alert from '@material-ui/lab/Alert';
 import PropTypes from 'prop-types';
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useMemo } from 'react';
+import { shallowEqual, useSelector } from 'react-redux';
 import SettingIconButton from '../../buttons/setting-icon-button/settingIconButton';
 import DeviceOfflineAlert from '../../device-offline-alert/deviceOfflineAlert';
 import OnlineDeviceStatus from '../../online-device-status/onlineDeviceStatus';
@@ -47,44 +47,50 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const SmartSwitchCard = ({ deviceId, deviceName }) => {
-  let thisSubDevices = [];
   const classes = useStyles();
-  let isDeviceOnline = false;
-  const subDevices = useSelector(state => state && state.subDevice && state.subDevice.subDevices);
-  if (deviceId && subDevices && subDevices.length) {
-    thisSubDevices = subDevices.filter(subDevice => subDevice.deviceId === deviceId);
-  }
+  const subDevices = useSelector(state => state && state.subDevice && state.subDevice.subDevices, shallowEqual);
+  const socketIds = useSelector(state => state.onlineDevice, shallowEqual);
 
-  const socketIds = useSelector(state => state.onlineDevice);
+  const thisSubDevices = useMemo(() => {
+    if (deviceId && subDevices && subDevices.length) {
+      return subDevices.filter(subDevice => subDevice.deviceId === deviceId);
+    }
+    return [];
+  }, [deviceId, subDevices]);
 
-  if (socketIds && socketIds.onlineDevices && socketIds.onlineDevices.length && deviceId) {
-    isDeviceOnline =
-      socketIds.onlineDevices.filter(onlineDevice => onlineDevice.bindedTo && onlineDevice.bindedTo === deviceId).length > 0;
-  }
+  const isDeviceOnline = useMemo(() => {
+    if (socketIds && socketIds.onlineDevices && socketIds.onlineDevices.length && deviceId) {
+      return (
+        socketIds.onlineDevices.filter(onlineDevice => onlineDevice.bindedTo && onlineDevice.bindedTo === deviceId).length >
+        0
+      );
+    }
+    return false;
+  }, [deviceId, socketIds]);
 
-  const renderDeviceOfflineAlert = () => {
+  const renderDeviceOfflineAlert = useMemo(() => {
     if (!isDeviceOnline) {
       return <DeviceOfflineAlert data-test="offlineAlertContainer" />;
     }
-  };
+  }, [isDeviceOnline]);
 
-  const renderAlert = () => {
+  const renderAlert = useMemo(() => {
     if (!thisSubDevices.length) {
       return (
         <CardContent className={classes.cardContent} data-test="noSubDeviceAlertCardContainer">
-          {renderDeviceOfflineAlert()}
+          {renderDeviceOfflineAlert}
           <Alert severity="info">It seems devices are not yet added. Please contact administrator!</Alert>
         </CardContent>
       );
     }
-  };
+  }, [classes.cardContent, renderDeviceOfflineAlert, thisSubDevices.length]);
 
-  const renderCards = () => {
+  const renderCards = useMemo(() => {
     if (thisSubDevices.length > 0) {
       return (
         <React.Fragment>
           <CardContent className={classes.cardContent} data-test="cardContentContainer">
-            {renderDeviceOfflineAlert()}
+            {renderDeviceOfflineAlert}
             <div className={classes.root}>
               <Grid container spacing={1}>
                 <Grid item xs={9} sm={9} md={9} lg={9}>
@@ -101,7 +107,15 @@ const SmartSwitchCard = ({ deviceId, deviceName }) => {
         </React.Fragment>
       );
     }
-  };
+  }, [
+    classes.buttonsGrp,
+    classes.cardContent,
+    classes.grow,
+    classes.root,
+    deviceId,
+    renderDeviceOfflineAlert,
+    thisSubDevices.length,
+  ]);
 
   return (
     <Card className={classes.default} data-test="smartSwitchCardContainer">
@@ -112,8 +126,8 @@ const SmartSwitchCard = ({ deviceId, deviceName }) => {
         title={deviceName}
         titleTypographyProps={{ align: 'center', variant: 'h6', color: 'primary', gutterBottom: false }}
       />
-      {renderAlert()}
-      {renderCards()}
+      {renderAlert}
+      {renderCards}
     </Card>
   );
 };

@@ -5,15 +5,13 @@ import { makeStyles } from '@material-ui/core/styles';
 import Alert from '@material-ui/lab/Alert';
 import AlertTitle from '@material-ui/lab/AlertTitle';
 import PropTypes from 'prop-types';
-import React, { useCallback, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { siteSettingActions, userActions } from '../../_actions';
-import { adminDrawerActions } from '../../_actions/admin-drawer/adminDrawer.actions';
-import { deviceActions } from '../../_actions/device/device.actions';
+import React, { useCallback, useContext, useMemo } from 'react';
 import AppSkeleton from '../../_components/app-skeleton/AppSkeleton';
 import SmartSwitchCard from '../../_components/cards/smart-switch-card/SmartSwitchCard';
 import TankCard from '../../_components/cards/tank-card/TankCard';
 import SettingDialog from '../../_components/dialogs/setting-dialog/settingDialog';
+import { DeviceContext } from '../../_contexts/device/DeviceContext.provider';
+import { UserContext } from '../../_contexts/user/UserContext.provider';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -28,74 +26,23 @@ const useStyles = makeStyles(theme => ({
 
 const HomePage = () => {
   const classes = useStyles();
-  const currentUser = useSelector(state => state.user);
-  const device = useSelector(state => state.device);
-  const sharedDevice = useSelector(state => state.sharedDevice);
-  const sockets = useSelector(state => state.socket);
-  const adminDrawer = useSelector(state => state.adminDrawer);
-  const siteSettings = useSelector(state => state.siteSetting);
-  const [renderLayout, setRenderLayout] = useState(false);
+  const userContext = useContext(UserContext);
+  const devicesContext = useContext(DeviceContext);
 
-  const isFetchingDevice = device.isFetchingDevice;
-  const isLoggedIn = currentUser.isLoggedIn && currentUser.tokens !== null;
-  const isAuthorized = currentUser.isAuthorized;
-  const hasFetchedDevices = currentUser.hasFetchedDevices;
-  const isSocketFetching = sockets.isSocketFetching;
-  const connected = sockets.connected;
-  const devices = device.devices;
-  const sharedDevices = sharedDevice.sharedDevices;
-  const dispatch = useDispatch();
+  const hasFetchedDevices = userContext.user.hasFetchedDevices;
+  const isSocketFetching = userContext.isSocketFetching;
 
-  const init = useCallback(() => {
-    const fetchDevices = () => {
-      if (!hasFetchedDevices && !isFetchingDevice && connected && (isLoggedIn || isAuthorized)) {
-        dispatch(deviceActions.setDeviceFetching(true));
-        dispatch(deviceActions.myDevices());
-        dispatch(userActions.setDevicesFetched(true));
-      }
-    };
-    const hideAdminDrawer = () => {
-      if (adminDrawer.show) {
-        dispatch(adminDrawerActions.hide());
-      }
-    };
-    const hideBurger = () => {
-      if (siteSettings && siteSettings.burger) {
-        dispatch(siteSettingActions.hideBurger());
-      }
-    };
+  const isFetchingDevice = devicesContext.device.isFetchingDevice;
+  const devices = devicesContext.device.devices;
+  const sharedDevices = devicesContext.sharedDevice.sharedDevices;
 
-    /*Prevent from re-rendering*/
-    if (!renderLayout) {
-      setRenderLayout(true);
-    }
-
-    hideBurger();
-    hideAdminDrawer();
-    fetchDevices();
-  }, [
-    renderLayout,
-    dispatch,
-    hasFetchedDevices,
-    isFetchingDevice,
-    connected,
-    isLoggedIn,
-    isAuthorized,
-    adminDrawer,
-    siteSettings,
-  ]);
-
-  useEffect(() => {
-    init();
-  }, [init]);
-
-  const renderAppSkeleton = () => {
+  const renderAppSkeleton = useMemo(() => {
     if (isFetchingDevice || isSocketFetching) {
       return <AppSkeleton data-test="appSkeletonComponent" />;
     }
-  };
+  }, [isFetchingDevice, isSocketFetching]);
 
-  const renderNoDeviceAlertComponent = () => {
+  const renderNoDeviceAlertComponent = useMemo(() => {
     if (!isFetchingDevice && devices.length <= 0 && sharedDevices.length <= 0 && hasFetchedDevices) {
       return (
         <Alert severity="info" data-test="noDeviceAlertComponent">
@@ -104,21 +51,21 @@ const HomePage = () => {
         </Alert>
       );
     }
-  };
+  }, [devices.length, hasFetchedDevices, isFetchingDevice, sharedDevices.length]);
 
-  const renderMyTankCardComponent = device => {
+  const renderMyTankCardComponent = useCallback(device => {
     if (device.variant && device.variant === 'tank') {
       return <TankCard deviceName={device.name} deviceId={device.deviceId} data-test="myTankCardComponent" />;
     }
-  };
+  }, []);
 
-  const renderMySmartSwitchCardComponent = device => {
+  const renderMySmartSwitchCardComponent = useCallback(device => {
     if (device.variant && device.variant === 'smartSwitch') {
       return <SmartSwitchCard deviceName={device.name} deviceId={device.deviceId} data-test="mySmartSwitchCardComponent" />;
     }
-  };
+  }, []);
 
-  const renderMyDeviceGridComponent = () => {
+  const renderMyDeviceGridComponent = useMemo(() => {
     return (
       !isFetchingDevice &&
       hasFetchedDevices &&
@@ -131,23 +78,23 @@ const HomePage = () => {
         </Grid>
       ))
     );
-  };
+  }, [devices, hasFetchedDevices, isFetchingDevice, renderMySmartSwitchCardComponent, renderMyTankCardComponent]);
 
-  const renderSharedTankCardComponent = device => {
+  const renderSharedTankCardComponent = useCallback(device => {
     if (device.variant && device.variant === 'tank') {
       return <TankCard deviceName={device.name} deviceId={device.deviceId} data-test="sharedTankCardComponent" />;
     }
-  };
+  }, []);
 
-  const renderSharedSmartSwitchCardComponent = device => {
+  const renderSharedSmartSwitchCardComponent = useCallback(device => {
     if (device.variant && device.variant === 'smartSwitch') {
       return (
         <SmartSwitchCard deviceName={device.name} deviceId={device.deviceId} data-test="sharedSmartSwitchCardComponent" />
       );
     }
-  };
+  }, []);
 
-  const renderSharedDeviceGridComponent = () => {
+  const renderSharedDeviceGridComponent = useMemo(() => {
     return (
       !isFetchingDevice &&
       hasFetchedDevices &&
@@ -160,37 +107,36 @@ const HomePage = () => {
         </Grid>
       ))
     );
-  };
+  }, [
+    hasFetchedDevices,
+    isFetchingDevice,
+    renderSharedSmartSwitchCardComponent,
+    renderSharedTankCardComponent,
+    sharedDevices,
+  ]);
 
-  const renderSettingDialogComponent = () => {
+  const renderSettingDialogComponent = useMemo(() => {
     if ((devices && devices.length > 0) || (sharedDevices && sharedDevices.length > 0)) {
       return <SettingDialog data-test="settingDialogComponent" />;
     }
-  };
+  }, [devices, sharedDevices]);
 
-  const renderHomeLayout = () => {
-    if (renderLayout) {
-      return (
-        <React.Fragment>
-          <CssBaseline />
-          <Container disableGutters={true} maxWidth="xl" data-test="homePageContainer">
-            <div className={classes.root}>
-              {renderAppSkeleton()}
-              {renderNoDeviceAlertComponent()}
-              <Grid container spacing={3} data-test="deviceGridComponent">
-                {renderMyDeviceGridComponent()}
-                {renderSharedDeviceGridComponent()}
-              </Grid>
-            </div>
-          </Container>
-          {renderSettingDialogComponent()}
-        </React.Fragment>
-      );
-    }
-    return null;
-  };
-
-  return renderHomeLayout();
+  return (
+    <React.Fragment>
+      <CssBaseline />
+      <Container disableGutters={true} maxWidth="xl" data-test="homePageContainer">
+        <div className={classes.root}>
+          {renderAppSkeleton}
+          {renderNoDeviceAlertComponent}
+          <Grid container spacing={3} data-test="deviceGridComponent">
+            {renderMyDeviceGridComponent}
+            {renderSharedDeviceGridComponent}
+          </Grid>
+        </div>
+      </Container>
+      {renderSettingDialogComponent}
+    </React.Fragment>
+  );
 };
 
 HomePage.propTypes = {

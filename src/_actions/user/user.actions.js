@@ -1,4 +1,5 @@
 import { userConstants } from '../../_constants/user.constants';
+import { history } from '../../_helpers/history/history';
 import { userService } from '../../_services/user/user.service';
 
 const setUser = userObj => {
@@ -39,6 +40,7 @@ const signIn = userObj => dispatch => {
         })
       );
       dispatch(setLoginError(null));
+      history.push('/home');
     })
     .catch(error => {
       // handle error

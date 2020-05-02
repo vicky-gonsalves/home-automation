@@ -4,7 +4,13 @@ const showBurger = () => dispatch => dispatch({ type: siteSettingConstants.SHOW_
 
 const hideBurger = () => dispatch => dispatch({ type: siteSettingConstants.HIDE_BURGER });
 
+const showLoader = () => dispatch => dispatch({ type: siteSettingConstants.SHOW_LOADER });
+
+const hideLoader = () => dispatch => dispatch({ type: siteSettingConstants.HIDE_LOADER });
+
 export const siteSettingActions = {
   showBurger,
   hideBurger,
+  showLoader,
+  hideLoader,
 };

@@ -5,8 +5,8 @@ import Typography from '@material-ui/core/Typography';
 import Alert from '@material-ui/lab/Alert';
 import moment from 'moment';
 import PropTypes from 'prop-types';
-import React, { useEffect, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { shallowEqual, useSelector } from 'react-redux';
 import SettingIconButton from '../../buttons/setting-icon-button/settingIconButton';
 import DeviceOfflineAlert from '../../device-offline-alert/deviceOfflineAlert';
 import OnlineDeviceStatus from '../../online-device-status/onlineDeviceStatus';
@@ -52,44 +52,55 @@ const useStyles = makeStyles(theme => ({
 
 const TankCard = ({ deviceId, deviceName }) => {
   const classes = useStyles();
-  const [updatedAt, setUpdatedAt] = useState();
+  const [updatedAt, setUpdatedAt] = useState(moment().fromNow());
   const ref = useRef(null);
-  let thisSubDevices = [];
-  let waterLevel = 0;
-  let isDeviceOnline = false;
-  let preferredDevice;
 
   // noinspection JSValidateTypes
   ref.current = { updatedAt, setUpdatedAt };
 
   const socketIds = useSelector(state => state.onlineDevice);
-  if (socketIds && socketIds.onlineDevices && socketIds.onlineDevices.length && deviceId) {
-    isDeviceOnline = socketIds.onlineDevices.filter(({ bindedTo }) => bindedTo && bindedTo === deviceId).length > 0;
-  }
+  const subDevices = useSelector(state => state && state.subDevice && state.subDevice.subDevices, shallowEqual);
+  const deviceSettings = useSelector(
+    state => state && state.deviceSetting && state.deviceSetting.deviceSettings,
+    shallowEqual
+  );
+  const deviceParams = useSelector(state => state && state.deviceParam && state.deviceParam.deviceParams, shallowEqual);
 
-  const subDevices = useSelector(state => state && state.subDevice && state.subDevice.subDevices);
-  const deviceSettings = useSelector(state => state && state.deviceSetting && state.deviceSetting.deviceSettings);
-  const deviceParams = useSelector(state => state && state.deviceParam && state.deviceParam.deviceParams);
+  const isDeviceOnline = useMemo(() => {
+    if (socketIds && socketIds.onlineDevices && socketIds.onlineDevices.length && deviceId) {
+      return socketIds.onlineDevices.filter(({ bindedTo }) => bindedTo && bindedTo === deviceId).length > 0;
+    }
+    return false;
+  }, [deviceId, socketIds]);
 
-  if (deviceParams && deviceParams.length) {
-    const wLevel = deviceParams.filter(({ paramName }) => paramName === 'waterLevel');
-    if (wLevel.length) {
-      waterLevel = wLevel[0];
-      if (waterLevel && waterLevel.updatedAt) {
-        ref.current.updatedAt = moment(waterLevel.updatedAt).fromNow();
+  const waterLevel = useMemo(() => {
+    if (deviceParams && deviceParams.length) {
+      const wLevel = deviceParams.filter(({ paramName }) => paramName === 'waterLevel');
+      if (wLevel.length) {
+        if (wLevel[0] && wLevel[0].updatedAt) {
+          ref.current.updatedAt = moment(wLevel[0].updatedAt).fromNow();
+        }
+        return wLevel[0];
       }
     }
-  }
-  if (deviceId && subDevices.length) {
-    thisSubDevices = subDevices.filter(subDevice => subDevice.deviceId === deviceId && subDevice.type === 'motorSwitch');
-  }
+    return 0;
+  }, [deviceParams]);
 
-  if (deviceId && subDevices.length && deviceSettings.length) {
-    preferredDevice = deviceSettings.filter(
-      ({ bindedTo, idType, paramName, type }) =>
-        bindedTo === deviceId && type === 'device' && idType === 'deviceId' && paramName === 'preferredSubDevice'
-    )[0];
-  }
+  const thisSubDevices = useMemo(() => {
+    if (deviceId && subDevices.length) {
+      return subDevices.filter(subDevice => subDevice.deviceId === deviceId && subDevice.type === 'motorSwitch');
+    }
+    return [];
+  }, [deviceId, subDevices]);
+
+  const preferredDevice = useMemo(() => {
+    if (deviceId && subDevices.length && deviceSettings.length) {
+      return deviceSettings.filter(
+        ({ bindedTo, idType, paramName, type }) =>
+          bindedTo === deviceId && type === 'device' && idType === 'deviceId' && paramName === 'preferredSubDevice'
+      )[0];
+    }
+  }, [deviceId, deviceSettings, subDevices.length]);
 
   const { paramValue } = waterLevel;
 
@@ -104,30 +115,33 @@ const TankCard = ({ deviceId, deviceName }) => {
     };
   }, [waterLevel.updatedAt]);
 
-  const renderOfflineAlert = () => {
+  const renderOfflineAlert = useMemo(() => {
     if (!isDeviceOnline) {
       return <DeviceOfflineAlert data-test="tankOfflineAlertContainer" />;
     }
-  };
+  }, [isDeviceOnline]);
 
-  const renderSubDeviceAlert = () => {
+  const renderSubDeviceAlert = useMemo(() => {
     if (!thisSubDevices.length) {
       return (
         <CardContent className={classes.cardContent} data-test="tankCardNoSubDeviceAlertContainer">
-          {renderOfflineAlert()}
+          {renderOfflineAlert}
           <Alert severity="info">It seems devices are not yet added. Please contact administrator!</Alert>
         </CardContent>
       );
     }
-  };
+  }, [classes.cardContent, renderOfflineAlert, thisSubDevices.length]);
 
-  const renderPreferredSubDevices = subDevice => {
-    if (thisSubDevices.length > 1 && preferredDevice && preferredDevice.paramValue === subDevice.subDeviceId) {
-      return <PreferredDevice data-test="preferredDeviceContainer" />;
-    }
-  };
+  const renderPreferredSubDevices = useCallback(
+    subDevice => {
+      if (thisSubDevices.length > 1 && preferredDevice && preferredDevice.paramValue === subDevice.subDeviceId) {
+        return <PreferredDevice data-test="preferredDeviceContainer" />;
+      }
+    },
+    [preferredDevice, thisSubDevices.length]
+  );
 
-  const renderLastUpdated = () => {
+  const renderLastUpdated = useMemo(() => {
     const { updatedAt: lastUpdated } = ref.current;
     return (
       <Typography
@@ -140,27 +154,64 @@ const TankCard = ({ deviceId, deviceName }) => {
         {`Updated ${lastUpdated}`}
       </Typography>
     );
-  };
+  }, [classes.update]);
 
-  const renderButtonGroups = subDevice => {
-    return (
-      <div key={subDevice.subDeviceId} className={classes.items}>
-        {renderPreferredSubDevices(subDevice)}
-        <MotorSwitch
-          name={subDevice.name}
-          deviceId={deviceId}
-          subDeviceId={subDevice.subDeviceId}
-          data-test="MotorSwitchContainer"
-        />
-        <MotorMode
-          name={subDevice.name}
-          deviceId={deviceId}
-          subDeviceId={subDevice.subDeviceId}
-          data-test="MotorModeContainer"
-        />
-      </div>
-    );
-  };
+  const renderButtonGroups = useMemo(() => {
+    if (thisSubDevices) {
+      return thisSubDevices.map(subDevice => (
+        <div key={subDevice.subDeviceId} className={classes.items}>
+          {renderPreferredSubDevices(subDevice)}
+          <MotorSwitch
+            name={subDevice.name}
+            deviceId={deviceId}
+            subDeviceId={subDevice.subDeviceId}
+            data-test="MotorSwitchContainer"
+          />
+          <MotorMode
+            name={subDevice.name}
+            deviceId={deviceId}
+            subDeviceId={subDevice.subDeviceId}
+            data-test="MotorModeContainer"
+          />
+        </div>
+      ));
+    }
+  }, [classes.items, deviceId, renderPreferredSubDevices, thisSubDevices]);
+
+  const renderTankCardContentContainer = useMemo(() => {
+    if (thisSubDevices.length) {
+      return (
+        <React.Fragment>
+          <CardContent className={classes.cardContent} data-test="tankCardContentContainer">
+            {renderOfflineAlert}
+            <div className={classes.root}>
+              <Grid container spacing={1}>
+                <Grid item xs={5} sm={4} md={5} lg={3}>
+                  <Tank waterLevel={paramValue} data-test="tankContainer" />
+                  {renderLastUpdated}
+                </Grid>
+                <Grid item xs={7} sm={8} md={7} lg={9} className={classes.buttonsGrp}>
+                  {renderButtonGroups}
+                </Grid>
+              </Grid>
+            </div>
+          </CardContent>
+          <CardActionFooter deviceId={deviceId} deviceVariant="tank" data-test="tankCardActionFooterContainer" />
+        </React.Fragment>
+      );
+    }
+    return null;
+  }, [
+    classes.buttonsGrp,
+    classes.cardContent,
+    classes.root,
+    deviceId,
+    paramValue,
+    renderButtonGroups,
+    renderLastUpdated,
+    renderOfflineAlert,
+    thisSubDevices.length,
+  ]);
 
   return (
     <Card className={classes.default} data-test="tankCardContainer">
@@ -171,26 +222,8 @@ const TankCard = ({ deviceId, deviceName }) => {
         title={deviceName}
         titleTypographyProps={{ align: 'center', variant: 'h6', color: 'primary', gutterBottom: false }}
       />
-      {renderSubDeviceAlert()}
-      {thisSubDevices.length > 0 && (
-        <React.Fragment>
-          <CardContent className={classes.cardContent} data-test="tankCardContentContainer">
-            {renderOfflineAlert()}
-            <div className={classes.root}>
-              <Grid container spacing={1}>
-                <Grid item xs={5} sm={4} md={5} lg={3}>
-                  <Tank waterLevel={paramValue} data-test="tankContainer" />
-                  {renderLastUpdated()}
-                </Grid>
-                <Grid item xs={7} sm={8} md={7} lg={9} className={classes.buttonsGrp}>
-                  {thisSubDevices && thisSubDevices.map(subDevice => renderButtonGroups(subDevice))}
-                </Grid>
-              </Grid>
-            </div>
-          </CardContent>
-          <CardActionFooter deviceId={deviceId} deviceVariant="tank" data-test="tankCardActionFooterContainer" />
-        </React.Fragment>
-      )}
+      {renderSubDeviceAlert}
+      {renderTankCardContentContainer}
     </Card>
   );
 };

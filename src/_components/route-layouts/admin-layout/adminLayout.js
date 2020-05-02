@@ -1,16 +1,17 @@
-import PropTypes from 'prop-types';
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { Redirect, useLocation } from 'react-router';
 import { Route } from 'react-router-dom';
 import { adminUserActions } from '../../../_actions';
+import { UserContext } from '../../../_contexts/user/UserContext.provider';
 import LazyLoader from '../../lazy-loader/LazyLoader';
 
 const UserListPage = React.lazy(() => import('../../../modules/Admin/User/UserList/UserListPage'));
 const UserEditorPage = React.lazy(() => import('../../../modules/Admin/User/UserEditor/UserEditorPage'));
 const DashboardPage = React.lazy(() => import('../../../modules/Admin/Dashboard/DashboardPage'));
 
-function AdminLayout({ isAdmin, isLoggedIn }) {
+function AdminLayout() {
+  const userContext = useContext(UserContext);
   const adminLayoutPath = ['/admin', '/users', '/users/new', '/users/edit/:id'];
   const location = useLocation();
   const dispatch = useDispatch();
@@ -20,7 +21,7 @@ function AdminLayout({ isAdmin, isLoggedIn }) {
       <Route
         {...rest}
         render={props =>
-          isLoggedIn && isAdmin === true ? (
+          userContext.isLoggedIn && userContext.isAdmin === true ? (
             <Component {...props} />
           ) : (
             <Redirect to={{ pathname: '/signin', state: { from: props.location } }} />
@@ -44,9 +45,6 @@ function AdminLayout({ isAdmin, isLoggedIn }) {
   );
 }
 
-AdminLayout.propTypes = {
-  isAdmin: PropTypes.bool.isRequired,
-  isLoggedIn: PropTypes.bool.isRequired,
-};
+AdminLayout.propTypes = {};
 
 export default AdminLayout;
