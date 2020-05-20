@@ -13,7 +13,7 @@ import Typography from '@material-ui/core/Typography';
 import SearchIcon from '@material-ui/icons/Search';
 import moment from 'moment';
 import PropTypes from 'prop-types';
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import config from '../../../config';
 import TableSearchForm from '../../forms/table-search-form/TableSearchForm';
 import OverlayLoading from '../../overlay-loading/OverlayLoading';
@@ -70,11 +70,14 @@ const ListTable = ({
   const [searchFilter, setSearchFilter] = React.useState({});
   const [headCells, setHeadCells] = React.useState(tableHeaders);
 
-  const performFilter = _searchFilter => {
-    setSearchFilter(_searchFilter);
-    setPage(0);
-    getList(isLoggedIn, isConnected, `${orderBy}:${order}`, limit, page + 1, searchFilter);
-  };
+  const performFilter = useCallback(
+    _searchFilter => {
+      setSearchFilter(_searchFilter);
+      setPage(0);
+      getList(isLoggedIn, isConnected, `${orderBy}:${order}`, limit, page + 1, searchFilter);
+    },
+    [getList, isConnected, isLoggedIn, limit, order, orderBy, page, searchFilter]
+  );
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -96,11 +99,14 @@ const ListTable = ({
     setPage(0);
   };
 
-  const handleSearchFilter = (key, value) => {
-    const _searchFilter = searchFilter;
-    _searchFilter[key] = value;
-    performFilter(_searchFilter);
-  };
+  const handleSearchFilter = useCallback(
+    (key, value) => {
+      const _searchFilter = searchFilter;
+      _searchFilter[key] = value;
+      performFilter(_searchFilter);
+    },
+    [performFilter, searchFilter]
+  );
 
   const handleSearch = (headCell, cancel) => () => {
     const newHeadcells = [];

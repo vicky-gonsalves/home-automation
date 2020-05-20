@@ -38,7 +38,7 @@ const useStyles = makeStyles(theme => ({
 
 export const SimpleTableSearchForm = props => {
   const classes = useStyles();
-  const { values, touched, errors, handleChange, handleBlur, isFetching, handleSubmit, headCell, handleCancel } = props;
+  const { values, touched, errors, handleChange, isFetching, handleSubmit, headCell, handleCancel } = props;
 
   const renderInput = () => {
     if (headCell.type === 'text' || headCell.type === 'number' || headCell.type === 'email') {
@@ -54,7 +54,6 @@ export const SimpleTableSearchForm = props => {
           name={headCell.id}
           label={headCell.label}
           onChange={handleChange}
-          onBlur={handleBlur}
           disabled={isFetching}
           error={errors[headCell.id] && touched[headCell.id]}
           data-test="tableSearchFormFieldInput"
