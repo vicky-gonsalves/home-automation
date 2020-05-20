@@ -13,6 +13,7 @@ import SettingDialog from '../../_components/dialogs/setting-dialog/settingDialo
 import DeviceSettingContextProvider from '../../_contexts/device-setting/DeviceSettingContext.provider';
 import { DeviceContext } from '../../_contexts/device/DeviceContext.provider';
 import SettingDialogContextProvider from '../../_contexts/setting-dialog/SettingDialogContext.provider';
+import SubDeviceSettingContextProvider from '../../_contexts/sub-device-setting/SubDeviceSettingContext.provider';
 import SubDeviceContextProvider from '../../_contexts/sub-device/SubDeviceContext.provider';
 import { UserContext } from '../../_contexts/user/UserContext.provider';
 
@@ -140,9 +141,11 @@ const HomePage = () => {
     if ((devices && devices.length > 0) || (sharedDevices && sharedDevices.length > 0)) {
       return (
         <DeviceSettingContextProvider>
-          <SettingDialogContextProvider>
-            <SettingDialog data-test="settingDialogComponent" />
-          </SettingDialogContextProvider>
+          <SubDeviceSettingContextProvider>
+            <SettingDialogContextProvider>
+              <SettingDialog data-test="settingDialogComponent" />
+            </SettingDialogContextProvider>
+          </SubDeviceSettingContextProvider>
         </DeviceSettingContextProvider>
       );
     }

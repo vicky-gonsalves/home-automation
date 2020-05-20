@@ -6,6 +6,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
+import SubDeviceSettingContextProvider from '../../../_contexts/sub-device-setting/SubDeviceSettingContext.provider';
 import SmartSwitchAlert from '../../alerts/smart-switch-alert/smartSwitchAlert';
 import TankAlert from '../../alerts/tank-alert/tankAlert';
 import Stats from '../stats/Stats';
@@ -39,7 +40,11 @@ const CardActionFooter = ({ deviceId, deviceVariant }) => {
     <React.Fragment>
       <CardActions className={classes.cardAction} data-test="cardActionFooterContainer">
         {deviceVariant === 'tank' && <TankAlert deviceId={deviceId} data-test="tankAlertComponent" />}
-        {deviceVariant === 'smartSwitch' && <SmartSwitchAlert deviceId={deviceId} data-test="smartSwitchAlertComponent" />}
+        {deviceVariant === 'smartSwitch' && (
+          <SubDeviceSettingContextProvider>
+            <SmartSwitchAlert deviceId={deviceId} data-test="smartSwitchAlertComponent" />
+          </SubDeviceSettingContextProvider>
+        )}
         <IconButton
           className={clsx(classes.expand, {
             [classes.expandOpen]: expanded,
