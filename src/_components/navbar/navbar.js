@@ -9,9 +9,11 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import BrightnessAutoIcon from '@material-ui/icons/BrightnessAuto';
 import MenuIcon from '@material-ui/icons/Menu';
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useContext, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { adminDrawerActions } from '../../_actions/admin-drawer/adminDrawer.actions';
+import { SiteSettingContext } from '../../_contexts/site-setting/SiteSettingContext.provider';
+import { UserContext } from '../../_contexts/user/UserContext.provider';
 import { history } from '../../_helpers/history/history';
 import { authInterceptor } from '../../_interceptors/auth/auth.interceptor';
 
@@ -28,11 +30,11 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Navbar = ({ appName }) => {
-  const siteSettings = useSelector(state => state.siteSetting);
-  const currentUser = useSelector(state => state.user);
-  const adminDrawer = useSelector(state => state.adminDrawer);
-  const isLoggedIn = currentUser.isLoggedIn && currentUser.tokens !== null;
-  const isAdmin = isLoggedIn && currentUser.role === 'admin';
+  const siteSettingContext = useContext(SiteSettingContext);
+  const userContext = useContext(UserContext);
+  const currentUser = userContext.user;
+  const isLoggedIn = userContext.isLoggedIn;
+  const isAdmin = userContext.isAdmin;
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -52,7 +54,7 @@ const Navbar = ({ appName }) => {
   };
 
   const handleDrawerToggle = () => {
-    if (adminDrawer.open) {
+    if (siteSettingContext.drawer.open) {
       dispatch(adminDrawerActions.close());
     } else {
       dispatch(adminDrawerActions.open());
@@ -75,7 +77,7 @@ const Navbar = ({ appName }) => {
   };
 
   const renderAdminMenuButton = () => {
-    if (isAdmin && siteSettings && siteSettings.burger) {
+    if (isAdmin && siteSettingContext && siteSettingContext.burger) {
       return (
         <IconButton
           color="inherit"
