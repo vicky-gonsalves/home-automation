@@ -6,13 +6,15 @@ import React, { useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { settingDialogActions } from '../../../_actions/setting-dialog/settingDialog.actions';
 import { DeviceSettingContext } from '../../../_contexts/device-setting/DeviceSettingContext.provider';
+import { SettingDialogContext } from '../../../_contexts/setting-dialog/DeviceSettingContext.provider';
 import MotorSettingForm from '../../forms/motor-setting-form/MotorSettingForm';
 import SmartSwitchSettingForm from '../../forms/smart-switch-setting-form/SmartSwitchSettingForm';
 
 const SettingDialog = () => {
   const dispatch = useDispatch();
   const deviceSettingContext = useContext(DeviceSettingContext);
-  const settingDialog = useSelector(state => state.settingDialog);
+  const settingDialogContext = useContext(SettingDialogContext);
+  const settingDialog = settingDialogContext.settingDialog;
   const isFetchingDeviceSetting = deviceSettingContext.isFetchingDeviceSetting;
   const isFetchingSubDeviceSetting = useSelector(state => state.subDeviceSetting && state.subDeviceSetting.isFetching);
   const handleClose = () => dispatch(settingDialogActions.close());
