@@ -10,6 +10,7 @@ import AppSkeleton from '../../_components/app-skeleton/AppSkeleton';
 import SmartSwitchCard from '../../_components/cards/smart-switch-card/SmartSwitchCard';
 import TankCard from '../../_components/cards/tank-card/TankCard';
 import SettingDialog from '../../_components/dialogs/setting-dialog/settingDialog';
+import DeviceParamContextProvider from '../../_contexts/device-param/DeviceParamContext.provider';
 import DeviceSettingContextProvider from '../../_contexts/device-setting/DeviceSettingContext.provider';
 import { DeviceContext } from '../../_contexts/device/DeviceContext.provider';
 import SettingDialogContextProvider from '../../_contexts/setting-dialog/SettingDialogContext.provider';
@@ -62,7 +63,9 @@ const HomePage = () => {
       return (
         <SubDeviceContextProvider>
           <DeviceSettingContextProvider>
-            <TankCard deviceName={device.name} deviceId={device.deviceId} data-test="myTankCardComponent" />
+            <DeviceParamContextProvider>
+              <TankCard deviceName={device.name} deviceId={device.deviceId} data-test="myTankCardComponent" />
+            </DeviceParamContextProvider>
           </DeviceSettingContextProvider>
         </SubDeviceContextProvider>
       );
@@ -99,7 +102,9 @@ const HomePage = () => {
       return (
         <SubDeviceContextProvider>
           <DeviceSettingContextProvider>
-            <TankCard deviceName={device.name} deviceId={device.deviceId} data-test="sharedTankCardComponent" />
+            <DeviceParamContextProvider>
+              <TankCard deviceName={device.name} deviceId={device.deviceId} data-test="sharedTankCardComponent" />
+            </DeviceParamContextProvider>
           </DeviceSettingContextProvider>
         </SubDeviceContextProvider>
       );

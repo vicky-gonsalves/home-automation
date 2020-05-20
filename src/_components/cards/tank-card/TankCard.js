@@ -6,7 +6,7 @@ import Alert from '@material-ui/lab/Alert';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
-import { shallowEqual, useSelector } from 'react-redux';
+import { DeviceParamContext } from '../../../_contexts/device-param/DeviceParamContext.provider';
 import { DeviceSettingContext } from '../../../_contexts/device-setting/DeviceSettingContext.provider';
 import { SocketIdContext } from '../../../_contexts/socket-id/SocketIdContext.provider';
 import SubDeviceParamContextProvider from '../../../_contexts/sub-device-param/SubDeviceParamContext.provider';
@@ -65,9 +65,10 @@ const TankCard = ({ deviceId, deviceName }) => {
   const socketIdContext = useContext(SocketIdContext);
   const subDevicesContext = useContext(SubDeviceContext);
   const deviceSettingContext = useContext(DeviceSettingContext);
+  const deviceParamContext = useContext(DeviceParamContext);
   const subDevices = subDevicesContext.subDevices;
   const deviceSettings = deviceSettingContext.deviceSettings;
-  const deviceParams = useSelector(state => state && state.deviceParam && state.deviceParam.deviceParams, shallowEqual);
+  const deviceParams = deviceParamContext.deviceParams;
 
   const isDeviceOnline = useMemo(() => {
     if (socketIdContext && socketIdContext.onlineDevices && socketIdContext.onlineDevices.length && deviceId) {
