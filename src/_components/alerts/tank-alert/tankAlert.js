@@ -3,6 +3,7 @@ import moment from 'moment';
 import PropTypes from 'prop-types';
 import React, { useContext } from 'react';
 import { useSelector } from 'react-redux';
+import { DeviceSettingContext } from '../../../_contexts/device-setting/DeviceSettingContext.provider';
 import { SocketIdContext } from '../../../_contexts/socket-id/SocketIdContext.provider';
 import { SubDeviceContext } from '../../../_contexts/sub-device/SubDeviceContext.provider';
 import CountDownTimer from '../../count-down-timer/CountDownTimer';
@@ -11,10 +12,11 @@ const TankAlert = props => {
   let autoShutDownTime;
   const socketIdContext = useContext(SocketIdContext);
   const subDevicesContext = useContext(SubDeviceContext);
+  const deviceSettingContext = useContext(DeviceSettingContext);
   const subDeviceParams = useSelector(state => state.subDeviceParam && state.subDeviceParam.subDeviceParams);
-  const deviceSettings = useSelector(state => state.deviceSetting && state.deviceSetting.deviceSettings);
   const onlineDevices = socketIdContext.onlineDevices;
   const subDevices = subDevicesContext.subDevices;
+  const deviceSettings = deviceSettingContext.deviceSettings;
   const thisDeviceParams = subDeviceParams.filter(
     param => param.deviceId === props.deviceId && param.paramName === 'status' && param.paramValue === 'on'
   );

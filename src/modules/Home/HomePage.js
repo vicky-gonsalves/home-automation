@@ -10,6 +10,7 @@ import AppSkeleton from '../../_components/app-skeleton/AppSkeleton';
 import SmartSwitchCard from '../../_components/cards/smart-switch-card/SmartSwitchCard';
 import TankCard from '../../_components/cards/tank-card/TankCard';
 import SettingDialog from '../../_components/dialogs/setting-dialog/settingDialog';
+import DeviceSettingContextProvider from '../../_contexts/device-setting/DeviceSettingContext.provider';
 import { DeviceContext } from '../../_contexts/device/DeviceContext.provider';
 import SubDeviceContextProvider from '../../_contexts/sub-device/SubDeviceContext.provider';
 import { UserContext } from '../../_contexts/user/UserContext.provider';
@@ -58,7 +59,9 @@ const HomePage = () => {
     if (device.variant && device.variant === 'tank') {
       return (
         <SubDeviceContextProvider>
-          <TankCard deviceName={device.name} deviceId={device.deviceId} data-test="myTankCardComponent" />
+          <DeviceSettingContextProvider>
+            <TankCard deviceName={device.name} deviceId={device.deviceId} data-test="myTankCardComponent" />
+          </DeviceSettingContextProvider>
         </SubDeviceContextProvider>
       );
     }
@@ -93,7 +96,9 @@ const HomePage = () => {
     if (device.variant && device.variant === 'tank') {
       return (
         <SubDeviceContextProvider>
-          <TankCard deviceName={device.name} deviceId={device.deviceId} data-test="sharedTankCardComponent" />
+          <DeviceSettingContextProvider>
+            <TankCard deviceName={device.name} deviceId={device.deviceId} data-test="sharedTankCardComponent" />
+          </DeviceSettingContextProvider>
         </SubDeviceContextProvider>
       );
     }
@@ -132,7 +137,11 @@ const HomePage = () => {
 
   const renderSettingDialogComponent = useMemo(() => {
     if ((devices && devices.length > 0) || (sharedDevices && sharedDevices.length > 0)) {
-      return <SettingDialog data-test="settingDialogComponent" />;
+      return (
+        <DeviceSettingContextProvider>
+          <SettingDialog data-test="settingDialogComponent" />
+        </DeviceSettingContextProvider>
+      );
     }
   }, [devices, sharedDevices]);
 

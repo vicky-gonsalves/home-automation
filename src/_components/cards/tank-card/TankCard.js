@@ -7,6 +7,7 @@ import moment from 'moment';
 import PropTypes from 'prop-types';
 import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { shallowEqual, useSelector } from 'react-redux';
+import { DeviceSettingContext } from '../../../_contexts/device-setting/DeviceSettingContext.provider';
 import { SocketIdContext } from '../../../_contexts/socket-id/SocketIdContext.provider';
 import { SubDeviceContext } from '../../../_contexts/sub-device/SubDeviceContext.provider';
 import SettingIconButton from '../../buttons/setting-icon-button/settingIconButton';
@@ -62,11 +63,9 @@ const TankCard = ({ deviceId, deviceName }) => {
 
   const socketIdContext = useContext(SocketIdContext);
   const subDevicesContext = useContext(SubDeviceContext);
+  const deviceSettingContext = useContext(DeviceSettingContext);
   const subDevices = subDevicesContext.subDevices;
-  const deviceSettings = useSelector(
-    state => state && state.deviceSetting && state.deviceSetting.deviceSettings,
-    shallowEqual
-  );
+  const deviceSettings = deviceSettingContext.deviceSettings;
   const deviceParams = useSelector(state => state && state.deviceParam && state.deviceParam.deviceParams, shallowEqual);
 
   const isDeviceOnline = useMemo(() => {
