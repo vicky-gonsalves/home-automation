@@ -1,47 +1,31 @@
 import PropTypes from 'prop-types';
-import React, { useCallback, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { siteSettingActions } from '../../../_actions';
-import { adminDrawerActions } from '../../../_actions/admin-drawer/adminDrawer.actions';
+import React, { useCallback, useContext, useEffect } from 'react';
+import { UserContext } from '../../../_contexts/user/UserContext.provider';
+import { history } from '../../../_helpers/history/history';
 
 const ForgotPasswordPage = () => {
-  const dispatch = useDispatch();
-  const adminDrawer = useSelector(state => state.adminDrawer);
-  const siteSettings = useSelector(state => state.siteSetting);
-  const [renderLayout, setRenderLayout] = useState(false);
+  const userContext = useContext(UserContext);
+  const isLoggedIn = userContext.isLoggedIn;
+
+  const navigateTo = path => {
+    history.push(path);
+  };
 
   const init = useCallback(() => {
-    const hideAdminDrawer = () => {
-      if (adminDrawer.show) {
-        dispatch(adminDrawerActions.hide());
-      }
-    };
-    const hideBurger = () => {
-      if (siteSettings && siteSettings.burger) {
-        dispatch(siteSettingActions.hideBurger());
+    const navigateToHome = () => {
+      if (isLoggedIn) {
+        navigateTo('/home');
       }
     };
 
-    /*Prevent from re-rendering*/
-    if (!renderLayout) {
-      setRenderLayout(true);
-    }
-    hideBurger();
-    hideAdminDrawer();
-  }, [renderLayout, dispatch, adminDrawer, siteSettings]);
+    navigateToHome();
+  }, [isLoggedIn]);
 
   useEffect(() => {
     init();
-  }, [init]);
+  });
 
-  const renderForgotPasswordLayout = () => {
-    if (renderLayout) {
-      return <div data-test="forgotPasswordPageContainer">Forgot Password Page Works</div>;
-    }
-    return null;
-  };
-
-  return renderForgotPasswordLayout();
+  return <div data-test="forgotPasswordPageContainer">Forgot Password Page Works</div>;
 };
 
 ForgotPasswordPage.propTypes = {

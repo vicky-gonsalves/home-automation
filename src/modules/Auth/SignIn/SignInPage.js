@@ -7,11 +7,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import PropTypes from 'prop-types';
-import React, { useCallback, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { siteSettingActions } from '../../../_actions';
-import { adminDrawerActions } from '../../../_actions/admin-drawer/adminDrawer.actions';
+import React, { useCallback, useContext, useEffect } from 'react';
 import SignInForm from '../../../_components/forms/signIn-form/SignInForm';
+import { UserContext } from '../../../_contexts/user/UserContext.provider';
 import { history } from '../../../_helpers/history/history';
 
 const useStyles = makeStyles(theme => ({
@@ -38,12 +36,8 @@ const useStyles = makeStyles(theme => ({
 
 const SignInPage = () => {
   const classes = useStyles();
-  const dispatch = useDispatch();
-  const [renderLayout, setRenderLayout] = useState(false);
-  const adminDrawer = useSelector(state => state.adminDrawer);
-  const siteSettings = useSelector(state => state.siteSetting);
-  const currentUser = useSelector(state => state.user);
-  const isLoggedIn = currentUser.isLoggedIn && currentUser.tokens !== null;
+  const userContext = useContext(UserContext);
+  const isLoggedIn = userContext.isLoggedIn;
 
   const navigateTo = path => {
     history.push(path);
@@ -55,32 +49,16 @@ const SignInPage = () => {
         navigateTo('/home');
       }
     };
-    const hideAdminDrawer = () => {
-      if (adminDrawer.show) {
-        dispatch(adminDrawerActions.hide());
-      }
-    };
-    const hideBurger = () => {
-      if (siteSettings && siteSettings.burger) {
-        dispatch(siteSettingActions.hideBurger());
-      }
-    };
 
-    /*Prevent from re-rendering*/
-    if (!renderLayout) {
-      setRenderLayout(true);
-    }
-    hideBurger();
-    hideAdminDrawer();
     navigateToHome();
-  }, [renderLayout, dispatch, isLoggedIn, adminDrawer, siteSettings]);
+  }, [isLoggedIn]);
 
   useEffect(() => {
     init();
-  }, [init]);
+  });
 
   const renderSigninLayout = () => {
-    if (renderLayout) {
+    if (!isLoggedIn) {
       return (
         <React.Fragment>
           <CssBaseline />

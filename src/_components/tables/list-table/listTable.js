@@ -268,7 +268,7 @@ const ListTable = ({
 
   useEffect(() => {
     init();
-  }, [init]);
+  });
 
   return (
     <React.Fragment>
