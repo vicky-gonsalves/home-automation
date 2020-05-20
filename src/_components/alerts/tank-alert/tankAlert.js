@@ -3,7 +3,7 @@ import moment from 'moment';
 import PropTypes from 'prop-types';
 import React, { useContext } from 'react';
 import { useSelector } from 'react-redux';
-import { SocketIdContext } from '../../../_contexts/socket-id/SocketIdContextProvider';
+import { SocketIdContext } from '../../../_contexts/socket-id/SocketIdContext.provider';
 import CountDownTimer from '../../count-down-timer/CountDownTimer';
 
 const TankAlert = props => {

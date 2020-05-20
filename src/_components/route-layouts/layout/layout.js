@@ -1,7 +1,7 @@
 import React, { useContext, useMemo } from 'react';
 import DeviceContextProvider from '../../../_contexts/device/DeviceContext.provider';
 import { SiteSettingContext } from '../../../_contexts/site-setting/SiteSettingContext.provider';
-import SocketIdContextProvider from '../../../_contexts/socket-id/SocketIdContextProvider';
+import SocketIdContextProvider from '../../../_contexts/socket-id/SocketIdContext.provider';
 import { UserContext } from '../../../_contexts/user/UserContext.provider';
 import AdminDrawer from '../../admin-drawer/adminDrawer';
 import AdminLayout from '../admin-layout/adminLayout';

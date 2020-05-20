@@ -7,7 +7,7 @@ import moment from 'moment';
 import PropTypes from 'prop-types';
 import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { shallowEqual, useSelector } from 'react-redux';
-import { SocketIdContext } from '../../../_contexts/socket-id/SocketIdContextProvider';
+import { SocketIdContext } from '../../../_contexts/socket-id/SocketIdContext.provider';
 import SettingIconButton from '../../buttons/setting-icon-button/settingIconButton';
 import DeviceOfflineAlert from '../../device-offline-alert/deviceOfflineAlert';
 import OnlineDeviceStatus from '../../online-device-status/onlineDeviceStatus';
