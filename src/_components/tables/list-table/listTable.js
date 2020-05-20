@@ -13,12 +13,12 @@ import Typography from '@material-ui/core/Typography';
 import SearchIcon from '@material-ui/icons/Search';
 import moment from 'moment';
 import PropTypes from 'prop-types';
-import React, { useCallback, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import config from '../../../config';
 import TableSearchForm from '../../forms/table-search-form/TableSearchForm';
 import OverlayLoading from '../../overlay-loading/OverlayLoading';
-import DateRangePicker from '../../pickers/date-range-picker/dateRangePicker';
 import PageToolbar from '../../page-toolbar/PageToolbar';
+import DateRangePicker from '../../pickers/date-range-picker/dateRangePicker';
 
 const useStyles = makeStyles(theme => ({
   tableContainer: {
@@ -58,7 +58,6 @@ const ListTable = ({
   isLoggedIn,
   isConnected,
   isFetching,
-  hasFetchedList,
   buttons,
   type,
   initialSort,
@@ -259,16 +258,9 @@ const ListTable = ({
       return <OverlayLoading data-test="overlayComponent" />;
     }
   };
-
-  const init = useCallback(() => {
-    if (!hasFetchedList) {
-      getList(isLoggedIn, isConnected, `${orderBy}:${order}`, limit, page + 1, searchFilter);
-    }
-  }, [hasFetchedList, getList, isConnected, isLoggedIn, limit, order, orderBy, page, searchFilter]);
-
   useEffect(() => {
-    init();
-  });
+    getList(isLoggedIn, isConnected, `${orderBy}:${order}`, limit, page + 1, searchFilter);
+  }, [getList, isConnected, isLoggedIn, limit, order, orderBy, page, searchFilter]);
 
   return (
     <React.Fragment>

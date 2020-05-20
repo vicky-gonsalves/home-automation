@@ -67,9 +67,12 @@ const UserList = ({ isLoggedIn, isConnected }) => {
 
   const getList = useCallback(
     (isLoggedIn, isConnected, sortBy, limit, page, searchFilter) => {
-      if (isLoggedIn && isConnected) {
-        dispatch(adminUserActions.getUsers({ sortBy, limit, page, ...searchFilter }));
-      }
+      const fetchList = () => {
+        if (isLoggedIn && isConnected) {
+          dispatch(adminUserActions.getUsers({ sortBy, limit, page, ...searchFilter }));
+        }
+      };
+      fetchList();
     },
     [dispatch]
   );
@@ -88,7 +91,6 @@ const UserList = ({ isLoggedIn, isConnected }) => {
             isLoggedIn={isLoggedIn}
             isConnected={isConnected}
             isFetching={isFetching}
-            hasFetchedList={adminUser.fetchedUsersList}
             buttons={buttons}
             initialSort={{ order: 'desc', orderBy: 'createdAt' }}
             data-test="listTableComponent"
