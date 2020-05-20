@@ -3,8 +3,9 @@ import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import Alert from '@material-ui/lab/Alert';
 import PropTypes from 'prop-types';
-import React, { useMemo } from 'react';
+import React, { useContext, useMemo } from 'react';
 import { shallowEqual, useSelector } from 'react-redux';
+import { SocketIdContext } from '../../../_contexts/socket-id/SocketIdContextProvider';
 import SettingIconButton from '../../buttons/setting-icon-button/settingIconButton';
 import DeviceOfflineAlert from '../../device-offline-alert/deviceOfflineAlert';
 import OnlineDeviceStatus from '../../online-device-status/onlineDeviceStatus';
@@ -49,7 +50,7 @@ const useStyles = makeStyles(theme => ({
 const SmartSwitchCard = ({ deviceId, deviceName }) => {
   const classes = useStyles();
   const subDevices = useSelector(state => state && state.subDevice && state.subDevice.subDevices, shallowEqual);
-  const socketIds = useSelector(state => state.onlineDevice, shallowEqual);
+  const socketIdContext = useContext(SocketIdContext);
 
   const thisSubDevices = useMemo(() => {
     if (deviceId && subDevices && subDevices.length) {
@@ -59,14 +60,14 @@ const SmartSwitchCard = ({ deviceId, deviceName }) => {
   }, [deviceId, subDevices]);
 
   const isDeviceOnline = useMemo(() => {
-    if (socketIds && socketIds.onlineDevices && socketIds.onlineDevices.length && deviceId) {
+    if (socketIdContext && socketIdContext.onlineDevices && socketIdContext.onlineDevices.length && deviceId) {
       return (
-        socketIds.onlineDevices.filter(onlineDevice => onlineDevice.bindedTo && onlineDevice.bindedTo === deviceId).length >
-        0
+        socketIdContext.onlineDevices.filter(onlineDevice => onlineDevice.bindedTo && onlineDevice.bindedTo === deviceId)
+          .length > 0
       );
     }
     return false;
-  }, [deviceId, socketIds]);
+  }, [deviceId, socketIdContext]);
 
   const renderDeviceOfflineAlert = useMemo(() => {
     if (!isDeviceOnline) {

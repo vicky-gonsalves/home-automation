@@ -1,6 +1,7 @@
 import React, { useContext, useMemo } from 'react';
 import DeviceContextProvider from '../../../_contexts/device/DeviceContext.provider';
 import { SiteSettingContext } from '../../../_contexts/site-setting/SiteSettingContext.provider';
+import SocketIdContextProvider from '../../../_contexts/socket-id/SocketIdContextProvider';
 import { UserContext } from '../../../_contexts/user/UserContext.provider';
 import AdminDrawer from '../../admin-drawer/adminDrawer';
 import AdminLayout from '../admin-layout/adminLayout';
@@ -59,8 +60,10 @@ function Layout() {
     <React.Fragment>
       {showDrawer}
       <DeviceContextProvider>
-        {renderHomeLayout}
-        {renderAdminLayout}
+        <SocketIdContextProvider>
+          {renderHomeLayout}
+          {renderAdminLayout}
+        </SocketIdContextProvider>
       </DeviceContextProvider>
       {renderAuthLayout}
     </React.Fragment>

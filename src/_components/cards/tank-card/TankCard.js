@@ -5,8 +5,9 @@ import Typography from '@material-ui/core/Typography';
 import Alert from '@material-ui/lab/Alert';
 import moment from 'moment';
 import PropTypes from 'prop-types';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { shallowEqual, useSelector } from 'react-redux';
+import { SocketIdContext } from '../../../_contexts/socket-id/SocketIdContextProvider';
 import SettingIconButton from '../../buttons/setting-icon-button/settingIconButton';
 import DeviceOfflineAlert from '../../device-offline-alert/deviceOfflineAlert';
 import OnlineDeviceStatus from '../../online-device-status/onlineDeviceStatus';
@@ -58,7 +59,7 @@ const TankCard = ({ deviceId, deviceName }) => {
   // noinspection JSValidateTypes
   ref.current = { updatedAt, setUpdatedAt };
 
-  const socketIds = useSelector(state => state.onlineDevice);
+  const socketIdContext = useContext(SocketIdContext);
   const subDevices = useSelector(state => state && state.subDevice && state.subDevice.subDevices, shallowEqual);
   const deviceSettings = useSelector(
     state => state && state.deviceSetting && state.deviceSetting.deviceSettings,
@@ -67,11 +68,11 @@ const TankCard = ({ deviceId, deviceName }) => {
   const deviceParams = useSelector(state => state && state.deviceParam && state.deviceParam.deviceParams, shallowEqual);
 
   const isDeviceOnline = useMemo(() => {
-    if (socketIds && socketIds.onlineDevices && socketIds.onlineDevices.length && deviceId) {
-      return socketIds.onlineDevices.filter(({ bindedTo }) => bindedTo && bindedTo === deviceId).length > 0;
+    if (socketIdContext && socketIdContext.onlineDevices && socketIdContext.onlineDevices.length && deviceId) {
+      return socketIdContext.onlineDevices.filter(({ bindedTo }) => bindedTo && bindedTo === deviceId).length > 0;
     }
     return false;
-  }, [deviceId, socketIds]);
+  }, [deviceId, socketIdContext]);
 
   const waterLevel = useMemo(() => {
     if (deviceParams && deviceParams.length) {
