@@ -8,22 +8,29 @@ export const DeviceContext = React.createContext();
 const DeviceContextProvider = props => {
   const userContext = useContext(UserContext);
   const device = useSelector(state => state.device, shallowEqual);
+  const socket = useSelector(state => state.socket, shallowEqual);
   const sharedDevice = useSelector(state => state.sharedDevice, shallowEqual);
 
-  const isAuth = useMemo(() => {
-    return userContext.isLoggedIn && userContext.token !== null && userContext.isAuthorized;
-  }, [userContext.isAuthorized, userContext.isLoggedIn, userContext.token]);
+  const shouldFetchDevices = useMemo(() => {
+    return (
+      userContext.isLoggedIn &&
+      userContext.token !== null &&
+      userContext.isAuthorized &&
+      socket.connected &&
+      !userContext.hasFetchedDevices
+    );
+  }, [userContext.isAuthorized, userContext.isLoggedIn, userContext.token, socket.connected, userContext.hasFetchedDevices]);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchDevices = () => {
-      if (isAuth) {
+      if (shouldFetchDevices) {
         dispatch(deviceActions.myDevices());
       }
     };
     fetchDevices();
-  }, [dispatch, isAuth]);
+  }, [dispatch, shouldFetchDevices]);
 
   return <DeviceContext.Provider value={{ device, sharedDevice }}>{props.children}</DeviceContext.Provider>;
 };

@@ -19,6 +19,7 @@ const UserContextProvider = props => {
   const isAuthorized = user.isAuthorized;
   const isAdmin = isLoggedIn && user.role === 'admin';
   const token = user && user.tokens && user.tokens.access && user.tokens.access.token ? user.tokens.access.token : null;
+  const hasFetchedDevices = user.hasFetchedDevices;
   authInterceptor.interceptRequests();
   createAuthRefreshInterceptor(axios, authInterceptor.refreshAuthLogic(dispatch));
 
@@ -49,7 +50,9 @@ const UserContextProvider = props => {
   }, [token, dispatch, isLoggedIn, isAuthorized]);
 
   return (
-    <UserContext.Provider value={{ user, connected, isLoggedIn, isAuthorized, isAdmin, token, isSocketFetching }}>
+    <UserContext.Provider
+      value={{ user, connected, isLoggedIn, isAuthorized, isAdmin, token, isSocketFetching, hasFetchedDevices }}
+    >
       {props.children}
     </UserContext.Provider>
   );
