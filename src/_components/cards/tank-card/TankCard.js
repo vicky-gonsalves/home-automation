@@ -144,7 +144,8 @@ const TankCard = ({ deviceId, deviceName }) => {
     [preferredDevice, thisSubDevices.length]
   );
 
-  const renderLastUpdated = useMemo(() => {
+  // do not use useMemo here
+  const renderLastUpdated = () => {
     const { updatedAt: lastUpdated } = ref.current;
     return (
       <Typography
@@ -157,7 +158,7 @@ const TankCard = ({ deviceId, deviceName }) => {
         {`Updated ${lastUpdated}`}
       </Typography>
     );
-  }, [classes.update]);
+  };
 
   const renderButtonGroups = useMemo(() => {
     if (thisSubDevices) {
@@ -183,7 +184,8 @@ const TankCard = ({ deviceId, deviceName }) => {
     }
   }, [classes.items, deviceId, renderPreferredSubDevices, thisSubDevices]);
 
-  const renderTankCardContentContainer = useMemo(() => {
+  // do not use useMemo here
+  const renderTankCardContentContainer = () => {
     if (thisSubDevices.length) {
       return (
         <React.Fragment>
@@ -193,7 +195,7 @@ const TankCard = ({ deviceId, deviceName }) => {
               <Grid container spacing={1}>
                 <Grid item xs={5} sm={4} md={5} lg={3}>
                   <Tank waterLevel={paramValue} data-test="tankContainer" />
-                  {renderLastUpdated}
+                  {renderLastUpdated()}
                 </Grid>
                 <Grid item xs={7} sm={8} md={7} lg={9} className={classes.buttonsGrp}>
                   {renderButtonGroups}
@@ -206,17 +208,7 @@ const TankCard = ({ deviceId, deviceName }) => {
       );
     }
     return null;
-  }, [
-    classes.buttonsGrp,
-    classes.cardContent,
-    classes.root,
-    deviceId,
-    paramValue,
-    renderButtonGroups,
-    renderLastUpdated,
-    renderOfflineAlert,
-    thisSubDevices.length,
-  ]);
+  };
 
   return (
     <Card className={classes.default} data-test="tankCardContainer">
@@ -228,7 +220,7 @@ const TankCard = ({ deviceId, deviceName }) => {
         titleTypographyProps={{ align: 'center', variant: 'h6', color: 'primary', gutterBottom: false }}
       />
       {renderSubDeviceAlert}
-      {renderTankCardContentContainer}
+      {renderTankCardContentContainer()}
     </Card>
   );
 };
