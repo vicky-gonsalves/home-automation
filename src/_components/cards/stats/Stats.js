@@ -10,8 +10,8 @@ import PermIdentityIcon from '@material-ui/icons/PermIdentity';
 import Alert from '@material-ui/lab/Alert';
 import moment from 'moment';
 import PropTypes from 'prop-types';
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useContext } from 'react';
+import { LogContext } from '../../../_contexts/log/LogContext.provider';
 
 const useStyles = makeStyles(theme => ({
   cardContent: {
@@ -30,7 +30,8 @@ const useStyles = makeStyles(theme => ({
 }));
 const Stats = ({ deviceId }) => {
   const classes = useStyles();
-  const allLogs = useSelector(state => state.log && state.log.logs);
+  const logContext = useContext(LogContext);
+  const allLogs = logContext.allLogs;
   const thisLogs = allLogs.filter(log => log.deviceId === deviceId);
 
   const renderStatsAlert = () => {

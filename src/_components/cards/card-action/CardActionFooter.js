@@ -6,6 +6,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
+import LogContextProvider from '../../../_contexts/log/LogContext.provider';
 import SubDeviceParamContextProvider from '../../../_contexts/sub-device-param/SubDeviceParamContext.provider';
 import SubDeviceSettingContextProvider from '../../../_contexts/sub-device-setting/SubDeviceSettingContext.provider';
 import SmartSwitchAlert from '../../alerts/smart-switch-alert/smartSwitchAlert';
@@ -65,7 +66,11 @@ const CardActionFooter = ({ deviceId, deviceVariant }) => {
         </IconButton>
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit data-test="collapseComponent">
-        {deviceId && <Stats deviceId={deviceId} data-test="statsAlertComponent" />}
+        {deviceId && (
+          <LogContextProvider>
+            <Stats deviceId={deviceId} data-test="statsAlertComponent" />
+          </LogContextProvider>
+        )}
       </Collapse>
     </React.Fragment>
   );
