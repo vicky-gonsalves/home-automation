@@ -2,7 +2,7 @@ import { CssBaseline } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useMemo } from 'react';
 import config from '../../config';
 
 const useStyles = makeStyles(theme => ({
@@ -14,7 +14,7 @@ const useStyles = makeStyles(theme => ({
     flexGrow: 1,
     padding: theme.spacing(3),
     transition: theme.transitions.create('margin', {
-      easing: theme.transitions.easing.sharp,
+      easing: theme.transitions.easing.easeOut,
       duration: theme.transitions.duration.leavingScreen,
     }),
     [theme.breakpoints.up('md')]: {
@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme => ({
   },
   contentShift: {
     transition: theme.transitions.create('margin', {
-      easing: theme.transitions.easing.easeOut,
+      easing: theme.transitions.easing.easeIn,
       duration: theme.transitions.duration.enteringScreen,
     }),
     [theme.breakpoints.up('md')]: {
@@ -35,7 +35,7 @@ const useStyles = makeStyles(theme => ({
 const AdminCommonLayout = ({ component, drawerOpen }) => {
   const classes = useStyles();
 
-  const renderAdminCommonLayout = () => {
+  return useMemo(() => {
     if (typeof component === 'object') {
       return (
         <React.Fragment>
@@ -52,9 +52,7 @@ const AdminCommonLayout = ({ component, drawerOpen }) => {
       );
     }
     return null;
-  };
-
-  return renderAdminCommonLayout();
+  }, [classes.content, classes.contentShift, component, drawerOpen]);
 };
 
 AdminCommonLayout.propTypes = {
