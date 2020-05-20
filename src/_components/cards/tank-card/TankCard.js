@@ -8,6 +8,7 @@ import PropTypes from 'prop-types';
 import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { shallowEqual, useSelector } from 'react-redux';
 import { SocketIdContext } from '../../../_contexts/socket-id/SocketIdContext.provider';
+import { SubDeviceContext } from '../../../_contexts/sub-device/SubDeviceContext.provider';
 import SettingIconButton from '../../buttons/setting-icon-button/settingIconButton';
 import DeviceOfflineAlert from '../../device-offline-alert/deviceOfflineAlert';
 import OnlineDeviceStatus from '../../online-device-status/onlineDeviceStatus';
@@ -60,7 +61,8 @@ const TankCard = ({ deviceId, deviceName }) => {
   ref.current = { updatedAt, setUpdatedAt };
 
   const socketIdContext = useContext(SocketIdContext);
-  const subDevices = useSelector(state => state && state.subDevice && state.subDevice.subDevices, shallowEqual);
+  const subDevicesContext = useContext(SubDeviceContext);
+  const subDevices = subDevicesContext.subDevices;
   const deviceSettings = useSelector(
     state => state && state.deviceSetting && state.deviceSetting.deviceSettings,
     shallowEqual

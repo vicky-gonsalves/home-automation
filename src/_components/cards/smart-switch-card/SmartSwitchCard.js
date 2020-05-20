@@ -4,8 +4,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import Alert from '@material-ui/lab/Alert';
 import PropTypes from 'prop-types';
 import React, { useContext, useMemo } from 'react';
-import { shallowEqual, useSelector } from 'react-redux';
 import { SocketIdContext } from '../../../_contexts/socket-id/SocketIdContext.provider';
+import { SubDeviceContext } from '../../../_contexts/sub-device/SubDeviceContext.provider';
 import SettingIconButton from '../../buttons/setting-icon-button/settingIconButton';
 import DeviceOfflineAlert from '../../device-offline-alert/deviceOfflineAlert';
 import OnlineDeviceStatus from '../../online-device-status/onlineDeviceStatus';
@@ -49,7 +49,8 @@ const useStyles = makeStyles(theme => ({
 
 const SmartSwitchCard = ({ deviceId, deviceName }) => {
   const classes = useStyles();
-  const subDevices = useSelector(state => state && state.subDevice && state.subDevice.subDevices, shallowEqual);
+  const subDevicesContext = useContext(SubDeviceContext);
+  const subDevices = subDevicesContext.subDevices;
   const socketIdContext = useContext(SocketIdContext);
 
   const thisSubDevices = useMemo(() => {

@@ -11,6 +11,7 @@ import SmartSwitchCard from '../../_components/cards/smart-switch-card/SmartSwit
 import TankCard from '../../_components/cards/tank-card/TankCard';
 import SettingDialog from '../../_components/dialogs/setting-dialog/settingDialog';
 import { DeviceContext } from '../../_contexts/device/DeviceContext.provider';
+import SubDeviceContextProvider from '../../_contexts/sub-device/SubDeviceContext.provider';
 import { UserContext } from '../../_contexts/user/UserContext.provider';
 
 const useStyles = makeStyles(theme => ({
@@ -55,13 +56,21 @@ const HomePage = () => {
 
   const renderMyTankCardComponent = useCallback(device => {
     if (device.variant && device.variant === 'tank') {
-      return <TankCard deviceName={device.name} deviceId={device.deviceId} data-test="myTankCardComponent" />;
+      return (
+        <SubDeviceContextProvider>
+          <TankCard deviceName={device.name} deviceId={device.deviceId} data-test="myTankCardComponent" />
+        </SubDeviceContextProvider>
+      );
     }
   }, []);
 
   const renderMySmartSwitchCardComponent = useCallback(device => {
     if (device.variant && device.variant === 'smartSwitch') {
-      return <SmartSwitchCard deviceName={device.name} deviceId={device.deviceId} data-test="mySmartSwitchCardComponent" />;
+      return (
+        <SubDeviceContextProvider>
+          <SmartSwitchCard deviceName={device.name} deviceId={device.deviceId} data-test="mySmartSwitchCardComponent" />
+        </SubDeviceContextProvider>
+      );
     }
   }, []);
 
@@ -82,14 +91,20 @@ const HomePage = () => {
 
   const renderSharedTankCardComponent = useCallback(device => {
     if (device.variant && device.variant === 'tank') {
-      return <TankCard deviceName={device.name} deviceId={device.deviceId} data-test="sharedTankCardComponent" />;
+      return (
+        <SubDeviceContextProvider>
+          <TankCard deviceName={device.name} deviceId={device.deviceId} data-test="sharedTankCardComponent" />
+        </SubDeviceContextProvider>
+      );
     }
   }, []);
 
   const renderSharedSmartSwitchCardComponent = useCallback(device => {
     if (device.variant && device.variant === 'smartSwitch') {
       return (
-        <SmartSwitchCard deviceName={device.name} deviceId={device.deviceId} data-test="sharedSmartSwitchCardComponent" />
+        <SubDeviceContextProvider>
+          <SmartSwitchCard deviceName={device.name} deviceId={device.deviceId} data-test="sharedSmartSwitchCardComponent" />
+        </SubDeviceContextProvider>
       );
     }
   }, []);

@@ -4,15 +4,17 @@ import PropTypes from 'prop-types';
 import React, { useContext } from 'react';
 import { useSelector } from 'react-redux';
 import { SocketIdContext } from '../../../_contexts/socket-id/SocketIdContext.provider';
+import { SubDeviceContext } from '../../../_contexts/sub-device/SubDeviceContext.provider';
 import CountDownTimer from '../../count-down-timer/CountDownTimer';
 
 const TankAlert = props => {
   let autoShutDownTime;
-  const subDevices = useSelector(state => state.subDevice && state.subDevice.subDevices);
+  const socketIdContext = useContext(SocketIdContext);
+  const subDevicesContext = useContext(SubDeviceContext);
   const subDeviceParams = useSelector(state => state.subDeviceParam && state.subDeviceParam.subDeviceParams);
   const deviceSettings = useSelector(state => state.deviceSetting && state.deviceSetting.deviceSettings);
-  const socketIdContext = useContext(SocketIdContext);
   const onlineDevices = socketIdContext.onlineDevices;
+  const subDevices = subDevicesContext.subDevices;
   const thisDeviceParams = subDeviceParams.filter(
     param => param.deviceId === props.deviceId && param.paramName === 'status' && param.paramValue === 'on'
   );

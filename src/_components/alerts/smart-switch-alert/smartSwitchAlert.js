@@ -3,15 +3,17 @@ import moment from 'moment';
 import PropTypes from 'prop-types';
 import React, { useContext } from 'react';
 import { useSelector } from 'react-redux';
-import { SocketIdContext } from '../../../_contexts/socket-id/SocketIdContextProvider';
+import { SocketIdContext } from '../../../_contexts/socket-id/SocketIdContext.provider';
+import { SubDeviceContext } from '../../../_contexts/sub-device/SubDeviceContext.provider';
 import CountDownTimer from '../../count-down-timer/CountDownTimer';
 
 const SmartSwitchAlert = ({ deviceId }) => {
-  const subDevices = useSelector(state => state.subDevice && state.subDevice.subDevices);
+  const socketIdContext = useContext(SocketIdContext);
+  const subDevicesContext = useContext(SubDeviceContext);
   const subDeviceParams = useSelector(state => state.subDeviceParam && state.subDeviceParam.subDeviceParams);
   const subDeviceSettings = useSelector(state => state.subDeviceSetting && state.subDeviceSetting.subDeviceSettings);
-  const socketIdContext = useContext(SocketIdContext);
   const onlineDevices = socketIdContext.onlineDevices;
+  const subDevices = subDevicesContext.subDevices;
 
   const thisSubDevices = subDevices.filter(subDevice => subDevice.deviceId === deviceId);
   const thisSubDeviceParams = [];
