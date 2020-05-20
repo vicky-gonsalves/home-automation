@@ -9,6 +9,7 @@ import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } 
 import { shallowEqual, useSelector } from 'react-redux';
 import { DeviceSettingContext } from '../../../_contexts/device-setting/DeviceSettingContext.provider';
 import { SocketIdContext } from '../../../_contexts/socket-id/SocketIdContext.provider';
+import SubDeviceParamContextProvider from '../../../_contexts/sub-device-param/SubDeviceParamContext.provider';
 import { SubDeviceContext } from '../../../_contexts/sub-device/SubDeviceContext.provider';
 import SettingIconButton from '../../buttons/setting-icon-button/settingIconButton';
 import DeviceOfflineAlert from '../../device-offline-alert/deviceOfflineAlert';
@@ -163,18 +164,20 @@ const TankCard = ({ deviceId, deviceName }) => {
       return thisSubDevices.map(subDevice => (
         <div key={subDevice.subDeviceId} className={classes.items}>
           {renderPreferredSubDevices(subDevice)}
-          <MotorSwitch
-            name={subDevice.name}
-            deviceId={deviceId}
-            subDeviceId={subDevice.subDeviceId}
-            data-test="MotorSwitchContainer"
-          />
-          <MotorMode
-            name={subDevice.name}
-            deviceId={deviceId}
-            subDeviceId={subDevice.subDeviceId}
-            data-test="MotorModeContainer"
-          />
+          <SubDeviceParamContextProvider>
+            <MotorSwitch
+              name={subDevice.name}
+              deviceId={deviceId}
+              subDeviceId={subDevice.subDeviceId}
+              data-test="MotorSwitchContainer"
+            />
+            <MotorMode
+              name={subDevice.name}
+              deviceId={deviceId}
+              subDeviceId={subDevice.subDeviceId}
+              data-test="MotorModeContainer"
+            />
+          </SubDeviceParamContextProvider>
         </div>
       ));
     }

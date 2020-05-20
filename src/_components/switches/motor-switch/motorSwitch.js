@@ -3,14 +3,16 @@ import Switch from '@material-ui/core/Switch';
 import Typography from '@material-ui/core/Typography';
 import Alert from '@material-ui/lab/Alert';
 import PropTypes from 'prop-types';
-import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useContext } from 'react';
+import { useDispatch } from 'react-redux';
 import { subDeviceParamActions } from '../../../_actions';
+import { SubDeviceParamsContext } from '../../../_contexts/sub-device-param/SubDeviceParamContext.provider';
 
 const MotorSwitch = props => {
   let thisSubDeviceParams;
   const dispatch = useDispatch();
-  const subDeviceParams = useSelector(state => state && state.subDeviceParam && state.subDeviceParam.subDeviceParams);
+  const subDeviceParamsContext = useContext(SubDeviceParamsContext);
+  const subDeviceParams = subDeviceParamsContext.subDeviceParams;
 
   const filterSubDeviceParams = () =>
     subDeviceParams.filter(

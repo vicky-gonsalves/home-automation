@@ -6,6 +6,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
+import SubDeviceParamContextProvider from '../../../_contexts/sub-device-param/SubDeviceParamContext.provider';
 import SubDeviceSettingContextProvider from '../../../_contexts/sub-device-setting/SubDeviceSettingContext.provider';
 import SmartSwitchAlert from '../../alerts/smart-switch-alert/smartSwitchAlert';
 import TankAlert from '../../alerts/tank-alert/tankAlert';
@@ -39,10 +40,16 @@ const CardActionFooter = ({ deviceId, deviceVariant }) => {
   return (
     <React.Fragment>
       <CardActions className={classes.cardAction} data-test="cardActionFooterContainer">
-        {deviceVariant === 'tank' && <TankAlert deviceId={deviceId} data-test="tankAlertComponent" />}
+        {deviceVariant === 'tank' && (
+          <SubDeviceParamContextProvider>
+            <TankAlert deviceId={deviceId} data-test="tankAlertComponent" />
+          </SubDeviceParamContextProvider>
+        )}
         {deviceVariant === 'smartSwitch' && (
           <SubDeviceSettingContextProvider>
-            <SmartSwitchAlert deviceId={deviceId} data-test="smartSwitchAlertComponent" />
+            <SubDeviceParamContextProvider>
+              <SmartSwitchAlert deviceId={deviceId} data-test="smartSwitchAlertComponent" />
+            </SubDeviceParamContextProvider>
           </SubDeviceSettingContextProvider>
         )}
         <IconButton

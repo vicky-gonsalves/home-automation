@@ -5,9 +5,10 @@ import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useContext } from 'react';
+import { useDispatch } from 'react-redux';
 import { subDeviceParamActions } from '../../../_actions/sub-device-param/subDeviceParam.actions';
+import { SubDeviceParamsContext } from '../../../_contexts/sub-device-param/SubDeviceParamContext.provider';
 
 const useStyles = makeStyles(theme => ({
   mode: {
@@ -19,7 +20,8 @@ const MotorMode = props => {
   let thisSubDeviceParams;
   const classes = useStyles();
   const dispatch = useDispatch();
-  const subDeviceParams = useSelector(state => state && state.subDeviceParam && state.subDeviceParam.subDeviceParams);
+  const subDeviceParamsContext = useContext(SubDeviceParamsContext);
+  const subDeviceParams = subDeviceParamsContext.subDeviceParams;
 
   const filterSubDeviceParams = () =>
     subDeviceParams.filter(

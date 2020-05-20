@@ -2,9 +2,9 @@ import Typography from '@material-ui/core/Typography';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React, { useContext } from 'react';
-import { useSelector } from 'react-redux';
 import { DeviceSettingContext } from '../../../_contexts/device-setting/DeviceSettingContext.provider';
 import { SocketIdContext } from '../../../_contexts/socket-id/SocketIdContext.provider';
+import { SubDeviceParamsContext } from '../../../_contexts/sub-device-param/SubDeviceParamContext.provider';
 import { SubDeviceContext } from '../../../_contexts/sub-device/SubDeviceContext.provider';
 import CountDownTimer from '../../count-down-timer/CountDownTimer';
 
@@ -13,7 +13,8 @@ const TankAlert = props => {
   const socketIdContext = useContext(SocketIdContext);
   const subDevicesContext = useContext(SubDeviceContext);
   const deviceSettingContext = useContext(DeviceSettingContext);
-  const subDeviceParams = useSelector(state => state.subDeviceParam && state.subDeviceParam.subDeviceParams);
+  const subDeviceParamsContext = useContext(SubDeviceParamsContext);
+  const subDeviceParams = subDeviceParamsContext.subDeviceParams;
   const onlineDevices = socketIdContext.onlineDevices;
   const subDevices = subDevicesContext.subDevices;
   const deviceSettings = deviceSettingContext.deviceSettings;

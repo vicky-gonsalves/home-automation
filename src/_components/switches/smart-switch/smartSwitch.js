@@ -5,14 +5,16 @@ import Typography from '@material-ui/core/Typography';
 import EmojiObjectsIcon from '@material-ui/icons/EmojiObjects';
 import Alert from '@material-ui/lab/Alert';
 import PropTypes from 'prop-types';
-import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useContext } from 'react';
+import { useDispatch } from 'react-redux';
 import { subDeviceParamActions } from '../../../_actions';
+import { SubDeviceParamsContext } from '../../../_contexts/sub-device-param/SubDeviceParamContext.provider';
 
 const SmartSwitch = ({ deviceId, name, show, subDeviceId }) => {
   let thisSubDeviceParams;
   const dispatch = useDispatch();
-  const subDeviceParams = useSelector(state => state && state.subDeviceParam && state.subDeviceParam.subDeviceParams);
+  const subDeviceParamsContext = useContext(SubDeviceParamsContext);
+  const subDeviceParams = subDeviceParamsContext.subDeviceParams;
   const allSubDeviceParams = subDeviceParams.filter(
     subDeviceParam => subDeviceParam.deviceId === deviceId && subDeviceParam.paramName === 'status'
   );

@@ -1,8 +1,9 @@
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useContext } from 'react';
+import SubDeviceParamContextProvider from '../../_contexts/sub-device-param/SubDeviceParamContext.provider';
+import { SubDeviceContext } from '../../_contexts/sub-device/SubDeviceContext.provider';
 import SmartSwitch from '../switches/smart-switch/smartSwitch';
 
 const useStyles = makeStyles(() => ({
@@ -19,7 +20,8 @@ const SubDeviceComponent = props => {
   let thisSubDevicesLength = 0;
   const classes = useStyles();
 
-  const subDevices = useSelector(state => state && state.subDevice && state.subDevice.subDevices);
+  const subDeviceContext = useContext(SubDeviceContext);
+  const subDevices = subDeviceContext.subDevices;
 
   if (props.deviceId && subDevices && subDevices.length) {
     thisSubDevices = subDevices.filter(subDevice => subDevice.deviceId === props.deviceId);
@@ -40,12 +42,14 @@ const SubDeviceComponent = props => {
           className={classes.buttonsGrp}
           data-test="subDeviceIndSwitchComponentContainer"
         >
-          <SmartSwitch
-            name={subDevice.name}
-            deviceId={subDevice.deviceId}
-            subDeviceId={subDevice.subDeviceId}
-            data-test="subDeviceSmartSwitchContainer"
-          />
+          <SubDeviceParamContextProvider>
+            <SmartSwitch
+              name={subDevice.name}
+              deviceId={subDevice.deviceId}
+              subDeviceId={subDevice.subDeviceId}
+              data-test="subDeviceSmartSwitchContainer"
+            />
+          </SubDeviceParamContextProvider>
         </Grid>
       ));
     }
@@ -63,7 +67,9 @@ const SubDeviceComponent = props => {
           direction="row"
           justify="flex-end"
         >
-          <SmartSwitch name="All" deviceId={props.all} show={showAllSwitch} data-test="subDeviceSmartSwitchAllContainer" />
+          <SubDeviceParamContextProvider>
+            <SmartSwitch name="All" deviceId={props.all} show={showAllSwitch} data-test="subDeviceSmartSwitchAllContainer" />
+          </SubDeviceParamContextProvider>
         </Grid>
       );
     }
