@@ -6,7 +6,7 @@ import React, { useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { settingDialogActions } from '../../../_actions/setting-dialog/settingDialog.actions';
 import { DeviceSettingContext } from '../../../_contexts/device-setting/DeviceSettingContext.provider';
-import { SettingDialogContext } from '../../../_contexts/setting-dialog/DeviceSettingContext.provider';
+import { SettingDialogContext } from '../../../_contexts/setting-dialog/SettingDialogContext.provider';
 import MotorSettingForm from '../../forms/motor-setting-form/MotorSettingForm';
 import SmartSwitchSettingForm from '../../forms/smart-switch-setting-form/SmartSwitchSettingForm';
 
