@@ -7,12 +7,13 @@ import { UserContext } from '../../../_contexts/user/UserContext.provider';
 import LazyLoader from '../../lazy-loader/LazyLoader';
 
 const UserListPage = React.lazy(() => import('../../../modules/Admin/User/UserList/UserListPage'));
+const UserViewPage = React.lazy(() => import('../../../modules/Admin/User/UserView/UserViewPage'));
 const UserEditorPage = React.lazy(() => import('../../../modules/Admin/User/UserEditor/UserEditorPage'));
 const DashboardPage = React.lazy(() => import('../../../modules/Admin/Dashboard/DashboardPage'));
 
 function AdminLayout() {
   const userContext = useContext(UserContext);
-  const adminLayoutPath = ['/admin', '/users', '/users/new', '/users/edit/:id'];
+  const adminLayoutPath = ['/admin', '/users', '/users/new', '/users/edit/:id', '/users/view/:id'];
   const location = useLocation();
   const dispatch = useDispatch();
 
@@ -41,6 +42,7 @@ function AdminLayout() {
       <AdminRoute exact path={adminLayoutPath[1]} component={LazyLoader(UserListPage)} />
       <AdminRoute exact path={adminLayoutPath[2]} component={LazyLoader(UserEditorPage)} />
       <AdminRoute exact path={adminLayoutPath[3]} component={LazyLoader(UserEditorPage)} />
+      <AdminRoute exact path={adminLayoutPath[4]} component={LazyLoader(UserViewPage)} />
     </React.Fragment>
   );
 }

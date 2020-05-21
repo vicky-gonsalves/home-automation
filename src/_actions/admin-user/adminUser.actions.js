@@ -52,7 +52,7 @@ const getUser = id => async dispatch => {
     dispatch(setUserProgress(false));
     return response;
   } catch (e) {
-    dispatch(authInterceptor.disconnect());
+    history.push('/notfound');
   }
 };
 
