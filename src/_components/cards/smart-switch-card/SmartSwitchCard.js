@@ -50,8 +50,8 @@ const useStyles = makeStyles(theme => ({
 const SmartSwitchCard = ({ deviceId, deviceName }) => {
   const classes = useStyles();
   const subDevicesContext = useContext(SubDeviceContext);
-  const subDevices = subDevicesContext.subDevices;
   const socketIdContext = useContext(SocketIdContext);
+  const subDevices = subDevicesContext.subDevices;
 
   const thisSubDevices = useMemo(() => {
     if (deviceId && subDevices && subDevices.length) {

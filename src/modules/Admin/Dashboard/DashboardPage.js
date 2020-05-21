@@ -9,16 +9,13 @@ const DashboardPage = () => {
   const innerComponent = <div data-test="dashboardPageContainer">Dashboard Page</div>;
 
   const renderAdminCommonLayoutComp = component => {
-    if (component && typeof component === 'object') {
-      return (
-        <AdminCommonLayout
-          component={component}
-          drawerOpen={siteSettingContext.drawer.open}
-          data-test="adminPageContainerForDashboard"
-        />
-      );
-    }
-    return null;
+    return (
+      <AdminCommonLayout
+        component={component}
+        drawerOpen={siteSettingContext.drawer.open}
+        data-test="adminPageContainerForDashboard"
+      />
+    );
   };
 
   return renderAdminCommonLayoutComp(innerComponent);

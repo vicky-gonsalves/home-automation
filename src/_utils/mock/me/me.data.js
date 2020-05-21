@@ -695,6 +695,10 @@ export const meData = {
 
 export const myDeviceState = [
   {
+    type: 'DEVICE_UPDATE_FETCHING',
+    payload: true,
+  },
+  {
     type: 'SET_FETCHED_DEVICES',
     payload: true,
   },

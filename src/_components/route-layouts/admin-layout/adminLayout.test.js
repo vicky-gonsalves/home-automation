@@ -5,8 +5,10 @@ import { Route } from 'react-router';
 import { Router } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import SiteSettingContextProvider from '../../../_contexts/site-setting/SiteSettingContext.provider';
+import UserContextProvider from '../../../_contexts/user/UserContext.provider';
 import { history } from '../../../_helpers/history/history';
-import { checkProps, findByDataAttr, getStateClone, initialState, wait } from '../../../_utils';
+import { checkProps, findByDataAttr, getStateClone, initialState, wait, getInnerComponent } from '../../../_utils';
 import AdminLayout from './adminLayout';
 
 const adminLayoutPath = ['/admin', '/users', '/users/new', '/users/edit/:id'];
@@ -21,9 +23,13 @@ const setupWrapper = (state, _props = {}) => {
   store = mockStore(state);
   return mount(
     <Provider store={store}>
-      <Router history={history}>
-        <AdminLayout {..._props} />
-      </Router>
+      <UserContextProvider>
+        <SiteSettingContextProvider>
+          <Router history={history}>
+            <AdminLayout {..._props} />
+          </Router>
+        </SiteSettingContextProvider>
+      </UserContextProvider>
     </Provider>
   );
 };
@@ -40,14 +46,18 @@ const innerProps = {
   location: {},
   match: {},
 };
-const getInnerComponent = component => component.props().component().props.children.type._result;
+
 const setUpInnerWrapper = (_state, InnerComponent, _props = {}) => {
   innerStore = mockStore(_state);
   return mount(
     <Provider store={innerStore}>
-      <Router history={history}>
-        <InnerComponent {..._props} />
-      </Router>
+      <UserContextProvider>
+        <SiteSettingContextProvider>
+          <Router history={history}>
+            <InnerComponent {..._props} />
+          </Router>
+        </SiteSettingContextProvider>
+      </UserContextProvider>
     </Provider>
   );
 };
@@ -61,7 +71,7 @@ describe('AdminLayout', () => {
 
     it('should throw a warning if props are missing', () => {
       const propsErr = checkProps(AdminLayout, {});
-      expect(propsErr).toBeDefined();
+      expect(propsErr).toBeUndefined();
     });
   });
   describe('Component Test', () => {
@@ -145,13 +155,13 @@ describe('AdminLayout', () => {
         history.push('/users');
         await wait();
         const component = wrapper.find('[path="/users"]').first();
-        const innerComponent = getInnerComponent(component);
+        const innerComponent = await getInnerComponent(component);
         const _initialState = getStateClone();
         _initialState.user.isLoggedIn = true;
         _initialState.user.isAuthorized = true;
         _initialState.user.tokens = { access: {} };
         _initialState.socket.connected = true;
-        innerWrapper = setUpInnerWrapper(_initialState, innerComponent, innerProps);
+        innerWrapper = setUpInnerWrapper(_initialState, innerComponent.default, innerProps);
         const itemsInInnerComponent = findByDataAttr(innerWrapper, 'userListPageComponent');
         expect(innerWrapper.props()).toBeDefined();
         expect(itemsInInnerComponent.length).toBeTruthy();
@@ -163,12 +173,12 @@ describe('AdminLayout', () => {
         history.push('/users/new');
         await wait();
         const component = wrapper.find('[path="/users/new"]').first();
-        const innerComponent = getInnerComponent(component);
+        const innerComponent = await getInnerComponent(component);
         const _initialState = getStateClone();
         _initialState.user.isLoggedIn = true;
         _initialState.user.isAuthorized = true;
         _initialState.socket.connected = true;
-        innerWrapper = setUpInnerWrapper(_initialState, innerComponent, innerProps);
+        innerWrapper = setUpInnerWrapper(_initialState, innerComponent.default, innerProps);
         const itemsInInnerComponent = findByDataAttr(innerWrapper, 'userEditorPageContainer');
         expect(innerWrapper.props()).toBeDefined();
         expect(itemsInInnerComponent.length).toBeTruthy();
@@ -180,12 +190,12 @@ describe('AdminLayout', () => {
         history.push('/admin');
         await wait();
         const component = wrapper.find('[path="/admin"]').first();
-        const innerComponent = getInnerComponent(component);
+        const innerComponent = await getInnerComponent(component);
         const _initialState = getStateClone();
         _initialState.user.isLoggedIn = true;
         _initialState.user.isAuthorized = true;
         _initialState.socket.connected = true;
-        innerWrapper = setUpInnerWrapper(_initialState, innerComponent, innerProps);
+        innerWrapper = setUpInnerWrapper(_initialState, innerComponent.default, innerProps);
         const itemsInInnerComponent = findByDataAttr(innerWrapper, 'dashboardPageContainer');
         expect(innerWrapper.props()).toBeDefined();
         expect(itemsInInnerComponent.length).toBeTruthy();

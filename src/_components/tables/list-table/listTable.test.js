@@ -4,7 +4,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { checkProps, findByDataAttr, getStateClone, wait } from '../../../_utils';
+import { checkProps, findByDataAttr, getStateClone } from '../../../_utils';
 import AddButton from '../../buttons/add-button/addButton';
 import DeleteButton from '../../buttons/delete-button/deleteButton';
 import EditButton from '../../buttons/edit-button/editButton';
@@ -470,7 +470,7 @@ describe('ListTable Component', () => {
       expect(component).toHaveLength(0);
     });
 
-    it('should not render sort button if sort is true and handle onClick event', () => {
+    it('should render sort button if sort is true and handle onClick event', () => {
       jest.spyOn(React, 'useState').mockImplementation(useStateMock);
       const _props = jest.fn().mockReturnValue(props)();
       _props.tableHeaders.length = 0;
@@ -483,9 +483,10 @@ describe('ListTable Component', () => {
       act(() => {
         component.props().onClick();
       });
-      wrapper.update();
-      expect(setState).toHaveBeenCalledWith('asc');
-      expect(setState).toHaveBeenLastCalledWith(_props.tableHeaders[0].id);
+      expect(setState).toHaveBeenNthCalledWith(1, 'asc');
+      expect(setState).toHaveBeenNthCalledWith(2, _props.tableHeaders[0].id);
+      expect(setState).toHaveBeenNthCalledWith(3, {});
+      expect(setState).toHaveBeenNthCalledWith(4, 0);
       expect(_props.getList).toHaveBeenCalled();
     });
 
@@ -595,7 +596,7 @@ describe('ListTable Component', () => {
       _props.getList.mockClear();
     });
 
-    it('should sort rows ascending', async () => {
+    it('should sort rows descending', () => {
       jest.spyOn(React, 'useState').mockImplementation(useStateMock);
       const _props = jest.fn().mockReturnValue(props)();
       _props.initialSort = { order: 'asc', orderBy: 'email' };
@@ -606,9 +607,11 @@ describe('ListTable Component', () => {
       act(() => {
         component.props().onClick();
       });
-      await wait();
-      expect(setState).toHaveBeenCalledWith('desc');
-      expect(setState).toHaveBeenLastCalledWith('email');
+      expect(setState).toHaveBeenNthCalledWith(1, 'desc');
+      expect(setState).toHaveBeenNthCalledWith(2, 'email');
+      expect(setState).toHaveBeenNthCalledWith(3, {});
+      expect(setState).toHaveBeenNthCalledWith(4, 0);
+      expect(_props.getList).toHaveBeenCalled();
     });
   });
 });

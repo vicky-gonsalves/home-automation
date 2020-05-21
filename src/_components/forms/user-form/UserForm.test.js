@@ -27,10 +27,8 @@ describe('UserForm', () => {
 
     it('should not throw a warning for SimpleUserForm', () => {
       const props = {
-        // headCell: headCells[0],
-        // handleSubmit: jest.fn(),
-        // handleCancel: jest.fn(),
-        // isFetching: false,
+        handleSubmit: jest.fn(),
+        isFetching: false,
       };
       const propsErr = checkProps(SimpleUserForm, props);
       expect(propsErr).toBeUndefined();
@@ -45,15 +43,13 @@ describe('UserForm', () => {
       store.clearActions();
     });
 
-    it('should render userFormFieldInput field for type text', () => {
+    it('should render nameInput field for type text', () => {
       const props = {
-        // headCell: headCells[0],
-        // handleSubmit: jest.fn(),
-        // handleCancel: jest.fn(),
-        // isFetching: false,
+        handleSubmit: jest.fn(),
+        isFetching: false,
       };
       wrapper = setupWrapper(initialState, props);
-      const component = findByDataAttr(wrapper, 'userFormFieldInput').first();
+      const component = findByDataAttr(wrapper, 'nameInput').first();
       expect(component).toHaveLength(1);
     });
   });

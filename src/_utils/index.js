@@ -71,7 +71,11 @@ const initialState = {
   },
   adminUser: {
     count: 0,
+    fetchedEditableUser: false,
+    fetchedUsersList: false,
     isFetchingUsersList: false,
+    user: {},
+    userInProgress: false,
     users: [],
   },
 };
@@ -161,6 +165,12 @@ const simulateSelectChange = (selectInput, name, value) => {
   });
 };
 
+const getInnerComponent = async component =>
+  await component
+    .props()
+    .component()
+    .props.children.type._ctor();
+
 module.exports = {
   initialState,
   getStateClone,
@@ -176,4 +186,5 @@ module.exports = {
   mockEmptyErrorResponse,
   mockStatusTextErrorResponse,
   simulateSelectChange,
+  getInnerComponent,
 };

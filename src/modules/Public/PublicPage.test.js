@@ -3,10 +3,14 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import UserContextProvider from '../../_contexts/user/UserContext.provider';
 import { history } from '../../_helpers/history/history';
 import { checkProps, findByDataAttr, getStateClone } from '../../_utils';
 import config from '../../config';
 import PublicPage from './PublicPage';
+
+jest.mock('axios');
+jest.mock('../../_components/buttons/signIn-button/signInButton', () => () => <div>mock</div>);
 
 let wrapper;
 let store;
@@ -28,7 +32,9 @@ const setupWrapper = (_initialState, _props) => {
   store = mockStore(_initialState);
   return mount(
     <Provider store={store}>
-      <PublicPage {..._props} />
+      <UserContextProvider>
+        <PublicPage {..._props} />
+      </UserContextProvider>
     </Provider>
   );
 };
@@ -88,46 +94,6 @@ describe('Public Page', () => {
       history.location = { pathname: '/', search: '', hash: '', state: undefined };
       expect(history.push).toHaveBeenCalledWith('/home');
       expect(history.push).toHaveBeenCalledTimes(1);
-    });
-
-    it('should hide drawer if its not already hidden', () => {
-      const _initialState = getStateClone();
-      _initialState.socket.connected = true;
-      _initialState.user.isLoggedIn = true;
-      _initialState.user.isAuthorized = true;
-      _initialState.adminDrawer.show = true;
-      wrapper = setupWrapper(_initialState, props);
-      expect(store.getActions()).toEqual([{ type: 'HIDE_ADMIN_DRAWER' }]);
-    });
-
-    it('should not hide drawer if its already hidden', () => {
-      const _initialState = getStateClone();
-      _initialState.socket.connected = true;
-      _initialState.user.isLoggedIn = true;
-      _initialState.user.isAuthorized = true;
-      _initialState.adminDrawer.show = false;
-      wrapper = setupWrapper(_initialState, props);
-      expect(store.getActions()).toHaveLength(0);
-    });
-
-    it('should hide burger if its not already hidden', () => {
-      const _initialState = getStateClone();
-      _initialState.socket.connected = true;
-      _initialState.user.isLoggedIn = true;
-      _initialState.user.isAuthorized = true;
-      _initialState.siteSetting.burger = true;
-      wrapper = setupWrapper(_initialState, props);
-      expect(store.getActions()).toEqual([{ type: 'HIDE_BURGER' }]);
-    });
-
-    it('should not hide burger if its already hidden', () => {
-      const _initialState = getStateClone();
-      _initialState.socket.connected = true;
-      _initialState.user.isLoggedIn = true;
-      _initialState.user.isAuthorized = true;
-      _initialState.siteSetting.burger = false;
-      wrapper = setupWrapper(_initialState, props);
-      expect(store.getActions()).toHaveLength(0);
     });
   });
 });

@@ -3,6 +3,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import SubDeviceParamContextProvider from '../../../_contexts/sub-device-param/SubDeviceParamContext.provider';
 import { subDeviceParamService } from '../../../_services';
 import { checkProps, findByDataAttr, initialState } from '../../../_utils';
 import { deviceTwo } from '../../../_utils/fixtures/device.fixture';
@@ -26,7 +27,9 @@ const setupWrapper = _initialState => {
   store = mockStore(_initialState);
   return mount(
     <Provider store={store}>
-      <SmartSwitch {...props} />
+      <SubDeviceParamContextProvider>
+        <SmartSwitch {...props} />
+      </SubDeviceParamContextProvider>
     </Provider>
   );
 };
@@ -57,7 +60,9 @@ describe('SmartSwitch Component', () => {
       store = mockStore(initialState);
       wrapper = mount(
         <Provider store={store}>
-          <SmartSwitch {..._props} />
+          <SubDeviceParamContextProvider>
+            <SmartSwitch {..._props} />
+          </SubDeviceParamContextProvider>
         </Provider>
       );
       const component = findByDataAttr(wrapper, 'smartSwitchContainer').first();
@@ -151,7 +156,9 @@ describe('SmartSwitch Component', () => {
       store = mockStore(initialState);
       wrapper = mount(
         <Provider store={store}>
-          <SmartSwitch {..._props} />
+          <SubDeviceParamContextProvider>
+            <SmartSwitch {..._props} />
+          </SubDeviceParamContextProvider>
         </Provider>
       );
       const component = findByDataAttr(wrapper, 'smartSwitchAllComponent').first();
@@ -171,7 +178,9 @@ describe('SmartSwitch Component', () => {
       store = mockStore(initialState);
       wrapper = mount(
         <Provider store={store}>
-          <SmartSwitch {..._props} />
+          <SubDeviceParamContextProvider>
+            <SmartSwitch {..._props} />
+          </SubDeviceParamContextProvider>
         </Provider>
       );
       const component = wrapper.find('input[type="checkbox"]').first();
@@ -196,7 +205,9 @@ describe('SmartSwitch Component', () => {
       store = mockStore(initialState);
       wrapper = mount(
         <Provider store={store}>
-          <SmartSwitch {..._props} />
+          <SubDeviceParamContextProvider>
+            <SmartSwitch {..._props} />
+          </SubDeviceParamContextProvider>
         </Provider>
       );
       const component = wrapper.find('input[type="checkbox"]').first();

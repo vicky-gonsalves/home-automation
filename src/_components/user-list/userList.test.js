@@ -1,4 +1,5 @@
 import { mount } from 'enzyme';
+import { find } from 'lodash';
 import React from 'react';
 import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
@@ -104,7 +105,7 @@ describe('UserList Component', () => {
       it('should dispatch action to get users if logged in and connected', async () => {
         const _initialState = getStateClone();
         wrapper = setupWrapper(_initialState, props);
-        expect(store.getActions()).toEqual([{ type: 'SET_FETCHING_USERS', payload: true }]);
+        expect(find(store.getActions(), { type: 'SET_FETCHING_USERS', payload: true })).toBeDefined();
       });
 
       it('should not dispatch action to get users if not logged in and not connected', async () => {

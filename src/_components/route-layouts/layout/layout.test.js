@@ -4,6 +4,8 @@ import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import SiteSettingContextProvider from '../../../_contexts/site-setting/SiteSettingContext.provider';
+import UserContextProvider from '../../../_contexts/user/UserContext.provider';
 import { history } from '../../../_helpers/history/history';
 import { checkProps, findByDataAttr, getStateClone } from '../../../_utils';
 import AdminLayout from '../admin-layout/adminLayout';
@@ -22,9 +24,13 @@ const setupWrapper = (state, _props = {}) => {
   store = mockStore(state);
   return mount(
     <Provider store={store}>
-      <Router history={history}>
-        <Layout {..._props} />
-      </Router>
+      <SiteSettingContextProvider>
+        <UserContextProvider>
+          <Router history={history}>
+            <Layout {..._props} />
+          </Router>
+        </UserContextProvider>
+      </SiteSettingContextProvider>
     </Provider>
   );
 };
@@ -35,9 +41,9 @@ describe('Layout', () => {
       expect(propsErr).toBeUndefined();
     });
 
-    it('should throw a warning if props are missing', () => {
+    it('should not throw warning if props are missing', () => {
       const propsErr = checkProps(Layout, {});
-      expect(propsErr).toBeDefined();
+      expect(propsErr).toBeUndefined();
     });
   });
   describe('Component Test', () => {
@@ -67,31 +73,20 @@ describe('Layout', () => {
       expect(component).toHaveLength(1);
     });
 
-    it('should render navbarComponent', () => {
+    it('should render adminDrawerComponent if user is logged in and role is admin and path is admin', () => {
       const _initialState = getStateClone();
-      wrapper = setupWrapper(_initialState, props);
-      const component = findByDataAttr(wrapper, 'navbarComponent').first();
-      expect(component).toHaveLength(1);
-    });
-
-    it('should render footerComponent', () => {
-      const _initialState = getStateClone();
-      wrapper = setupWrapper(_initialState, props);
-      const component = findByDataAttr(wrapper, 'footerComponent').first();
-      expect(component).toHaveLength(1);
-    });
-
-    it('should render adminDrawerComponent if adminDrawer.show is true', () => {
-      const _initialState = getStateClone();
-      _initialState.adminDrawer.show = true;
+      _initialState.user.isLoggedIn = true;
+      _initialState.user.role = 'admin';
+      _initialState.user.tokens = { access: {} };
+      _initialState.socket.connected = true;
+      history.location = { pathname: '/admin', search: '', hash: '', state: undefined };
       wrapper = setupWrapper(_initialState, props);
       const component = findByDataAttr(wrapper, 'adminDrawerComponent').first();
       expect(component).toHaveLength(1);
     });
 
-    it('should not render adminDrawerComponent if adminDrawer.show is false', () => {
+    it('should not render adminDrawerComponent if user is not logged in', () => {
       const _initialState = getStateClone();
-      _initialState.adminDrawer.show = false;
       wrapper = setupWrapper(_initialState, props);
       const component = findByDataAttr(wrapper, 'adminDrawerComponent');
       expect(component).toHaveLength(0);

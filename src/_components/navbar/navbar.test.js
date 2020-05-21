@@ -3,6 +3,8 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import SiteSettingContextProvider from '../../_contexts/site-setting/SiteSettingContext.provider';
+import UserContextProvider from '../../_contexts/user/UserContext.provider';
 import { history } from '../../_helpers/history/history';
 import { checkProps, findByDataAttr, initialState } from '../../_utils';
 import { admin, userOne } from '../../_utils/fixtures/user.fixture';
@@ -23,7 +25,11 @@ const setupWrapper = _initialState => {
   store = mockStore(_initialState);
   return mount(
     <Provider store={store}>
-      <Navbar {...props} />
+      <UserContextProvider>
+        <SiteSettingContextProvider>
+          <Navbar {...props} />
+        </SiteSettingContextProvider>
+      </UserContextProvider>
     </Provider>
   );
 };
@@ -37,7 +43,9 @@ describe('Navbar Component', () => {
   });
 
   describe('Components Testing with State', () => {
-    beforeEach(() => {});
+    beforeEach(() => {
+      history.location = { pathname: '/home', search: '', hash: '', state: undefined };
+    });
     afterEach(() => {
       wrapper.unmount();
       store.clearActions();
@@ -134,6 +142,7 @@ describe('Navbar Component', () => {
       _initialState.user.isLoggedIn = true;
       _initialState.user.tokens = { access: {}, refresh: {} };
       _initialState.siteSetting.burger = true;
+      history.location = { pathname: '/admin', search: '', hash: '', state: undefined };
       wrapper = setupWrapper(_initialState);
       const component = findByDataAttr(wrapper, 'drawerIconButtonComponent').first();
       expect(component.length).toBe(1);
@@ -187,6 +196,7 @@ describe('Navbar Component', () => {
       _initialState.user.isLoggedIn = true;
       _initialState.user.tokens = { access: {}, refresh: {} };
       _initialState.siteSetting.burger = true;
+      history.location = { pathname: '/admin', search: '', hash: '', state: undefined };
       wrapper = setupWrapper(_initialState);
       const component = findByDataAttr(wrapper, 'drawerIconButtonComponent').first();
       component.props().onClick();
@@ -199,6 +209,7 @@ describe('Navbar Component', () => {
       _initialState.adminDrawer.open = false;
       _initialState.user.isLoggedIn = true;
       _initialState.user.tokens = { access: {}, refresh: {} };
+      history.location = { pathname: '/admin', search: '', hash: '', state: undefined };
       wrapper = setupWrapper(_initialState);
       const component = findByDataAttr(wrapper, 'drawerIconButtonComponent').first();
       component.props().onClick();

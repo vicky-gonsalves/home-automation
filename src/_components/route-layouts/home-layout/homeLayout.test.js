@@ -5,8 +5,10 @@ import { Route } from 'react-router';
 import { Router } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import DeviceContextProvider from '../../../_contexts/device/DeviceContext.provider';
+import UserContextProvider from '../../../_contexts/user/UserContext.provider';
 import { history } from '../../../_helpers/history/history';
-import { checkProps, findByDataAttr, getStateClone, initialState, wait } from '../../../_utils';
+import { checkProps, findByDataAttr, getStateClone, initialState, wait, getInnerComponent } from '../../../_utils';
 import HomeLayout from './homeLayout';
 
 const homeLayoutPath = ['/home'];
@@ -21,7 +23,9 @@ const setupWrapper = (state, _props = {}) => {
   return mount(
     <Provider store={store}>
       <Router history={history}>
-        <HomeLayout {..._props} />
+        <UserContextProvider>
+          <HomeLayout {..._props} />
+        </UserContextProvider>
       </Router>
     </Provider>
   );
@@ -39,13 +43,17 @@ const innerProps = {
   location: {},
   match: {},
 };
-const getInnerComponent = component => component.props().component().props.children.type._result;
+
 const setUpInnerWrapper = (state, InnerComponent, _props = {}) => {
   innerStore = mockStore(state);
   return mount(
     <Provider store={store}>
       <Router history={history}>
-        <InnerComponent {..._props} />
+        <UserContextProvider>
+          <DeviceContextProvider>
+            <InnerComponent {..._props} />
+          </DeviceContextProvider>
+        </UserContextProvider>
       </Router>
     </Provider>
   );
@@ -58,9 +66,9 @@ describe('HomeLayout', () => {
       expect(propsErr).toBeUndefined();
     });
 
-    it('should throw a warning if props are missing', () => {
+    it('should not throw a warning if props are missing', () => {
       const propsErr = checkProps(HomeLayout, {});
-      expect(propsErr).toBeDefined();
+      expect(propsErr).toBeUndefined();
     });
   });
   describe('Component Test', () => {
@@ -110,12 +118,12 @@ describe('HomeLayout', () => {
         history.push('/home');
         await wait();
         const component = wrapper.find('[path="/home"]').first();
-        const innerComponent = getInnerComponent(component);
+        const innerComponent = await getInnerComponent(component);
         const _initialState = getStateClone();
         _initialState.user.isLoggedIn = true;
         _initialState.user.isAuthorized = true;
         _initialState.socket.connected = true;
-        innerWrapper = setUpInnerWrapper(_initialState, innerComponent, innerProps);
+        innerWrapper = setUpInnerWrapper(_initialState, innerComponent.default, innerProps);
         const itemsInInnerComponent = findByDataAttr(innerWrapper, 'homePageContainer');
         expect(innerWrapper.props()).toBeDefined();
         expect(itemsInInnerComponent.length).toBeTruthy();

@@ -4,6 +4,8 @@ import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import SiteSettingContextProvider from '../../_contexts/site-setting/SiteSettingContext.provider';
+import UserContextProvider from '../../_contexts/user/UserContext.provider';
 import { history } from '../../_helpers/history/history';
 import { checkProps, findByDataAttr, getStateClone, initialState } from '../../_utils';
 import AdminDrawer from './adminDrawer';
@@ -19,9 +21,13 @@ const setupWrapper = (_initialState, _width) => {
   store = mockStore(_initialState);
   return mount(
     <Provider store={store}>
-      <Router history={history}>
-        <AdminDrawer {...props} width={_width} />
-      </Router>
+      <UserContextProvider>
+        <SiteSettingContextProvider>
+          <Router history={history}>
+            <AdminDrawer {...props} width={_width} />
+          </Router>
+        </SiteSettingContextProvider>
+      </UserContextProvider>
     </Provider>
   );
 };

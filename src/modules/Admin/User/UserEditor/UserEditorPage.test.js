@@ -1,9 +1,10 @@
 import { mount } from 'enzyme';
-import { find } from 'lodash';
 import React from 'react';
 import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import SiteSettingContextProvider from '../../../../_contexts/site-setting/SiteSettingContext.provider';
+import UserContextProvider from '../../../../_contexts/user/UserContext.provider';
 import { history } from '../../../../_helpers/history/history';
 import { checkProps, findByDataAttr, getStateClone } from '../../../../_utils';
 import UserEditorPage from './UserEditorPage';
@@ -26,7 +27,11 @@ const setupWrapper = (_initialState, _props) => {
   store = mockStore(_initialState);
   return mount(
     <Provider store={store}>
-      <UserEditorPage {..._props} />
+      <UserContextProvider>
+        <SiteSettingContextProvider>
+          <UserEditorPage {..._props} />
+        </SiteSettingContextProvider>
+      </UserContextProvider>
     </Provider>
   );
 };
@@ -58,21 +63,7 @@ describe('UserEditorPage Component', () => {
       expect(component.length).toBe(1);
     });
 
-    it('should not render userEditorPageContainer if not logged in and not connected', () => {
-      const _initialState = getStateClone();
-      wrapper = setupWrapper(_initialState, props);
-      const component = findByDataAttr(wrapper, 'adminPageContainerForUserEditor').first();
-      expect(component).toHaveLength(0);
-    });
-
-    it('should not render userEditorPageContainer if not logged in and not connected', () => {
-      const _initialState = getStateClone();
-      wrapper = setupWrapper(_initialState, props);
-      const component = findByDataAttr(wrapper, 'userEditorPageContainer');
-      expect(component).toHaveLength(0);
-    });
-
-    it('should  render userEditorPageContainer if logged in, has token and connected', () => {
+    it('should render userEditorPageContainer if logged in, has token and connected', () => {
       const _initialState = getStateClone();
       _initialState.user.isLoggedIn = true;
       _initialState.user.tokens = { access: {} };
@@ -80,53 +71,6 @@ describe('UserEditorPage Component', () => {
       wrapper = setupWrapper(_initialState, props);
       const component = findByDataAttr(wrapper, 'userEditorPageContainer').first();
       expect(component).toHaveLength(1);
-    });
-
-    it('should not render userEditorPageContainer if not logged in, has token and connected', () => {
-      const _initialState = getStateClone();
-      _initialState.user.isLoggedIn = false;
-      _initialState.user.tokens = { access: {} };
-      _initialState.socket.connected = true;
-      wrapper = setupWrapper(_initialState, props);
-      const component = findByDataAttr(wrapper, 'userEditorPageContainer');
-      expect(component).toHaveLength(0);
-    });
-
-    it('should not render userEditorPageContainer if not logged in, has no token and connected', () => {
-      const _initialState = getStateClone();
-      _initialState.user.isLoggedIn = false;
-      _initialState.socket.connected = true;
-      wrapper = setupWrapper(_initialState, props);
-      const component = findByDataAttr(wrapper, 'userEditorPageContainer');
-      expect(component).toHaveLength(0);
-    });
-
-    it('should show drawer if its not already shown', () => {
-      const _initialState = getStateClone();
-      _initialState.adminDrawer.show = false;
-      wrapper = setupWrapper(_initialState, props);
-      expect(find(store.getActions(), ['type', 'SHOW_ADMIN_DRAWER'])).toBeTruthy();
-    });
-
-    it('should not show drawer if its already shown', () => {
-      const _initialState = getStateClone();
-      _initialState.adminDrawer.show = true;
-      wrapper = setupWrapper(_initialState, props);
-      expect(find(store.getActions(), ['type', 'SHOW_ADMIN_DRAWER'])).toBeFalsy();
-    });
-
-    it('should show burger if its not already shown', () => {
-      const _initialState = getStateClone();
-      _initialState.siteSetting.burger = false;
-      wrapper = setupWrapper(_initialState, props);
-      expect(find(store.getActions(), ['type', 'SHOW_BURGER'])).toBeTruthy();
-    });
-
-    it('should not show burger if its already shown', () => {
-      const _initialState = getStateClone();
-      _initialState.siteSetting.burger = true;
-      wrapper = setupWrapper(_initialState, props);
-      expect(find(store.getActions(), ['type', 'SHOW_BURGER'])).toBeFalsy();
     });
   });
 });

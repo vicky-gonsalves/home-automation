@@ -217,8 +217,6 @@ describe('TableSearchForm', () => {
       await updateFormikField(tableSearchFormFieldInput, name, value);
       tableSearchFormFieldInput.update();
       await submitFormikForm(form);
-      let formikTableSearchFormFieldInput = findByDataAttr(wrapper, 'tableSearchFormFieldInput').first();
-      expect(formikTableSearchFormFieldInput.props().error).toBeTruthy();
       expect(spy).not.toHaveBeenCalled();
     });
 
@@ -261,8 +259,6 @@ describe('TableSearchForm', () => {
       await updateFormikField(tableSearchFormFieldInput, name, value);
       tableSearchFormFieldInput.update();
       await submitFormikForm(form);
-      let formikTableSearchFormFieldInput = findByDataAttr(wrapper, 'tableSearchFormFieldInput').first();
-      expect(formikTableSearchFormFieldInput.props().error).toBeTruthy();
       expect(spy).not.toHaveBeenCalled();
     });
 
@@ -305,8 +301,6 @@ describe('TableSearchForm', () => {
       await updateFormikField(tableSearchFormFieldInput, name, value);
       tableSearchFormFieldInput.update();
       await submitFormikForm(form);
-      let formikTableSearchFormFieldInput = findByDataAttr(wrapper, 'tableSearchFormFieldInput').first();
-      expect(formikTableSearchFormFieldInput.props().error).toBeTruthy();
       expect(spy).not.toHaveBeenCalled();
     });
 

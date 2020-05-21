@@ -43,7 +43,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const SimpleUserForm = props => {
+export const SimpleUserForm = props => {
   const classes = useStyles();
   const roles = ['admin', 'user'];
   const {
@@ -205,7 +205,7 @@ const SimpleUserForm = props => {
             disabled={isFetching}
             data-test="submitButton"
           >
-            {submitButtonTitle}
+            <span>{submitButtonTitle}</span>
           </Button>
         </Grid>
       </Grid>

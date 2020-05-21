@@ -20,6 +20,7 @@ const props = {
     contentShift: '',
   },
   component: <UserList isConnected={true} isLoggedIn={true} />,
+  drawerOpen: true,
 };
 
 const setupWrapper = (_initialState, _props) => {
@@ -65,8 +66,17 @@ describe('AdminCommonLayout Component', () => {
 
     it('should render adminCommonLayoutContainer and have class contentShift if admin drawer is closed', () => {
       const _initialState = getStateClone();
-      _initialState.adminDrawer.open = false;
-      wrapper = setupWrapper(_initialState, props);
+      const _props = {
+        classes: {
+          root: '',
+          footer: '',
+          content: '',
+          contentShift: '',
+        },
+        component: <UserList isConnected={true} isLoggedIn={true} />,
+        drawerOpen: false,
+      };
+      wrapper = setupWrapper(_initialState, _props);
       const component = findByDataAttr(wrapper, 'adminCommonLayoutContainer').first();
       expect(component.props().className.search('contentShift')).toBeLessThan(0);
     });

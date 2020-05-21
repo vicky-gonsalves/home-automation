@@ -3,6 +3,8 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import SocketIdContextProvider from '../../../_contexts/socket-id/SocketIdContext.provider';
+import SubDeviceContextProvider from '../../../_contexts/sub-device/SubDeviceContext.provider';
 import { findByDataAttr, initialState } from '../../../_utils';
 import { deviceTwo } from '../../../_utils/fixtures/device.fixture';
 import { socketIdSix } from '../../../_utils/fixtures/socketId.fixture';
@@ -10,6 +12,11 @@ import { subDeviceThree } from '../../../_utils/fixtures/subDevice.fixture';
 import SmartSwitchCard from './SmartSwitchCard';
 
 jest.mock('axios');
+jest.mock('../../buttons/setting-icon-button/settingIconButton', () => () => <div>mock</div>);
+jest.mock('../../device-offline-alert/deviceOfflineAlert', () => () => <div>mock</div>);
+jest.mock('../../online-device-status/onlineDeviceStatus', () => () => <div>mock</div>);
+jest.mock('../../sub-device/subDeviceComponent', () => () => <div>mock</div>);
+jest.mock('../card-action/CardActionFooter', () => () => <div>mock</div>);
 
 let store;
 const props = {
@@ -21,7 +28,11 @@ const setupWrapper = _initialState => {
   store = mockStore(_initialState);
   return mount(
     <Provider store={store}>
-      <SmartSwitchCard {...props} />
+      <SubDeviceContextProvider>
+        <SocketIdContextProvider>
+          <SmartSwitchCard {...props} />
+        </SocketIdContextProvider>
+      </SubDeviceContextProvider>
     </Provider>
   );
 };

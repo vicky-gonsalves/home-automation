@@ -22,7 +22,7 @@ const SiteSettingContextProvider = props => {
 
   useEffect(() => {
     ref.current.setShow(toShow);
-    history.listen(() => {
+    return history.listen(() => {
       ref.current.setShow(toShow);
     });
   });

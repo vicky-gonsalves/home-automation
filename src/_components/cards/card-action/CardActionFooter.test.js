@@ -8,6 +8,9 @@ import { deviceOne } from '../../../_utils/fixtures/device.fixture';
 import CardActionFooter from './CardActionFooter';
 
 jest.mock('axios');
+jest.mock('../../alerts/tank-alert/tankAlert', () => ({ deviceId }) => <div>{deviceId}</div>);
+jest.mock('../../alerts/smart-switch-alert/smartSwitchAlert', () => ({ deviceId }) => <div>{deviceId}</div>);
+jest.mock('../stats/Stats', () => ({ deviceId }) => <div>{deviceId}</div>);
 
 let store;
 const props = {

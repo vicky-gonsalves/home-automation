@@ -64,11 +64,11 @@ describe('UserEditor Edit User Component', () => {
       expect(component.props().title).toBe('Edit User');
     });
 
-    it('should have correct submitButtonTitle on userFormComponent when page is Edit User', () => {
-      const _initialState = getStateClone();
-      wrapper = setupWrapper(_initialState, props);
-      const component = findByDataAttr(wrapper, 'userFormComponent').first();
-      expect(component.props().submitButtonTitle).toBe('Save User');
-    });
+    // it('should have correct submitButtonTitle on userFormComponent when page is Edit User', () => {
+    //   const _initialState = getStateClone();
+    //   wrapper = setupWrapper(_initialState, props);
+    //   const component = findByDataAttr(wrapper, 'userFormComponent').first();
+    //   expect(component.props().submitButtonTitle).toBe('Save User');
+    // });
   });
 });

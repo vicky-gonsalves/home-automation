@@ -3,6 +3,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import SubDeviceContextProvider from '../../_contexts/sub-device/SubDeviceContext.provider';
 import { checkProps, findByDataAttr, initialState } from '../../_utils';
 import { deviceOne } from '../../_utils/fixtures/device.fixture';
 import { subDeviceOne, subDeviceTwo } from '../../_utils/fixtures/subDevice.fixture';
@@ -22,7 +23,9 @@ const setupWrapper = _initialState => {
   store = mockStore(_initialState);
   return mount(
     <Provider store={store}>
-      <SubDeviceComponent {...props} />
+      <SubDeviceContextProvider>
+        <SubDeviceComponent {...props} />
+      </SubDeviceContextProvider>
     </Provider>
   );
 };
@@ -53,7 +56,9 @@ describe('SubDeviceComponent Component', () => {
       store = mockStore(initialState);
       wrapper = mount(
         <Provider store={store}>
-          <SubDeviceComponent {..._props} />
+          <SubDeviceContextProvider>
+            <SubDeviceComponent {..._props} />
+          </SubDeviceContextProvider>
         </Provider>
       );
       const component = findByDataAttr(wrapper, 'subDeviceIndSwitchComponentContainer').first();

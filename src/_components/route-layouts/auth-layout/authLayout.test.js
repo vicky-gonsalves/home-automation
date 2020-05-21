@@ -5,8 +5,9 @@ import { Route } from 'react-router';
 import { Router } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import UserContextProvider from '../../../_contexts/user/UserContext.provider';
 import { history } from '../../../_helpers/history/history';
-import { checkProps, findByDataAttr, getStateClone, initialState, wait } from '../../../_utils';
+import { checkProps, findByDataAttr, getStateClone, initialState, wait, getInnerComponent } from '../../../_utils';
 import AuthLayout from './authLayout';
 
 const authLayoutPath = ['/signin', '/forgot-password', '/'];
@@ -19,7 +20,9 @@ const setupWrapper = (state, _props = {}) => {
   return mount(
     <Provider store={store}>
       <Router history={history}>
-        <AuthLayout {..._props} />
+        <UserContextProvider>
+          <AuthLayout {..._props} />
+        </UserContextProvider>
       </Router>
     </Provider>
   );
@@ -34,13 +37,15 @@ const innerProps = {
   location: {},
   match: {},
 };
-const getInnerComponent = component => component.props().component().props.children.type._result;
+
 const setUpInnerWrapper = (state, InnerComponent, _props = {}) => {
   innerStore = mockStore(state);
   return mount(
     <Provider store={store}>
       <Router history={history}>
-        <InnerComponent {..._props} />
+        <UserContextProvider>
+          <InnerComponent {..._props} />
+        </UserContextProvider>
       </Router>
     </Provider>
   );
@@ -80,9 +85,9 @@ describe('AuthLayout', () => {
         history.push('/signin');
         await wait();
         const component = wrapper.find('[path="/signin"]').first();
-        const innerComponent = getInnerComponent(component);
+        const innerComponent = await getInnerComponent(component);
         const _initialState = getStateClone();
-        innerWrapper = setUpInnerWrapper(_initialState, innerComponent, innerProps);
+        innerWrapper = setUpInnerWrapper(_initialState, innerComponent.default, innerProps);
         const itemsInInnerComponent = findByDataAttr(innerWrapper, 'signInContainer');
         expect(innerWrapper.props()).toBeDefined();
         expect(itemsInInnerComponent.length).toBeTruthy();
@@ -94,9 +99,9 @@ describe('AuthLayout', () => {
         history.push('/');
         await wait();
         const component = wrapper.find('[path="/"]').first();
-        const innerComponent = getInnerComponent(component);
+        const innerComponent = await getInnerComponent(component);
         const _initialState = getStateClone();
-        innerWrapper = setUpInnerWrapper(_initialState, innerComponent, innerProps);
+        innerWrapper = setUpInnerWrapper(_initialState, innerComponent.default, innerProps);
         const itemsInInnerComponent = findByDataAttr(innerWrapper, 'publicPageContainer');
         expect(innerWrapper.props()).toBeDefined();
         expect(itemsInInnerComponent.length).toBeTruthy();
@@ -108,9 +113,9 @@ describe('AuthLayout', () => {
         history.push('/forgot-password');
         await wait();
         const component = wrapper.find('[path="/forgot-password"]').first();
-        const innerComponent = getInnerComponent(component);
+        const innerComponent = await getInnerComponent(component);
         const _initialState = getStateClone();
-        innerWrapper = setUpInnerWrapper(_initialState, innerComponent, innerProps);
+        innerWrapper = setUpInnerWrapper(_initialState, innerComponent.default, innerProps);
         const itemsInInnerComponent = findByDataAttr(innerWrapper, 'forgotPasswordPageContainer');
         expect(innerWrapper.props()).toBeDefined();
         expect(itemsInInnerComponent.length).toBeTruthy();

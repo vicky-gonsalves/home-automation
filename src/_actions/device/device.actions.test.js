@@ -45,14 +45,21 @@ describe('deviceActions', () => {
     deviceService.getMyDevices = jest.fn().mockResolvedValueOnce();
     store.dispatch(deviceActions.myDevices()).then(() => {
       expect(store.getActions().length).toBeTruthy();
-      expect(store.getActions()).toEqual([{ payload: true, type: 'SET_FETCHED_DEVICES' }]);
+      expect(store.getActions()).toEqual([
+        { payload: true, type: 'DEVICE_UPDATE_FETCHING' },
+        { payload: true, type: 'SET_FETCHED_DEVICES' },
+      ]);
     });
   });
 
   it('should update store if no data and return DEVICE_GET_ERROR action', () => {
     deviceService.getMyDevices = jest.fn().mockRejectedValue(undefined);
     store.dispatch(deviceActions.myDevices()).then(() => {
-      expect(store.getActions()).toEqual([{ payload: true, type: 'SET_FETCHED_DEVICES' }, { type: 'DEVICE_GET_ERROR' }]);
+      expect(store.getActions()).toEqual([
+        { payload: true, type: 'DEVICE_UPDATE_FETCHING' },
+        { payload: true, type: 'SET_FETCHED_DEVICES' },
+        { type: 'DEVICE_GET_ERROR' },
+      ]);
     });
   });
 

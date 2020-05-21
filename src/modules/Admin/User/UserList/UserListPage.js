@@ -14,16 +14,13 @@ const UserListPage = () => {
   );
 
   const renderAdminCommonLayoutComp = component => {
-    if (component && typeof component === 'object') {
-      return (
-        <AdminCommonLayout
-          component={component}
-          drawerOpen={siteSettingContext.drawer.open}
-          data-test="adminPageContainerForUserList"
-        />
-      );
-    }
-    return null;
+    return (
+      <AdminCommonLayout
+        component={component}
+        drawerOpen={siteSettingContext.drawer.open}
+        data-test="adminPageContainerForUserList"
+      />
+    );
   };
 
   return renderAdminCommonLayoutComp(innerComponent);

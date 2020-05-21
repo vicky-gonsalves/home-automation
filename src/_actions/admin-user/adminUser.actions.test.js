@@ -37,6 +37,7 @@ describe('adminUserActions', () => {
     adminUserService.getUsers = jest.fn().mockRejectedValueOnce('Some Error');
     await store.dispatch(adminUserActions.getUsers());
     expect(store.getActions()).toEqual([
+      { type: 'SET_FETCHED_USERS', payload: true },
       { type: 'SET_FETCHING_USERS', payload: true },
       { type: 'SIGN_OUT' },
       { type: 'DISCONNECTED' },

@@ -3,6 +3,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import LogContextProvider from '../../../_contexts/log/LogContext.provider';
 import { findByDataAttr, initialState } from '../../../_utils';
 import { deviceOne } from '../../../_utils/fixtures/device.fixture';
 import { logFive, logFour, logOne, logSix, logThree, logTwo } from '../../../_utils/fixtures/log.fixture';
@@ -19,7 +20,9 @@ const setupWrapper = _initialState => {
   store = mockStore(_initialState);
   return mount(
     <Provider store={store}>
-      <Stats {...props} />
+      <LogContextProvider>
+        <Stats {...props} />
+      </LogContextProvider>
     </Provider>
   );
 };

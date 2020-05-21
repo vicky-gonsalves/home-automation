@@ -3,6 +3,10 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import SocketIdContextProvider from '../../../_contexts/socket-id/SocketIdContext.provider';
+import SubDeviceParamContextProvider from '../../../_contexts/sub-device-param/SubDeviceParamContext.provider';
+import SubDeviceSettingContextProvider from '../../../_contexts/sub-device-setting/SubDeviceSettingContext.provider';
+import SubDeviceContextProvider from '../../../_contexts/sub-device/SubDeviceContext.provider';
 import { checkProps, findByDataAttr, initialState } from '../../../_utils';
 import { deviceTwo } from '../../../_utils/fixtures/device.fixture';
 import { socketIdSix } from '../../../_utils/fixtures/socketId.fixture';
@@ -12,6 +16,7 @@ import { subDeviceSettingFive, subDeviceSettingOne } from '../../../_utils/fixtu
 import SmartSwitchAlert from './smartSwitchAlert';
 
 jest.mock('axios');
+jest.mock('../../count-down-timer/CountDownTimer', () => () => <div>mock</div>);
 
 let store;
 const props = {
@@ -23,7 +28,15 @@ const setupWrapper = _initialState => {
   store = mockStore(_initialState);
   return mount(
     <Provider store={store}>
-      <SmartSwitchAlert {...props} />
+      <SubDeviceContextProvider>
+        <SubDeviceSettingContextProvider>
+          <SubDeviceParamContextProvider>
+            <SocketIdContextProvider>
+              <SmartSwitchAlert {...props} />
+            </SocketIdContextProvider>
+          </SubDeviceParamContextProvider>
+        </SubDeviceSettingContextProvider>
+      </SubDeviceContextProvider>
     </Provider>
   );
 };

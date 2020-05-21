@@ -10,16 +10,13 @@ const UserEditorPage = () => {
   const innerComponent = <UserEditor data-test="userEditorPageContainer" />;
 
   const renderAdminCommonLayoutComp = component => {
-    if (component && typeof component === 'object') {
-      return (
-        <AdminCommonLayout
-          component={component}
-          drawerOpen={siteSettingContext.drawer.open}
-          data-test="adminPageContainerForUserEditor"
-        />
-      );
-    }
-    return null;
+    return (
+      <AdminCommonLayout
+        component={component}
+        drawerOpen={siteSettingContext.drawer.open}
+        data-test="adminPageContainerForUserEditor"
+      />
+    );
   };
 
   return renderAdminCommonLayoutComp(innerComponent);

@@ -3,11 +3,16 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import DeviceSettingContextProvider from '../../../_contexts/device-setting/DeviceSettingContext.provider';
+import SettingDialogContextProvider from '../../../_contexts/setting-dialog/SettingDialogContext.provider';
+import SubDeviceSettingContextProvider from '../../../_contexts/sub-device-setting/SubDeviceSettingContext.provider';
 import { checkProps, findByDataAttr, initialState } from '../../../_utils';
 import { dialogOne, dialogTwo } from '../../../_utils/fixtures/dialog.fixture';
 import SettingDialog from './settingDialog';
 
 jest.mock('axios');
+jest.mock('../../forms/motor-setting-form/MotorSettingForm', () => () => <div>mock</div>);
+jest.mock('../../forms/smart-switch-setting-form/SmartSwitchSettingForm', () => () => <div>mock</div>);
 
 let store;
 const props = {};
@@ -16,7 +21,13 @@ const setupWrapper = _initialState => {
   store = mockStore(_initialState);
   return mount(
     <Provider store={store}>
-      <SettingDialog {...props} />
+      <DeviceSettingContextProvider>
+        <SubDeviceSettingContextProvider>
+          <SettingDialogContextProvider>
+            <SettingDialog {...props} />
+          </SettingDialogContextProvider>
+        </SubDeviceSettingContextProvider>
+      </DeviceSettingContextProvider>
     </Provider>
   );
 };

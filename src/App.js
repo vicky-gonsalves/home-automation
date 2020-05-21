@@ -42,8 +42,8 @@ function App() {
   return (
     <Container maxWidth={false} disableGutters={true} className={classes.root} data-test="appContainer">
       <div className={classes.offset} />
-      <SiteSettingContextProvider>
-        <UserContextProvider>{renderApp}</UserContextProvider>
+      <SiteSettingContextProvider data-test="siteSettingContextProvider">
+        <UserContextProvider data-test="userContextProvider">{renderApp}</UserContextProvider>
       </SiteSettingContextProvider>
       <Footer appName={config.appName} data-test="footerComponent" />
     </Container>

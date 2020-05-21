@@ -4,6 +4,10 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import DeviceParamContextProvider from '../../../_contexts/device-param/DeviceParamContext.provider';
+import DeviceSettingContextProvider from '../../../_contexts/device-setting/DeviceSettingContext.provider';
+import SocketIdContextProvider from '../../../_contexts/socket-id/SocketIdContext.provider';
+import SubDeviceContextProvider from '../../../_contexts/sub-device/SubDeviceContext.provider';
 import { findByDataAttr, initialState } from '../../../_utils';
 import { deviceOne } from '../../../_utils/fixtures/device.fixture';
 import { deviceParamOne, deviceParamTwo } from '../../../_utils/fixtures/deviceParam.fixture';
@@ -13,6 +17,14 @@ import { subDeviceOne, subDeviceThree, subDeviceTwo } from '../../../_utils/fixt
 import TankCard from './TankCard';
 
 jest.mock('axios');
+jest.mock('../../device-offline-alert/deviceOfflineAlert', () => () => <div>mock</div>);
+jest.mock('../../preferred-device/preferredDevice', () => () => <div>mock</div>);
+jest.mock('../../radios/motor-mode/motorMode', () => () => <div>mock</div>);
+jest.mock('../../switches/motor-switch/motorSwitch', () => () => <div>mock</div>);
+jest.mock('../card-action/CardActionFooter', () => () => <div>mock</div>);
+jest.mock('../../tank/tank', () => () => <div>mock</div>);
+jest.mock('../../buttons/setting-icon-button/settingIconButton', () => () => <div>mock</div>);
+jest.mock('../../online-device-status/onlineDeviceStatus', () => () => <div>mock</div>);
 
 let store;
 const props = {
@@ -24,7 +36,15 @@ const setupWrapper = _initialState => {
   store = mockStore(_initialState);
   return mount(
     <Provider store={store}>
-      <TankCard {...props} />
+      <DeviceSettingContextProvider>
+        <DeviceParamContextProvider>
+          <SubDeviceContextProvider>
+            <SocketIdContextProvider>
+              <TankCard {...props} />
+            </SocketIdContextProvider>
+          </SubDeviceContextProvider>
+        </DeviceParamContextProvider>
+      </DeviceSettingContextProvider>
     </Provider>
   );
 };

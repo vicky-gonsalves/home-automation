@@ -3,6 +3,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import SubDeviceParamContextProvider from '../../../_contexts/sub-device-param/SubDeviceParamContext.provider';
 import { checkProps, findByDataAttr, initialState } from '../../../_utils';
 import { deviceOne } from '../../../_utils/fixtures/device.fixture';
 import { subDeviceOne } from '../../../_utils/fixtures/subDevice.fixture';
@@ -24,7 +25,9 @@ const setupWrapper = _initialState => {
   store = mockStore(_initialState);
   return mount(
     <Provider store={store}>
-      <MotorSwitch {...props} />
+      <SubDeviceParamContextProvider>
+        <MotorSwitch {...props} />
+      </SubDeviceParamContextProvider>
     </Provider>
   );
 };
@@ -55,7 +58,9 @@ describe('MotorSwitch Component', () => {
       store = mockStore(initialState);
       wrapper = mount(
         <Provider store={store}>
-          <MotorSwitch {..._props} />
+          <SubDeviceParamContextProvider>
+            <MotorSwitch {..._props} />
+          </SubDeviceParamContextProvider>
         </Provider>
       );
       const component = findByDataAttr(wrapper, 'motorSwitchContainer').first();
