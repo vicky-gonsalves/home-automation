@@ -1,6 +1,6 @@
 import axios from 'axios';
 import createAuthRefreshInterceptor from 'axios-auth-refresh';
-import React, { useEffect } from 'react';
+import React, { useLayoutEffect } from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { socketActions, userActions } from '../../_actions';
 import { userConstants } from '../../_constants';
@@ -23,7 +23,7 @@ const UserContextProvider = props => {
   authInterceptor.interceptRequests();
   createAuthRefreshInterceptor(axios, authInterceptor.refreshAuthLogic(dispatch));
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const fetchMe = () => {
       if (isLoggedIn && !isAuthorized && token) {
         userActions

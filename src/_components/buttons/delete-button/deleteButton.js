@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import DeleteIcon from '@material-ui/icons/Delete';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { useDispatch } from 'react-redux';
 
 const useStyles = makeStyles(theme => ({
   margin: {
@@ -10,11 +11,11 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const DeleteButton = ({ item, type }) => {
+const DeleteButton = ({ item, type, callback }) => {
   const classes = useStyles();
+  const dispatch = useDispatch();
   const handleClick = () => {
-    // eslint-disable-next-line no-console
-    console.log(item, type);
+    dispatch(callback(item.id));
   };
   return (
     <IconButton
@@ -32,6 +33,7 @@ const DeleteButton = ({ item, type }) => {
 DeleteButton.propTypes = {
   item: PropTypes.object.isRequired,
   type: PropTypes.string,
+  callback: PropTypes.func.isRequired,
 };
 
 export default DeleteButton;

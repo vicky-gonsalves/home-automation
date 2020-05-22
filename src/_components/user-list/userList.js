@@ -1,9 +1,11 @@
 import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import React, { useCallback } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useCallback, useContext, useMemo } from 'react';
+import { useDispatch } from 'react-redux';
 import { adminUserActions } from '../../_actions';
+import { AdminUserContext } from '../../_contexts/admin-user/AdminUserContext.provider';
+import { UserContext } from '../../_contexts/user/UserContext.provider';
 import AddButton from '../buttons/add-button/addButton';
 import DeleteButton from '../buttons/delete-button/deleteButton';
 import EditButton from '../buttons/edit-button/editButton';
@@ -20,12 +22,15 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const UserList = ({ isLoggedIn, isConnected }) => {
+const UserList = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const adminUser = useSelector(state => state.adminUser);
+  const userContext = useContext(UserContext);
+  const adminUserContext = useContext(AdminUserContext);
+  const adminUser = adminUserContext.adminUser;
   const list = adminUser.users;
-  const isFetching = adminUser.isFetchingUsersList || !isConnected;
+  const isFetching = adminUser.isFetchingUsersList || !userContext.connected;
+
   const tableHeaders = [
     {
       id: 'actions',
@@ -48,7 +53,7 @@ const UserList = ({ isLoggedIn, isConnected }) => {
       label: 'Role',
       type: 'select',
       options: ['admin', 'user'],
-      width: 300,
+      width: 250,
     },
     {
       id: 'isDisabled',
@@ -58,9 +63,9 @@ const UserList = ({ isLoggedIn, isConnected }) => {
       label: 'Disabled?',
       type: 'select',
       options: ['true', 'false'],
-      width: 300,
+      width: 250,
     },
-    { id: 'createdAt', sort: true, search: true, align: 'right', label: 'created at', type: 'datetime', width: 330 },
+    { id: 'createdAt', sort: true, search: true, align: 'left', label: 'created at', type: 'datetime', width: 450 },
   ];
 
   const buttons = [{ title: 'Add User', type: 'user', component: AddButton, path: '/users/new', buttonType: 'add' }];
@@ -77,24 +82,44 @@ const UserList = ({ isLoggedIn, isConnected }) => {
     [dispatch]
   );
 
+  const renderList = useMemo(() => {
+    return (
+      <ListTable
+        type="user"
+        title="Users"
+        tableHeaders={tableHeaders}
+        count={adminUser.count}
+        list={list}
+        getList={getList}
+        isLoggedIn={userContext.isLoggedIn}
+        isConnected={userContext.connected}
+        isFetching={isFetching}
+        buttons={buttons}
+        initialSort={{ order: 'desc', orderBy: 'createdAt' }}
+        preventDeletion={{ email: userContext.user.email }}
+        data-test="listTableComponent"
+        preDeleteCallback={adminUserActions.setUserToBeDeleted}
+        postDeleteCallback={adminUserActions.deleteUser}
+        cancelDeleteCallback={adminUserActions.unsetUserToBeDeleted}
+      />
+    );
+  }, [
+    adminUser.count,
+    buttons,
+    getList,
+    isFetching,
+    list,
+    tableHeaders,
+    userContext.connected,
+    userContext.isLoggedIn,
+    userContext.user.email,
+  ]);
+
   return (
     <React.Fragment>
       <div className={classes.root} data-test="listTableContainer">
         <Paper className={classes.paper} data-test="paperComponent">
-          <ListTable
-            type="user"
-            title="Users"
-            tableHeaders={tableHeaders}
-            count={adminUser.count}
-            list={list}
-            getList={getList}
-            isLoggedIn={isLoggedIn}
-            isConnected={isConnected}
-            isFetching={isFetching}
-            buttons={buttons}
-            initialSort={{ order: 'desc', orderBy: 'createdAt' }}
-            data-test="listTableComponent"
-          />
+          {renderList}
         </Paper>
       </div>
     </React.Fragment>
@@ -106,8 +131,6 @@ UserList.propTypes = {
     root: PropTypes.string.isRequired,
     paper: PropTypes.string.isRequired,
   }),
-  isLoggedIn: PropTypes.bool.isRequired,
-  isConnected: PropTypes.bool.isRequired,
 };
 
 export default UserList;

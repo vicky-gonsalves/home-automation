@@ -2,15 +2,16 @@ import PropTypes from 'prop-types';
 import React, { useContext } from 'react';
 import AdminCommonLayout from '../../../../_components/admin-common-layout/AdminCommonLayout';
 import UserList from '../../../../_components/user-list/userList';
+import AdminUserContextProvider from '../../../../_contexts/admin-user/AdminUserContext.provider';
 import { SiteSettingContext } from '../../../../_contexts/site-setting/SiteSettingContext.provider';
-import { UserContext } from '../../../../_contexts/user/UserContext.provider';
 
 const UserListPage = () => {
   const siteSettingContext = useContext(SiteSettingContext);
-  const userContext = useContext(UserContext);
 
   const innerComponent = (
-    <UserList isLoggedIn={userContext.isLoggedIn} isConnected={userContext.connected} data-test="userListPageComponent" />
+    <AdminUserContextProvider>
+      <UserList data-test="userListPageComponent" />
+    </AdminUserContextProvider>
   );
 
   const renderAdminCommonLayoutComp = component => {

@@ -485,8 +485,6 @@ describe('ListTable Component', () => {
       });
       expect(setState).toHaveBeenNthCalledWith(1, 'asc');
       expect(setState).toHaveBeenNthCalledWith(2, _props.tableHeaders[0].id);
-      expect(setState).toHaveBeenNthCalledWith(3, {});
-      expect(setState).toHaveBeenNthCalledWith(4, 0);
       expect(_props.getList).toHaveBeenCalled();
     });
 
@@ -609,8 +607,6 @@ describe('ListTable Component', () => {
       });
       expect(setState).toHaveBeenNthCalledWith(1, 'desc');
       expect(setState).toHaveBeenNthCalledWith(2, 'email');
-      expect(setState).toHaveBeenNthCalledWith(3, {});
-      expect(setState).toHaveBeenNthCalledWith(4, 0);
       expect(_props.getList).toHaveBeenCalled();
     });
   });

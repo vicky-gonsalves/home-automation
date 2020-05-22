@@ -31,6 +31,18 @@ const clearUser = dispatch => {
   dispatch({ type: adminUserConstants.CLEAR_USER });
 };
 
+const removeUser = id => dispatch => {
+  dispatch({ type: adminUserConstants.DELETE_USER, payload: id });
+};
+
+const setUserToBeDeleted = id => dispatch => {
+  dispatch({ type: adminUserConstants.SET_USER_TO_BE_DELETED, payload: id });
+};
+
+const unsetUserToBeDeleted = id => dispatch => {
+  dispatch({ type: adminUserConstants.UNSET_USER_TO_BE_DELETED, payload: id });
+};
+
 const getUsers = params => async dispatch => {
   try {
     dispatch(setFetchedUsers(true));
@@ -78,6 +90,17 @@ const updateUser = (params, id) => async dispatch => {
   }
 };
 
+const deleteUser = id => async dispatch => {
+  try {
+    dispatch(setUserProgress(true));
+    await adminUserService.deleteUser(id);
+    dispatch(removeUser(id));
+    dispatch(setUserProgress(false));
+  } catch (e) {
+    dispatch(authInterceptor.disconnect());
+  }
+};
+
 export const adminUserActions = {
   getUser,
   getUsers,
@@ -85,5 +108,8 @@ export const adminUserActions = {
   setFetchedUsers,
   addUser,
   updateUser,
+  deleteUser,
   clearUser,
+  setUserToBeDeleted,
+  unsetUserToBeDeleted,
 };

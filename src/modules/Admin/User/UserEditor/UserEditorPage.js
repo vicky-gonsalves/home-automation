@@ -1,22 +1,18 @@
 import PropTypes from 'prop-types';
-import React, { useContext } from 'react';
+import React from 'react';
 import AdminCommonLayout from '../../../../_components/admin-common-layout/AdminCommonLayout';
 import UserEditor from '../../../../_components/user-editor/userEditor';
-import { SiteSettingContext } from '../../../../_contexts/site-setting/SiteSettingContext.provider';
+import AdminUserContextProvider from '../../../../_contexts/admin-user/AdminUserContext.provider';
 
 const UserEditorPage = () => {
-  const siteSettingContext = useContext(SiteSettingContext);
-
-  const innerComponent = <UserEditor data-test="userEditorPageContainer" />;
+  const innerComponent = (
+    <AdminUserContextProvider>
+      <UserEditor data-test="userEditorPageContainer" />
+    </AdminUserContextProvider>
+  );
 
   const renderAdminCommonLayoutComp = component => {
-    return (
-      <AdminCommonLayout
-        component={component}
-        drawerOpen={siteSettingContext.drawer.open}
-        data-test="adminPageContainerForUserEditor"
-      />
-    );
+    return <AdminCommonLayout component={component} data-test="adminPageContainerForUserEditor" />;
   };
 
   return renderAdminCommonLayoutComp(innerComponent);

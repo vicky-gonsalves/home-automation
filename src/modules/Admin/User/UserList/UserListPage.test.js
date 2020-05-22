@@ -4,10 +4,11 @@ import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import SiteSettingContextProvider from '../../../../_contexts/site-setting/SiteSettingContext.provider';
-import UserContextProvider from '../../../../_contexts/user/UserContext.provider';
 import { history } from '../../../../_helpers/history/history';
 import { checkProps, findByDataAttr, getStateClone } from '../../../../_utils';
 import UserListPage from './UserListPage';
+
+jest.mock('../../../../_components/user-list/userList', () => () => <div>Mock</div>);
 
 let wrapper;
 let store;
@@ -26,11 +27,9 @@ const setupWrapper = (_initialState, _props) => {
   store = mockStore(_initialState);
   return mount(
     <Provider store={store}>
-      <UserContextProvider>
-        <SiteSettingContextProvider>
-          <UserListPage {..._props} />
-        </SiteSettingContextProvider>
-      </UserContextProvider>
+      <SiteSettingContextProvider>
+        <UserListPage {..._props} />
+      </SiteSettingContextProvider>
     </Provider>
   );
 };

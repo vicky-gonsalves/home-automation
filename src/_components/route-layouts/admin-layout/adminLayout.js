@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useLayoutEffect, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
 import { Redirect, useLocation } from 'react-router';
 import { Route } from 'react-router-dom';
@@ -32,19 +32,23 @@ function AdminLayout() {
     );
   };
 
-  useEffect(() => {
+  const renderAdminRoutes = useMemo(() => {
+    return (
+      <React.Fragment>
+        <AdminRoute exact path={adminLayoutPath[0]} component={LazyLoader(DashboardPage)} />
+        <AdminRoute exact path={adminLayoutPath[1]} component={LazyLoader(UserListPage)} />
+        <AdminRoute exact path={adminLayoutPath[2]} component={LazyLoader(UserEditorPage)} />
+        <AdminRoute exact path={adminLayoutPath[3]} component={LazyLoader(UserEditorPage)} />
+        <AdminRoute exact path={adminLayoutPath[4]} component={LazyLoader(UserViewPage)} />
+      </React.Fragment>
+    );
+  }, [adminLayoutPath]);
+
+  useLayoutEffect(() => {
     adminUserActions.clearUser(dispatch); // Cleanup
   }, [dispatch, location]);
 
-  return (
-    <React.Fragment>
-      <AdminRoute exact path={adminLayoutPath[0]} component={LazyLoader(DashboardPage)} />
-      <AdminRoute exact path={adminLayoutPath[1]} component={LazyLoader(UserListPage)} />
-      <AdminRoute exact path={adminLayoutPath[2]} component={LazyLoader(UserEditorPage)} />
-      <AdminRoute exact path={adminLayoutPath[3]} component={LazyLoader(UserEditorPage)} />
-      <AdminRoute exact path={adminLayoutPath[4]} component={LazyLoader(UserViewPage)} />
-    </React.Fragment>
-  );
+  return <React.Fragment>{renderAdminRoutes}</React.Fragment>;
 }
 
 AdminLayout.propTypes = {};

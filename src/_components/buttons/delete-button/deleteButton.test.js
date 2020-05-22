@@ -1,10 +1,8 @@
 import { mount } from 'enzyme';
 import React from 'react';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { history } from '../../../_helpers/history/history';
 import { checkProps, findByDataAttr, getStateClone } from '../../../_utils';
 import DeleteButton from './deleteButton';
 
@@ -14,17 +12,16 @@ let wrapper;
 let store;
 const mockStore = configureStore([thunk]);
 const props = {
-  item: {},
+  item: { id: 'someid' },
   type: 'user',
+  callback: () => ({ type: 'SOMETHING_TO_BE_DELETED', payload: 'someid' }),
 };
 
 const setupWrapper = (_initialState, _props) => {
   store = mockStore(_initialState);
   return mount(
     <Provider store={store}>
-      <Router history={history}>
-        <DeleteButton {..._props} />
-      </Router>
+      <DeleteButton {..._props} />
     </Provider>
   );
 };
@@ -59,14 +56,11 @@ describe('DeleteButton', () => {
     });
 
     it('should call callback on click', () => {
-      // eslint-disable-next-line no-console
-      console.log = jest.fn();
       const _initialState = getStateClone();
       wrapper = setupWrapper(_initialState, props);
       const component = findByDataAttr(wrapper, 'deleteIconButtonComponent').first();
       component.props().onClick();
-      // eslint-disable-next-line no-console
-      expect(console.log).toHaveBeenCalled();
+      expect(store.getActions()).toEqual([{ type: 'SOMETHING_TO_BE_DELETED', payload: 'someid' }]);
     });
   });
 });

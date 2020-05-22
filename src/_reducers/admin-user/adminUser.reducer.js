@@ -59,6 +59,40 @@ const adminUser = (state = initialState, action) => {
         count: 0,
       };
 
+    case adminUserConstants.DELETE_USER:
+      return {
+        ...state,
+        users: state.users.filter(user => user.id !== action.payload),
+      };
+
+    case adminUserConstants.SET_USER_TO_BE_DELETED:
+      const users = [];
+      state.users.forEach(user => {
+        if (user.id === action.payload) {
+          user.toBeDeleted = true;
+        }
+        users.push(user);
+      });
+
+      return {
+        ...state,
+        users,
+      };
+
+    case adminUserConstants.UNSET_USER_TO_BE_DELETED:
+      const resetUsers = [];
+      state.users.forEach(user => {
+        if (user.id === action.payload) {
+          user.toBeDeleted = false;
+        }
+        resetUsers.push(user);
+      });
+
+      return {
+        ...state,
+        users: resetUsers,
+      };
+
     default:
       return state;
   }

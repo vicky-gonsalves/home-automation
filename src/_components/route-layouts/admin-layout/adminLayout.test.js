@@ -11,7 +11,7 @@ import { history } from '../../../_helpers/history/history';
 import { checkProps, findByDataAttr, getStateClone, initialState, wait, getInnerComponent } from '../../../_utils';
 import AdminLayout from './adminLayout';
 
-const adminLayoutPath = ['/admin', '/users', '/users/new', '/users/edit/:id'];
+const adminLayoutPath = ['/admin', '/users', '/users/new', '/users/edit/:id', '/users/view/:id'];
 let wrapper;
 let store;
 const props = {
@@ -88,6 +88,7 @@ describe('AdminLayout', () => {
       expect(component.at(1).props().path).toBe(adminLayoutPath[1]);
       expect(component.at(2).props().path).toBe(adminLayoutPath[2]);
       expect(component.at(3).props().path).toBe(adminLayoutPath[3]);
+      expect(component.at(4).props().path).toBe(adminLayoutPath[4]);
     });
 
     it('should redirect to signin if user is not authenticated', () => {
@@ -100,6 +101,7 @@ describe('AdminLayout', () => {
       expect(renderLayoutPath(component, 1)).toBe(signInPath);
       expect(renderLayoutPath(component, 2)).toBe(signInPath);
       expect(renderLayoutPath(component, 3)).toBe(signInPath);
+      expect(renderLayoutPath(component, 4)).toBe(signInPath);
     });
 
     it('should redirect to signin if user is not admin', () => {
@@ -112,6 +114,7 @@ describe('AdminLayout', () => {
       expect(renderLayoutPath(component, 1)).toBe(signInPath);
       expect(renderLayoutPath(component, 2)).toBe(signInPath);
       expect(renderLayoutPath(component, 3)).toBe(signInPath);
+      expect(renderLayoutPath(component, 4)).toBe(signInPath);
     });
 
     it('should redirect to signin if user is admin but not logged in', () => {
@@ -124,6 +127,7 @@ describe('AdminLayout', () => {
       expect(renderLayoutPath(component, 1)).toBe(signInPath);
       expect(renderLayoutPath(component, 2)).toBe(signInPath);
       expect(renderLayoutPath(component, 3)).toBe(signInPath);
+      expect(renderLayoutPath(component, 4)).toBe(signInPath);
     });
 
     it('should redirect to signin if has no props', () => {
@@ -138,6 +142,7 @@ describe('AdminLayout', () => {
       expect(renderLayoutPath(component, 1)).toBe(signInPath);
       expect(renderLayoutPath(component, 2)).toBe(signInPath);
       expect(renderLayoutPath(component, 3)).toBe(signInPath);
+      expect(renderLayoutPath(component, 4)).toBe(signInPath);
       // eslint-disable-next-line no-console
       console.error.mockClear();
     });

@@ -24,13 +24,11 @@ const setupWrapper = (state, _props = {}) => {
   store = mockStore(state);
   return mount(
     <Provider store={store}>
-      <SiteSettingContextProvider>
-        <UserContextProvider>
-          <Router history={history}>
-            <Layout {..._props} />
-          </Router>
-        </UserContextProvider>
-      </SiteSettingContextProvider>
+      <UserContextProvider>
+        <Router history={history}>
+          <Layout {..._props} />
+        </Router>
+      </UserContextProvider>
     </Provider>
   );
 };
@@ -71,25 +69,6 @@ describe('Layout', () => {
       wrapper = setupWrapper(_initialState, props);
       const component = wrapper.find(AuthLayout);
       expect(component).toHaveLength(1);
-    });
-
-    it('should render adminDrawerComponent if user is logged in and role is admin and path is admin', () => {
-      const _initialState = getStateClone();
-      _initialState.user.isLoggedIn = true;
-      _initialState.user.role = 'admin';
-      _initialState.user.tokens = { access: {} };
-      _initialState.socket.connected = true;
-      history.location = { pathname: '/admin', search: '', hash: '', state: undefined };
-      wrapper = setupWrapper(_initialState, props);
-      const component = findByDataAttr(wrapper, 'adminDrawerComponent').first();
-      expect(component).toHaveLength(1);
-    });
-
-    it('should not render adminDrawerComponent if user is not logged in', () => {
-      const _initialState = getStateClone();
-      wrapper = setupWrapper(_initialState, props);
-      const component = findByDataAttr(wrapper, 'adminDrawerComponent');
-      expect(component).toHaveLength(0);
     });
   });
 });

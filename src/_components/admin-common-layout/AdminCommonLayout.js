@@ -2,8 +2,10 @@ import { CssBaseline } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import React, { useMemo } from 'react';
+import React, { useContext, useMemo } from 'react';
+import { SiteSettingContext } from '../../_contexts/site-setting/SiteSettingContext.provider';
 import config from '../../config';
+import AdminDrawer from '../admin-drawer/adminDrawer';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -32,17 +34,19 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const AdminCommonLayout = ({ component, drawerOpen }) => {
+const AdminCommonLayout = ({ component }) => {
   const classes = useStyles();
+  const siteSettingContext = useContext(SiteSettingContext);
 
   return useMemo(() => {
     if (typeof component === 'object') {
       return (
         <React.Fragment>
           <CssBaseline />
+          <AdminDrawer data-test="adminDrawerComponent" />
           <main
             className={clsx(classes.content, {
-              [classes.contentShift]: drawerOpen,
+              [classes.contentShift]: siteSettingContext.drawer.open,
             })}
             data-test="adminCommonLayoutContainer"
           >
@@ -52,7 +56,7 @@ const AdminCommonLayout = ({ component, drawerOpen }) => {
       );
     }
     return null;
-  }, [classes.content, classes.contentShift, component, drawerOpen]);
+  }, [classes.content, classes.contentShift, component, siteSettingContext.drawer.open]);
 };
 
 AdminCommonLayout.propTypes = {
@@ -63,7 +67,6 @@ AdminCommonLayout.propTypes = {
     contentShift: PropTypes.string.isRequired,
   }),
   component: PropTypes.object.isRequired,
-  drawerOpen: PropTypes.bool.isRequired,
 };
 
 export default AdminCommonLayout;

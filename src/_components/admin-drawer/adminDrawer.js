@@ -11,7 +11,7 @@ import DevicesIcon from '@material-ui/icons/Devices';
 import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useLayoutEffect, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
 import { adminDrawerActions } from '../../_actions/admin-drawer/adminDrawer.actions';
 import { SiteSettingContext } from '../../_contexts/site-setting/SiteSettingContext.provider';
@@ -52,9 +52,9 @@ const AdminDrawer = ({ width }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const siteSettingContext = useContext(SiteSettingContext);
-  const isMobile = !isWidthUp('md', width) && !isWidthUp('lg', width) && !isWidthUp('xl', width);
+  const isMobile = useMemo(() => !isWidthUp('md', width) && !isWidthUp('lg', width) && !isWidthUp('xl', width), [width]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const initDrawer = () => {
       if (isMobile) {
         dispatch(adminDrawerActions.close());
@@ -70,76 +70,90 @@ const AdminDrawer = ({ width }) => {
     { name: 'Devices', path: '/home', icon: <DevicesIcon /> },
   ];
 
-  const handleDrawerToggle = () => {
-    if (siteSettingContext.drawer.open) {
-      dispatch(adminDrawerActions.close());
-    } else {
-      dispatch(adminDrawerActions.open());
-    }
-  };
-
-  const renderMenuList = menuList.map(menu => (
-    <ListItemLink key={menu.name} icon={menu.icon} primary={menu.name} to={menu.path} isMobile={isMobile} />
-  ));
-
-  const renderMenu = (
-    <React.Fragment>
-      <Toolbar>
-        <BrightnessAutoIcon data-test="icon" />
-        &nbsp;
-        <Typography variant="h6" className={classes.title} color="primary" noWrap data-test="appNameMobile">
-          {config.appName}
-        </Typography>
-      </Toolbar>
-      <Divider />
-      <div className={isMobile ? '' : classes.drawerPaper} data-test="listContainer">
-        <List data-test="listComponent"> {renderMenuList} </List>
-      </div>
-    </React.Fragment>
+  const handleDrawerToggle = useMemo(
+    () => () => {
+      if (siteSettingContext.drawer.open) {
+        dispatch(adminDrawerActions.close());
+      } else {
+        dispatch(adminDrawerActions.open());
+      }
+    },
+    [dispatch, siteSettingContext.drawer.open]
   );
 
-  const mobileDrawer = (
-    <SwipeableDrawer
-      anchor="left"
-      open={siteSettingContext.drawer.open}
-      onClose={handleDrawerToggle}
-      onOpen={() => {}}
-      data-test="mobileDrawer"
-    >
-      {renderMenu}
-    </SwipeableDrawer>
+  const renderMenuList = useMemo(
+    () =>
+      menuList.map(menu => (
+        <ListItemLink key={menu.name} icon={menu.icon} primary={menu.name} to={menu.path} isMobile={isMobile} />
+      )),
+    [isMobile, menuList]
   );
 
-  const deskTopDrawer = (
-    <Drawer
-      open={siteSettingContext.drawer.open}
-      onClose={handleDrawerToggle}
-      variant="permanent"
-      className={clsx(classes.drawer, {
-        [classes.drawerOpen]: siteSettingContext.drawer.open,
-        [classes.drawerClose]: !siteSettingContext.drawer.open,
-      })}
-      classes={{
-        paper: clsx({
+  const renderMenu = useMemo(
+    () => (
+      <React.Fragment>
+        <Toolbar>
+          <BrightnessAutoIcon data-test="icon" />
+          &nbsp;
+          <Typography variant="h6" className={classes.title} color="primary" noWrap data-test="appNameMobile">
+            {config.appName}
+          </Typography>
+        </Toolbar>
+        <Divider />
+        <div className={isMobile ? '' : classes.drawerPaper} data-test="listContainer">
+          <List data-test="listComponent"> {renderMenuList} </List>
+        </div>
+      </React.Fragment>
+    ),
+    [classes.drawerPaper, classes.title, isMobile, renderMenuList]
+  );
+
+  const mobileDrawer = useMemo(
+    () => (
+      <SwipeableDrawer
+        anchor="left"
+        open={siteSettingContext.drawer.open}
+        onClose={handleDrawerToggle}
+        onOpen={() => {}}
+        data-test="mobileDrawer"
+      >
+        {renderMenu}
+      </SwipeableDrawer>
+    ),
+    [handleDrawerToggle, renderMenu, siteSettingContext.drawer.open]
+  );
+
+  const deskTopDrawer = useMemo(
+    () => (
+      <Drawer
+        open={siteSettingContext.drawer.open}
+        onClose={handleDrawerToggle}
+        variant="permanent"
+        className={clsx(classes.drawer, {
           [classes.drawerOpen]: siteSettingContext.drawer.open,
           [classes.drawerClose]: !siteSettingContext.drawer.open,
-        }),
-      }}
-      data-test="nonMobileDrawer"
-    >
-      {renderMenu}
-    </Drawer>
+        })}
+        classes={{
+          paper: clsx({
+            [classes.drawerOpen]: siteSettingContext.drawer.open,
+            [classes.drawerClose]: !siteSettingContext.drawer.open,
+          }),
+        }}
+        data-test="nonMobileDrawer"
+      >
+        {renderMenu}
+      </Drawer>
+    ),
+    [classes.drawer, classes.drawerClose, classes.drawerOpen, handleDrawerToggle, renderMenu, siteSettingContext.drawer.open]
   );
 
-  const renderDrawer = () => {
+  return useMemo(() => {
     if (isMobile) {
       return mobileDrawer;
     } else {
       return deskTopDrawer;
     }
-  };
-
-  return renderDrawer();
+  }, [deskTopDrawer, isMobile, mobileDrawer]);
 };
 
 AdminDrawer.propTypes = {

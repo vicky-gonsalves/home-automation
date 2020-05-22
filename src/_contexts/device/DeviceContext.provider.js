@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo } from 'react';
+import React, { useContext, useLayoutEffect, useMemo } from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { deviceActions } from '../../_actions';
 import { history } from '../../_helpers/history/history';
@@ -42,7 +42,7 @@ const DeviceContextProvider = props => {
 
   const dispatch = useDispatch();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const fetchDevices = () => {
       if (shouldFetchDevices) {
         dispatch(deviceActions.myDevices());

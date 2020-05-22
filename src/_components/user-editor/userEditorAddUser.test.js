@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import { Router, Switch } from 'react-router';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import AdminUserContextProvider from '../../_contexts/admin-user/AdminUserContext.provider';
 import { history } from '../../_helpers/history/history';
 import { checkProps, findByDataAttr, getStateClone } from '../../_utils';
 import UserEditor from './userEditor';
@@ -33,7 +34,9 @@ const setupWrapper = (_initialState, _props) => {
     <Provider store={store}>
       <Router history={history}>
         <Switch>
-          <UserEditor {..._props} />
+          <AdminUserContextProvider>
+            <UserEditor {..._props} />
+          </AdminUserContextProvider>
         </Switch>
       </Router>
     </Provider>

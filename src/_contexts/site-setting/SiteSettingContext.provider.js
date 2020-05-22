@@ -28,7 +28,7 @@ const SiteSettingContextProvider = props => {
   });
 
   return (
-    <SiteSettingContext.Provider value={{ drawer: { show: ref.current.show, open }, burger: ref.current.show }}>
+    <SiteSettingContext.Provider value={{ drawer: { open }, burger: ref.current.show }}>
       {props.children}
     </SiteSettingContext.Provider>
   );

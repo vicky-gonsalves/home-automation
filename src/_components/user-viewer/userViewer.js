@@ -6,10 +6,11 @@ import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import moment from 'moment';
 import PropTypes from 'prop-types';
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useContext, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router';
 import { adminUserActions } from '../../_actions';
+import { AdminUserContext } from '../../_contexts/admin-user/AdminUserContext.provider';
 import EditorSkeleton from '../editor-skeleton/EditorSkeleton';
 import PageToolbar from '../page-toolbar/PageToolbar';
 
@@ -31,7 +32,8 @@ const useStyles = makeStyles(theme => ({
 const UserViewer = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const adminUser = useSelector(state => state.adminUser);
+  const adminUserContext = useContext(AdminUserContext);
+  const adminUser = adminUserContext.adminUser;
   const params = useParams();
   const HAS_ID = params && params.hasOwnProperty('id');
   const userId = HAS_ID ? params.id : null;

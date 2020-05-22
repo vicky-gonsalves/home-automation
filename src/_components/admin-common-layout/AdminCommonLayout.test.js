@@ -3,11 +3,15 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import AdminUserContextProvider from '../../_contexts/admin-user/AdminUserContext.provider';
+import SiteSettingContextProvider from '../../_contexts/site-setting/SiteSettingContext.provider';
+import UserContextProvider from '../../_contexts/user/UserContext.provider';
 import { checkProps, findByDataAttr, getStateClone } from '../../_utils';
 import UserList from '../user-list/userList';
 import AdminCommonLayout from './AdminCommonLayout';
 
 jest.mock('axios');
+jest.mock('../admin-drawer/adminDrawer', () => () => <div>Mock</div>);
 
 let wrapper;
 let store;
@@ -27,7 +31,13 @@ const setupWrapper = (_initialState, _props) => {
   store = mockStore(_initialState);
   return mount(
     <Provider store={store}>
-      <AdminCommonLayout {..._props} />
+      <SiteSettingContextProvider>
+        <UserContextProvider>
+          <AdminUserContextProvider>
+            <AdminCommonLayout {..._props} />
+          </AdminUserContextProvider>
+        </UserContextProvider>
+      </SiteSettingContextProvider>
     </Provider>
   );
 };
@@ -73,7 +83,7 @@ describe('AdminCommonLayout Component', () => {
           content: '',
           contentShift: '',
         },
-        component: <UserList isConnected={true} isLoggedIn={true} />,
+        component: <UserList />,
         drawerOpen: false,
       };
       wrapper = setupWrapper(_initialState, _props);
@@ -98,6 +108,13 @@ describe('AdminCommonLayout Component', () => {
       expect(component).toHaveLength(0);
       // eslint-disable-next-line no-console
       console.error.mockClear();
+    });
+
+    it('should render adminDrawerComponent', () => {
+      const _initialState = getStateClone();
+      wrapper = setupWrapper(_initialState, props);
+      const component = findByDataAttr(wrapper, 'adminDrawerComponent').first();
+      expect(component).toHaveLength(1);
     });
   });
 });

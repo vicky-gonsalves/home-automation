@@ -9,6 +9,13 @@ const handleResponse = response => {
   return Promise.reject('No Data');
 };
 
+const handleDeletionResponse = response => {
+  if (response && response.status === 204) {
+    return Promise.resolve();
+  }
+  return Promise.reject('Server Error');
+};
+
 const handleError = error => {
   let err;
   if (error && error.response) {
@@ -59,9 +66,19 @@ const updateUser = async (params, id) => {
   }
 };
 
+const deleteUser = async id => {
+  try {
+    const response = await axios.delete(`${config.apiUrl}/users/${id}`);
+    return handleDeletionResponse(response);
+  } catch (error) {
+    return handleError(error);
+  }
+};
+
 export const adminUserService = {
   getUsers,
   getUser,
   addUser,
   updateUser,
+  deleteUser,
 };
