@@ -87,6 +87,7 @@ const ListTable = ({
   preDeleteCallback,
   postDeleteCallback,
   cancelDeleteCallback,
+  useKey,
 }) => {
   const classes = useStyles();
   const [order, setOrder] = React.useState(initialSort.order);
@@ -276,8 +277,8 @@ const ListTable = ({
   const renderActions = useMemo(
     () => (actions, item) => {
       const generateComponent = action => {
-        if (action.buttonType && (action.buttonType === 'view' || action.buttonType === 'edit')) {
-          return <action.component path={`${action.path}${item.id}`} data-test="actionButtonComponent" />;
+        if (action.buttonType && useKey && (action.buttonType === 'view' || action.buttonType === 'edit')) {
+          return <action.component path={`${action.path}${item[useKey]}`} data-test="actionButtonComponent" />;
         } else if (
           action.buttonType &&
           action.buttonType === 'delete' &&
@@ -298,15 +299,31 @@ const ListTable = ({
             });
             if (counter < keys.length) {
               return (
-                <action.component item={item} type={type} callback={preDeleteCallback} data-test="actionButtonComponent" />
+                <action.component
+                  item={item}
+                  type={type}
+                  useKey={useKey}
+                  callback={preDeleteCallback}
+                  data-test="actionButtonComponent"
+                />
               );
             }
+          } else {
+            return (
+              <action.component
+                item={item}
+                type={type}
+                useKey={useKey}
+                callback={preDeleteCallback}
+                data-test="actionButtonComponent"
+              />
+            );
           }
         }
       };
       return actions.map(action => <React.Fragment key={action.id}>{generateComponent(action)}</React.Fragment>);
     },
-    [cancelDeleteCallback, postDeleteCallback, preDeleteCallback, preventDeletion, type]
+    [cancelDeleteCallback, postDeleteCallback, preDeleteCallback, preventDeletion, type, useKey]
   );
 
   const renderRowCells = useMemo(
@@ -340,7 +357,12 @@ const ListTable = ({
         <React.Fragment>
           <TableCell align={'center'} className={classes.deleteButtons}>
             <Typography variant="subtitle2" noWrap>
-              <ConfirmButton item={item} callback={postDeleteCallback} cancelCallback={cancelDeleteCallback} />
+              <ConfirmButton
+                item={item}
+                callback={postDeleteCallback}
+                cancelCallback={cancelDeleteCallback}
+                useKey={useKey}
+              />
             </Typography>
           </TableCell>
           <TableCell colSpan={headCells.length - 1} key={`delete-${item.id}`} align={'left'}>
@@ -351,7 +373,7 @@ const ListTable = ({
         </React.Fragment>
       );
     },
-    [cancelDeleteCallback, classes.deleteButtons, headCells.length, postDeleteCallback, type]
+    [cancelDeleteCallback, classes.deleteButtons, headCells.length, postDeleteCallback, type, useKey]
   );
 
   const renderTableRows = useMemo(
@@ -496,6 +518,7 @@ ListTable.propTypes = {
       component: PropTypes.func.isRequired,
       path: PropTypes.string.isRequired,
       buttonType: PropTypes.string.isRequired,
+      width: PropTypes.number,
     })
   ),
   title: PropTypes.string.isRequired,
@@ -504,5 +527,6 @@ ListTable.propTypes = {
     order: PropTypes.string.isRequired,
     orderBy: PropTypes.string.isRequired,
   }),
+  useKey: PropTypes.string.isRequired,
 };
 export default ListTable;

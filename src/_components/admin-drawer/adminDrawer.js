@@ -67,7 +67,7 @@ const AdminDrawer = ({ width }) => {
 
   const menuList = [
     { name: 'Users', path: '/users', icon: <SupervisorAccountIcon /> },
-    { name: 'Devices', path: '/home', icon: <DevicesIcon /> },
+    { name: 'Devices', path: '/devices', icon: <DevicesIcon /> },
   ];
 
   const handleDrawerToggle = useMemo(

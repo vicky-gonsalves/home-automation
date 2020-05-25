@@ -154,10 +154,11 @@ const props = {
   isLoggedIn: true,
   isConnected: true,
   isFetching: false,
-  buttons: [{ title: 'Add User', type: 'user', component: AddButton, path: '/users/new', buttonType: 'add' }],
+  buttons: [{ title: 'Add User', type: 'user', component: AddButton, path: '/users/new', buttonType: 'add', width: 100 }],
   title: 'Users',
   type: 'user',
   initialSort: { order: 'desc', orderBy: 'createdAt' },
+  useKey: 'id',
 };
 
 const setupWrapper = (_initialState, _props) => {

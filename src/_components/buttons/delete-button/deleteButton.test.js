@@ -14,6 +14,7 @@ const mockStore = configureStore([thunk]);
 const props = {
   item: { id: 'someid' },
   type: 'user',
+  useKey: 'id',
   callback: () => ({ type: 'SOMETHING_TO_BE_DELETED', payload: 'someid' }),
 };
 

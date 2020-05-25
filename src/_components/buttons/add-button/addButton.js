@@ -15,7 +15,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const AddButton = ({ title, path }) => {
+const AddButton = ({ title, path, width }) => {
   const classes = useStyles();
   const handleClick = () => {
     history.push(path);
@@ -30,6 +30,7 @@ const AddButton = ({ title, path }) => {
           startIcon={<AddIcon />}
           onClick={handleClick}
           data-test="addButtonComponent"
+          style={{ minWidth: width || 0 }}
         >
           {title}
         </Button>
@@ -47,6 +48,7 @@ AddButton.propTypes = {
   }),
   path: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
+  width: PropTypes.number,
 };
 
 export default AddButton;

@@ -23,7 +23,14 @@ const PageToolbar = ({ title, buttons }) => {
 
   const renderButton = button => {
     if (button.component) {
-      return <button.component path={button.path} title={button.title} data-test="toolbarButtonComponent" />;
+      return (
+        <button.component
+          path={button.path}
+          title={button.title}
+          width={button.width || null}
+          data-test="toolbarButtonComponent"
+        />
+      );
     }
     return null;
   };

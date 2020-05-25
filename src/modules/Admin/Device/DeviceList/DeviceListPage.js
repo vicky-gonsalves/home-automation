@@ -1,17 +1,17 @@
 import PropTypes from 'prop-types';
 import React, { useContext } from 'react';
 import AdminCommonLayout from '../../../../_components/admin-common-layout/AdminCommonLayout';
-import UserList from '../../../../_components/user-list/userList';
-import AdminUserContextProvider from '../../../../_contexts/admin-user/AdminUserContext.provider';
+import DeviceList from '../../../../_components/device-list/deviceList';
+import AdminDeviceContextProvider from '../../../../_contexts/admin-device/AdminDeviceContext.provider';
 import { SiteSettingContext } from '../../../../_contexts/site-setting/SiteSettingContext.provider';
 
-const UserListPage = () => {
+const DeviceListPage = () => {
   const siteSettingContext = useContext(SiteSettingContext);
 
   const innerComponent = (
-    <AdminUserContextProvider>
-      <UserList data-test="userListPageComponent" />
-    </AdminUserContextProvider>
+    <AdminDeviceContextProvider>
+      <DeviceList data-test="deviceListPageComponent" />
+    </AdminDeviceContextProvider>
   );
 
   const renderAdminCommonLayoutComp = component => {
@@ -19,7 +19,7 @@ const UserListPage = () => {
       <AdminCommonLayout
         component={component}
         drawerOpen={siteSettingContext.drawer.open}
-        data-test="adminPageContainerForUserList"
+        data-test="adminPageContainerForDeviceList"
       />
     );
   };
@@ -27,10 +27,10 @@ const UserListPage = () => {
   return renderAdminCommonLayoutComp(innerComponent);
 };
 
-UserListPage.propTypes = {
+DeviceListPage.propTypes = {
   history: PropTypes.object.isRequired,
   location: PropTypes.object.isRequired,
   match: PropTypes.object.isRequired,
 };
 
-export default UserListPage;
+export default DeviceListPage;

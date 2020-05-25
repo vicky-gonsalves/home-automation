@@ -14,10 +14,6 @@ let wrapper;
 let store;
 const mockStore = configureStore([thunk]);
 const props = {
-  classes: {
-    root: '',
-    footer: '',
-  },
   history,
   location: {},
   match: {},

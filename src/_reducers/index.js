@@ -1,6 +1,7 @@
 /* istanbul ignore file */
 import { combineReducers } from 'redux';
 import { appConstants } from '../_constants';
+import adminDevice from './admin-device/adminDevice.reducer';
 import adminDrawer from './admin-drawer/adminDrawer.reducer';
 import adminUser from './admin-user/adminUser.reducer';
 import deviceParam from './device-param/deviceParam.reducer';
@@ -32,6 +33,7 @@ const appReducer = combineReducers({
   log,
   adminDrawer,
   adminUser,
+  adminDevice,
   siteSetting,
 });
 

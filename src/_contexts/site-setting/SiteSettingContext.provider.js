@@ -9,7 +9,7 @@ const SiteSettingContextProvider = props => {
   const ref = useRef(null);
   // noinspection JSValidateTypes
   ref.current = { show, setShow };
-  const drawerPath = ['admin', 'users'];
+  const drawerPath = ['admin', 'users', 'devices'];
   const toShow = useCallback(
     () =>
       Boolean(

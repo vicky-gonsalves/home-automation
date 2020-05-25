@@ -16,6 +16,7 @@ const mockStore = configureStore([thunk]);
 const props = {
   title: 'Add Something',
   path: '/',
+  width: 100,
 };
 
 const setupWrapper = (_initialState, _props) => {

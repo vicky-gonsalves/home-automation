@@ -11,3 +11,4 @@ export * from './log/log.actions';
 export * from './app/app.actions';
 export * from './admin-user/adminUser.actions';
 export * from './site-setting/siteSetting.actions';
+export * from './admin-device/adminDevice.actions';

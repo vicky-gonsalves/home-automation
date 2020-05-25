@@ -3,8 +3,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import React, { useCallback, useContext, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
-import { adminUserActions } from '../../_actions';
-import { AdminUserContext } from '../../_contexts/admin-user/AdminUserContext.provider';
+import { adminDeviceActions } from '../../_actions';
+import { AdminDeviceContext } from '../../_contexts/admin-device/AdminDeviceContext.provider';
 import { UserContext } from '../../_contexts/user/UserContext.provider';
 import AddButton from '../buttons/add-button/addButton';
 import DeleteButton from '../buttons/delete-button/deleteButton';
@@ -22,14 +22,14 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const UserList = () => {
+const DeviceList = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const userContext = useContext(UserContext);
-  const adminUserContext = useContext(AdminUserContext);
-  const adminUser = adminUserContext.adminUser;
-  const list = adminUser.users;
-  const isFetching = adminUser.isFetchingUsersList || !userContext.connected;
+  const adminDeviceContext = useContext(AdminDeviceContext);
+  const adminDevice = adminDeviceContext.adminDevice;
+  const list = adminDevice.devices;
+  const isFetching = adminDevice.isFetchingDevicesList || !userContext.connected;
 
   const tableHeaders = [
     {
@@ -38,21 +38,32 @@ const UserList = () => {
       label: 'Actions',
       width: 150,
       actions: [
-        { id: 'view', component: ViewButton, path: '/users/view/', buttonType: 'view' },
-        { id: 'edit', component: EditButton, path: '/users/edit/', buttonType: 'edit' },
-        { id: 'delete', component: DeleteButton, buttonType: 'delete' },
+        { id: 'view', component: ViewButton, path: '/devices/view/', buttonType: 'view', useKey: 'deviceId' },
+        { id: 'edit', component: EditButton, path: '/devices/edit/', buttonType: 'edit', useKey: 'deviceId' },
+        { id: 'delete', component: DeleteButton, buttonType: 'delete', useKey: 'deviceId' },
       ],
     },
     { id: 'name', sort: true, search: true, align: 'left', label: 'Name', type: 'text', width: 300 },
-    { id: 'email', sort: true, search: true, align: 'left', label: 'Email', type: 'email', width: 300 },
+    { id: 'deviceId', sort: true, search: true, align: 'left', label: 'Device Id', type: 'text', width: 300 },
+    { id: 'deviceOwner', sort: true, search: true, align: 'left', label: 'Device Owner', type: 'email', width: 300 },
     {
-      id: 'role',
+      id: 'type',
       sort: true,
       search: true,
       align: 'left',
-      label: 'Role',
+      label: 'Type',
       type: 'select',
-      options: ['admin', 'user'],
+      options: ['arduino', 'raspberrypi', 'nodeMCU'],
+      width: 250,
+    },
+    {
+      id: 'variant',
+      sort: true,
+      search: true,
+      align: 'left',
+      label: 'Variant',
+      type: 'select',
+      options: ['tank', 'smartSwitch'],
       width: 250,
     },
     {
@@ -68,13 +79,15 @@ const UserList = () => {
     { id: 'createdAt', sort: true, search: true, align: 'left', label: 'created at', type: 'datetime', width: 450 },
   ];
 
-  const buttons = [{ title: 'Add User', type: 'user', component: AddButton, path: '/users/new', buttonType: 'add' }];
+  const buttons = [
+    { title: 'Add Device', type: 'device', component: AddButton, path: '/devices/new', buttonType: 'add', width: 150 },
+  ];
 
   const getList = useCallback(
     (isLoggedIn, isConnected, sortBy, limit, page, searchFilter) => {
       const fetchList = () => {
         if (isLoggedIn && isConnected) {
-          dispatch(adminUserActions.getUsers({ sortBy, limit, page, ...searchFilter }));
+          dispatch(adminDeviceActions.getDevices({ sortBy, limit, page, ...searchFilter }));
         }
       };
       fetchList();
@@ -85,10 +98,10 @@ const UserList = () => {
   const renderList = useMemo(() => {
     return (
       <ListTable
-        type="user"
-        title="Users"
+        type="device"
+        title="Devices"
         tableHeaders={tableHeaders}
-        count={adminUser.count}
+        count={adminDevice.count}
         list={list}
         getList={getList}
         isLoggedIn={userContext.isLoggedIn}
@@ -96,25 +109,14 @@ const UserList = () => {
         isFetching={isFetching}
         buttons={buttons}
         initialSort={{ order: 'desc', orderBy: 'createdAt' }}
-        preventDeletion={{ email: userContext.user.email }}
         data-test="listTableComponent"
-        preDeleteCallback={adminUserActions.setUserToBeDeleted}
-        postDeleteCallback={adminUserActions.deleteUser}
-        cancelDeleteCallback={adminUserActions.unsetUserToBeDeleted}
-        useKey={'id'}
+        preDeleteCallback={adminDeviceActions.setDeviceToBeDeleted}
+        postDeleteCallback={adminDeviceActions.deleteDevice}
+        cancelDeleteCallback={adminDeviceActions.unsetDeviceToBeDeleted}
+        useKey={'deviceId'}
       />
     );
-  }, [
-    adminUser.count,
-    buttons,
-    getList,
-    isFetching,
-    list,
-    tableHeaders,
-    userContext.connected,
-    userContext.isLoggedIn,
-    userContext.user.email,
-  ]);
+  }, [adminDevice.count, buttons, getList, isFetching, list, tableHeaders, userContext.connected, userContext.isLoggedIn]);
 
   return (
     <React.Fragment>
@@ -127,11 +129,11 @@ const UserList = () => {
   );
 };
 
-UserList.propTypes = {
+DeviceList.propTypes = {
   classes: PropTypes.shape({
     root: PropTypes.string.isRequired,
     paper: PropTypes.string.isRequired,
   }),
 };
 
-export default UserList;
+export default DeviceList;

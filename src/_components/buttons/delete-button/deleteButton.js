@@ -11,11 +11,11 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const DeleteButton = ({ item, type, callback }) => {
+const DeleteButton = ({ item, callback, useKey }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const handleClick = () => {
-    dispatch(callback(item.id));
+    dispatch(callback(item[useKey]));
   };
   return (
     <IconButton
@@ -32,8 +32,8 @@ const DeleteButton = ({ item, type, callback }) => {
 
 DeleteButton.propTypes = {
   item: PropTypes.object.isRequired,
-  type: PropTypes.string,
   callback: PropTypes.func.isRequired,
+  useKey: PropTypes.string.isRequired,
 };
 
 export default DeleteButton;
