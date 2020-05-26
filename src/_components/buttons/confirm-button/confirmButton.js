@@ -7,9 +7,7 @@ import { useDispatch } from 'react-redux';
 
 const ConfirmButton = ({ item, callback, cancelCallback, useKey }) => {
   const dispatch = useDispatch();
-  const handleConfirm = () => {
-    dispatch(callback(item[useKey]));
-  };
+  const handleConfirm = () => callback(item[useKey]);
   const handleCancel = () => {
     dispatch(cancelCallback(item[useKey]));
   };

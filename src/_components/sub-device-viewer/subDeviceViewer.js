@@ -9,12 +9,10 @@ import PropTypes from 'prop-types';
 import React, { useContext, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router';
-import { adminDeviceActions } from '../../_actions';
-import { AdminDeviceContext } from '../../_contexts/admin-device/AdminDeviceContext.provider';
-import AdminSubDeviceContextProvider from '../../_contexts/admin-sub-device/AdminSubDeviceContext.provider';
+import { adminSubDeviceActions } from '../../_actions';
+import { AdminSubDeviceContext } from '../../_contexts/admin-sub-device/AdminSubDeviceContext.provider';
 import EditorSkeleton from '../editor-skeleton/EditorSkeleton';
 import PageToolbar from '../page-toolbar/PageToolbar';
-import SubDeviceList from '../sub-device-list/subDeviceList';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -31,35 +29,37 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const DeviceViewer = () => {
+const SubDeviceViewer = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const adminDeviceContext = useContext(AdminDeviceContext);
-  const adminDevice = adminDeviceContext.adminDevice;
+  const adminSubDeviceContext = useContext(AdminSubDeviceContext);
+  const adminSubDevice = adminSubDeviceContext.adminSubDevice;
   const params = useParams();
   const HAS_ID = params && params.hasOwnProperty('id');
+  const HAS_SUB_DEVICE_ID = params && params.hasOwnProperty('subDeviceId');
   const deviceId = HAS_ID ? params.id : null;
-  const pageTitle = 'View Device';
+  const subDeviceId = HAS_SUB_DEVICE_ID ? params.subDeviceId : null;
+  const pageTitle = 'View Sub Device';
 
   useEffect(() => {
     const getDevice = () => {
-      if (deviceId && !adminDevice.fetchedEditableDevice) {
-        dispatch(adminDeviceActions.getDevice(deviceId));
+      if (deviceId && subDeviceId && !adminSubDevice.fetchedEditableDevice) {
+        dispatch(adminSubDeviceActions.getSubDevice(deviceId, subDeviceId));
       }
     };
 
     getDevice();
-  }, [adminDevice.fetchedEditableDevice, dispatch, deviceId]);
+  }, [adminSubDevice.fetchedEditableDevice, dispatch, deviceId, subDeviceId]);
 
   return (
     <React.Fragment>
       <CssBaseline />
-      <div className={classes.root} data-test="deviceViewerComponent">
+      <div className={classes.root} data-test="subDeviceViewerComponent">
         <Container maxWidth={'xl'} disableGutters={true}>
-          <Paper elevation={2} className={classes.paper} data-test="deviceViewerPaperComponent">
-            <PageToolbar title={pageTitle} data-test="deviceViewerToolbarComponent" />
-            {adminDevice.deviceInProgress && <EditorSkeleton />}
-            {!adminDevice.deviceInProgress && adminDevice.device && adminDevice.device.id && (
+          <Paper elevation={2} className={classes.paper} data-test="subDeviceViewerPaperComponent">
+            <PageToolbar title={pageTitle} data-test="subDeviceViewerToolbarComponent" />
+            {adminSubDevice.deviceInProgress && <EditorSkeleton />}
+            {!adminSubDevice.deviceInProgress && adminSubDevice.subDevice && adminSubDevice.subDevice.id && (
               <React.Fragment>
                 <Grid container className={classes.root}>
                   <Grid item xs={12} md={6}>
@@ -68,7 +68,15 @@ const DeviceViewer = () => {
                         <div>Name</div>
                       </Typography>
                       <Typography variant="subtitle1" display="block" gutterBottom>
-                        <div>{adminDevice.device.name}</div>
+                        <div>{adminSubDevice.subDevice.name}</div>
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={12} xl={6} className={classes.info}>
+                      <Typography variant="subtitle2" display="block" gutterBottom>
+                        <div>SubDevice Id</div>
+                      </Typography>
+                      <Typography variant="subtitle1" display="block" gutterBottom>
+                        <div>{adminSubDevice.subDevice.subDeviceId}</div>
                       </Typography>
                     </Grid>
                     <Grid item xs={12} xl={6} className={classes.info}>
@@ -76,7 +84,7 @@ const DeviceViewer = () => {
                         <div>Device Id</div>
                       </Typography>
                       <Typography variant="subtitle1" display="block" gutterBottom>
-                        <div>{adminDevice.device.deviceId}</div>
+                        <div>{adminSubDevice.subDevice.deviceId}</div>
                       </Typography>
                     </Grid>
                     <Grid item xs={12} xl={6} className={classes.info}>
@@ -84,15 +92,7 @@ const DeviceViewer = () => {
                         <div>Type</div>
                       </Typography>
                       <Typography variant="subtitle1" display="block" gutterBottom>
-                        <div>{adminDevice.device.type}</div>
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={12} xl={6} className={classes.info}>
-                      <Typography variant="subtitle2" display="block" gutterBottom>
-                        <div>Variant</div>
-                      </Typography>
-                      <Typography variant="subtitle1" display="block" gutterBottom>
-                        <div>{adminDevice.device.variant}</div>
+                        <div>{adminSubDevice.subDevice.type}</div>
                       </Typography>
                     </Grid>
                     <Grid item xs={12} xl={6} className={classes.info}>
@@ -100,15 +100,7 @@ const DeviceViewer = () => {
                         <div>Status</div>
                       </Typography>
                       <Typography variant="subtitle1" display="block" gutterBottom>
-                        <div>{adminDevice.device.isDisabled ? 'Not Active' : 'Active'}</div>
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={12} className={classes.info}>
-                      <Typography variant="subtitle2" display="block" gutterBottom>
-                        <div>Device Owner</div>
-                      </Typography>
-                      <Typography variant="subtitle1" display="block" gutterBottom>
-                        <div>{adminDevice.device.deviceOwner}</div>
+                        <div>{adminSubDevice.subDevice.isDisabled ? 'Not Active' : 'Active'}</div>
                       </Typography>
                     </Grid>
                   </Grid>
@@ -119,7 +111,7 @@ const DeviceViewer = () => {
                         <div>Created At</div>
                       </Typography>
                       <Typography variant="subtitle1" display="block" gutterBottom>
-                        <div>{moment(adminDevice.device.createdAt).format('MMMM Do YYYY, h:mm:ss a')}</div>
+                        <div>{moment(adminSubDevice.subDevice.createdAt).format('MMMM Do YYYY, h:mm:ss a')}</div>
                       </Typography>
                     </Grid>
 
@@ -128,7 +120,7 @@ const DeviceViewer = () => {
                         <div>Created By</div>
                       </Typography>
                       <Typography variant="subtitle1" display="block" gutterBottom>
-                        <div>{adminDevice.device.createdBy || 'System'}</div>
+                        <div>{adminSubDevice.subDevice.createdBy || 'System'}</div>
                       </Typography>
                     </Grid>
 
@@ -137,7 +129,7 @@ const DeviceViewer = () => {
                         <div>Last Updated At</div>
                       </Typography>
                       <Typography variant="subtitle1" display="block" gutterBottom>
-                        <div>{moment(adminDevice.device.updatedAt).format('MMMM Do YYYY, h:mm:ss a')}</div>
+                        <div>{moment(adminSubDevice.subDevice.updatedAt).format('MMMM Do YYYY, h:mm:ss a')}</div>
                       </Typography>
                     </Grid>
 
@@ -146,27 +138,14 @@ const DeviceViewer = () => {
                         <div>Last Updated By</div>
                       </Typography>
                       <Typography variant="subtitle1" display="block" gutterBottom>
-                        <div>{adminDevice.device.updatedBy || 'System'}</div>
-                      </Typography>
-                    </Grid>
-
-                    <Grid item xs={12} className={classes.info}>
-                      <Typography variant="subtitle2" display="block" gutterBottom>
-                        <div>Registered At</div>
-                      </Typography>
-                      <Typography variant="subtitle1" display="block" gutterBottom>
-                        <div>
-                          {adminDevice.device.registeredAt
-                            ? moment(adminDevice.device.registeredAt).format('MMMM Do YYYY, h:mm:ss a')
-                            : 'Not Registered'}
-                        </div>
+                        <div>{adminSubDevice.subDevice.updatedBy || 'System'}</div>
                       </Typography>
                     </Grid>
                   </Grid>
                 </Grid>
-                <AdminSubDeviceContextProvider>
-                  <SubDeviceList deviceId={deviceId} variant={adminDevice.device.variant} />
-                </AdminSubDeviceContextProvider>
+                {/*<AdminSubDeviceContextProvider>*/}
+                {/*  <SubDeviceList deviceId={deviceId} />*/}
+                {/*</AdminSubDeviceContextProvider>*/}
               </React.Fragment>
             )}
           </Paper>
@@ -176,11 +155,11 @@ const DeviceViewer = () => {
   );
 };
 
-DeviceViewer.propTypes = {
+SubDeviceViewer.propTypes = {
   classes: PropTypes.shape({
     root: PropTypes.string.isRequired,
     paper: PropTypes.string.isRequired,
   }),
 };
 
-export default DeviceViewer;
+export default SubDeviceViewer;

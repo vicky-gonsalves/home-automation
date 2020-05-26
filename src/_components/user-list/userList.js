@@ -82,6 +82,13 @@ const UserList = () => {
     [dispatch]
   );
 
+  const deleteUser = useCallback(
+    userId => {
+      dispatch(adminUserActions.deleteUser(userId));
+    },
+    [dispatch]
+  );
+
   const renderList = useMemo(() => {
     return (
       <ListTable
@@ -99,7 +106,7 @@ const UserList = () => {
         preventDeletion={{ email: userContext.user.email }}
         data-test="listTableComponent"
         preDeleteCallback={adminUserActions.setUserToBeDeleted}
-        postDeleteCallback={adminUserActions.deleteUser}
+        postDeleteCallback={deleteUser}
         cancelDeleteCallback={adminUserActions.unsetUserToBeDeleted}
         useKey={'id'}
       />
@@ -107,6 +114,7 @@ const UserList = () => {
   }, [
     adminUser.count,
     buttons,
+    deleteUser,
     getList,
     isFetching,
     list,

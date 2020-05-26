@@ -15,13 +15,19 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const AddButton = ({ title, path, width }) => {
+const AddButton = ({ title, path, callback, width }) => {
   const classes = useStyles();
+  const hasCallback = callback && typeof callback === 'function';
+  const hasPath = path && path.length;
   const handleClick = () => {
-    history.push(path);
+    if (hasPath) {
+      history.push(path);
+    } else if (hasCallback) {
+      callback();
+    }
   };
   const renderButton = () => {
-    if (title && path) {
+    if (title && (hasPath || hasCallback)) {
       return (
         <Button
           className={classes.button}
@@ -46,7 +52,16 @@ AddButton.propTypes = {
     margin: PropTypes.string.isRequired,
     button: PropTypes.string.isRequired,
   }),
-  path: PropTypes.string.isRequired,
+  path: (props, propName, componentName) => {
+    if (!props.path && !props.callback) {
+      return new Error(`One of props 'path' or 'callback' was not specified in '${componentName}'.`);
+    }
+  },
+  callback: (props, propName, componentName) => {
+    if (!props.path && !props.callback) {
+      return new Error(`One of props 'path' or 'callback' was not specified in '${componentName}'.`);
+    }
+  },
   title: PropTypes.string.isRequired,
   width: PropTypes.number,
 };

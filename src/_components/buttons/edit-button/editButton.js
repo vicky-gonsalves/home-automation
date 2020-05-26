@@ -11,10 +11,16 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const EditButton = ({ path }) => {
+const EditButton = ({ path, callback, item }) => {
   const classes = useStyles();
+  const hasCallback = callback && typeof callback === 'function';
+  const hasPath = path && path.length;
   const handleClick = () => {
-    history.push(path);
+    if (hasPath) {
+      history.push(path);
+    } else if (hasCallback) {
+      callback(item);
+    }
   };
   return (
     <IconButton
@@ -30,7 +36,17 @@ const EditButton = ({ path }) => {
 };
 
 EditButton.propTypes = {
-  path: PropTypes.string.isRequired,
+  item: PropTypes.object,
+  path: (props, propName, componentName) => {
+    if (!props.path && !props.callback) {
+      return new Error(`One of props 'path' or 'callback' was not specified in '${componentName}'.`);
+    }
+  },
+  callback: (props, propName, componentName) => {
+    if (!props.path && !props.callback) {
+      return new Error(`One of props 'path' or 'callback' was not specified in '${componentName}'.`);
+    }
+  },
 };
 
 export default EditButton;

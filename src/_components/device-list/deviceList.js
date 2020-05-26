@@ -95,6 +95,13 @@ const DeviceList = () => {
     [dispatch]
   );
 
+  const deleteDevice = useCallback(
+    deviceId => {
+      dispatch(adminDeviceActions.deleteDevice(deviceId));
+    },
+    [dispatch]
+  );
+
   const renderList = useMemo(() => {
     return (
       <ListTable
@@ -111,12 +118,22 @@ const DeviceList = () => {
         initialSort={{ order: 'desc', orderBy: 'createdAt' }}
         data-test="listTableComponent"
         preDeleteCallback={adminDeviceActions.setDeviceToBeDeleted}
-        postDeleteCallback={adminDeviceActions.deleteDevice}
+        postDeleteCallback={deleteDevice}
         cancelDeleteCallback={adminDeviceActions.unsetDeviceToBeDeleted}
         useKey={'deviceId'}
       />
     );
-  }, [adminDevice.count, buttons, getList, isFetching, list, tableHeaders, userContext.connected, userContext.isLoggedIn]);
+  }, [
+    adminDevice.count,
+    buttons,
+    deleteDevice,
+    getList,
+    isFetching,
+    list,
+    tableHeaders,
+    userContext.connected,
+    userContext.isLoggedIn,
+  ]);
 
   return (
     <React.Fragment>

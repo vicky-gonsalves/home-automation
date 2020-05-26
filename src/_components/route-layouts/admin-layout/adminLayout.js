@@ -2,7 +2,7 @@ import React, { useContext, useLayoutEffect, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
 import { Redirect, useLocation } from 'react-router';
 import { Route } from 'react-router-dom';
-import { adminUserActions, adminDeviceActions } from '../../../_actions';
+import { adminUserActions, adminDeviceActions, adminSubDeviceActions } from '../../../_actions';
 import { UserContext } from '../../../_contexts/user/UserContext.provider';
 import LazyLoader from '../../lazy-loader/LazyLoader';
 
@@ -13,11 +13,17 @@ const DashboardPage = React.lazy(() => import('../../../modules/Admin/Dashboard/
 const DeviceListPage = React.lazy(() => import('../../../modules/Admin/Device/DeviceList/DeviceListPage'));
 const DeviceViewPage = React.lazy(() => import('../../../modules/Admin/Device/DeviceView/DeviceViewPage'));
 const DeviceEditorPage = React.lazy(() => import('../../../modules/Admin/Device/DeviceEditor/DeviceEditorPage'));
+const SubDeviceViewPage = React.lazy(() => import('../../../modules/Admin/SubDevice/SubDeviceView/SubDeviceViewPage'));
 
 function AdminLayout() {
   const userContext = useContext(UserContext);
   const adminLayoutPath = ['/admin', '/users', '/users/new', '/users/edit/:id', '/users/view/:id'];
   const deviceLayoutPath = ['/devices', '/devices/new', '/devices/edit/:id', '/devices/view/:id'];
+  const subDeviceLayoutPath = [
+    '/devices/:id/sub-devices/new',
+    '/devices/:id/sub-devices/edit/:subDeviceId',
+    '/devices/:id/sub-devices/view/:subDeviceId',
+  ];
   const location = useLocation();
   const dispatch = useDispatch();
 
@@ -49,13 +55,18 @@ function AdminLayout() {
         <AdminRoute exact path={deviceLayoutPath[1]} component={LazyLoader(DeviceEditorPage)} />
         <AdminRoute exact path={deviceLayoutPath[2]} component={LazyLoader(DeviceEditorPage)} />
         <AdminRoute exact path={deviceLayoutPath[3]} component={LazyLoader(DeviceViewPage)} />
+
+        <AdminRoute exact path={subDeviceLayoutPath[0]} component={LazyLoader(DeviceEditorPage)} />
+        <AdminRoute exact path={subDeviceLayoutPath[1]} component={LazyLoader(DeviceEditorPage)} />
+        <AdminRoute exact path={subDeviceLayoutPath[2]} component={LazyLoader(SubDeviceViewPage)} />
       </React.Fragment>
     );
-  }, [adminLayoutPath, deviceLayoutPath]);
+  }, [adminLayoutPath, deviceLayoutPath, subDeviceLayoutPath]);
 
   useLayoutEffect(() => {
     adminUserActions.clearUser(dispatch); // Cleanup
     adminDeviceActions.clearDevice(dispatch); // Cleanup
+    adminSubDeviceActions.clearSubDevice(dispatch); // Cleanup
   }, [dispatch, location]);
 
   return <React.Fragment>{renderAdminRoutes}</React.Fragment>;

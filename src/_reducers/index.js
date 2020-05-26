@@ -3,11 +3,13 @@ import { combineReducers } from 'redux';
 import { appConstants } from '../_constants';
 import adminDevice from './admin-device/adminDevice.reducer';
 import adminDrawer from './admin-drawer/adminDrawer.reducer';
+import adminSubDevice from './admin-sub-device/adminDevice.reducer';
 import adminUser from './admin-user/adminUser.reducer';
 import deviceParam from './device-param/deviceParam.reducer';
 import deviceSetting from './device-setting/deviceSetting.reducer';
 import device from './device/device.reducer';
-import settingDialog from './dialog/settingDialog.reducer';
+import editorDialog from './editor-dialog/editorDialog.reducer';
+import settingDialog from './setting-dialog/settingDialog.reducer';
 import log from './log/log.reducer';
 import onlineDevice from './online-device/onlineDevice.reducer';
 import sharedDevice from './shared-device/sharedDevice.reducer';
@@ -34,7 +36,9 @@ const appReducer = combineReducers({
   adminDrawer,
   adminUser,
   adminDevice,
+  adminSubDevice,
   siteSetting,
+  editorDialog,
 });
 
 const rootReducer = (state, action) => {

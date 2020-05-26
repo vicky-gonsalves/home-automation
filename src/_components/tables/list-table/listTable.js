@@ -278,7 +278,11 @@ const ListTable = ({
     () => (actions, item) => {
       const generateComponent = action => {
         if (action.buttonType && useKey && (action.buttonType === 'view' || action.buttonType === 'edit')) {
-          return <action.component path={`${action.path}${item[useKey]}`} data-test="actionButtonComponent" />;
+          if (action.callback && typeof action.callback === 'function') {
+            return <action.component callback={action.callback} item={item} data-test="actionButtonComponent" />;
+          } else {
+            return <action.component path={`${action.path}${item[useKey]}`} data-test="actionButtonComponent" />;
+          }
         } else if (
           action.buttonType &&
           action.buttonType === 'delete' &&
@@ -497,7 +501,16 @@ ListTable.propTypes = {
         PropTypes.shape({
           id: PropTypes.string.isRequired,
           component: PropTypes.func.isRequired,
-          path: PropTypes.string,
+          path: (props, propName, componentName) => {
+            if (props.buttonType !== 'delete' && !props.path && !props.callback) {
+              return new Error(`One of props 'path' or 'callback' was not specified in '${componentName}'.`);
+            }
+          },
+          callback: (props, propName, componentName) => {
+            if (props.buttonType !== 'delete' && !props.path && !props.callback) {
+              return new Error(`One of props 'path' or 'callback' was not specified in '${componentName}'.`);
+            }
+          },
           buttonType: PropTypes.string.isRequired,
         })
       ),
@@ -516,7 +529,16 @@ ListTable.propTypes = {
     PropTypes.shape({
       title: PropTypes.string.isRequired,
       component: PropTypes.func.isRequired,
-      path: PropTypes.string.isRequired,
+      path: (props, propName, componentName) => {
+        if (!props.path && !props.callback) {
+          return new Error(`One of props 'path' or 'callback' was not specified in '${componentName}'.`);
+        }
+      },
+      callback: (props, propName, componentName) => {
+        if (!props.path && !props.callback) {
+          return new Error(`One of props 'path' or 'callback' was not specified in '${componentName}'.`);
+        }
+      },
       buttonType: PropTypes.string.isRequired,
       width: PropTypes.number,
     })

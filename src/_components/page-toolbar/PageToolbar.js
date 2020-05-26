@@ -26,6 +26,7 @@ const PageToolbar = ({ title, buttons }) => {
       return (
         <button.component
           path={button.path}
+          callback={button.callback}
           title={button.title}
           width={button.width || null}
           data-test="toolbarButtonComponent"
@@ -72,7 +73,16 @@ PageToolbar.propTypes = {
       component: PropTypes.func.isRequired,
       title: PropTypes.string.isRequired,
       buttonType: PropTypes.string.isRequired,
-      path: PropTypes.string.isRequired,
+      path: (props, propName, componentName) => {
+        if (!props.path && !props.callback) {
+          return new Error(`One of props 'path' or 'callback' was not specified in '${componentName}'.`);
+        }
+      },
+      callback: (props, propName, componentName) => {
+        if (!props.path && !props.callback) {
+          return new Error(`One of props 'path' or 'callback' was not specified in '${componentName}'.`);
+        }
+      },
     })
   ),
 };
