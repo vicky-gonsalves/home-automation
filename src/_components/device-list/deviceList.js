@@ -1,15 +1,19 @@
 import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import React, { useCallback, useContext, useMemo } from 'react';
+import React, { useCallback, useContext, useMemo, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { adminDeviceActions } from '../../_actions';
+import { adminDeviceActions, editorDialogActions } from '../../_actions';
 import { AdminDeviceContext } from '../../_contexts/admin-device/AdminDeviceContext.provider';
+import AdminUserContextProvider from '../../_contexts/admin-user/AdminUserContext.provider';
+import EditorDialogContextProvider from '../../_contexts/editor-dialog/EditorDialogContext.provider';
 import { UserContext } from '../../_contexts/user/UserContext.provider';
 import AddButton from '../buttons/add-button/addButton';
 import DeleteButton from '../buttons/delete-button/deleteButton';
 import EditButton from '../buttons/edit-button/editButton';
 import ViewButton from '../buttons/view-button/viewButton';
+import EditorDialog from '../dialogs/editor-dialog/editorDialog';
+import DeviceForm from '../forms/device-form/DeviceForm';
 import ListTable from '../tables/list-table/listTable';
 
 const useStyles = makeStyles(theme => ({
@@ -28,8 +32,10 @@ const DeviceList = () => {
   const userContext = useContext(UserContext);
   const adminDeviceContext = useContext(AdminDeviceContext);
   const adminDevice = adminDeviceContext.adminDevice;
+  const device = adminDevice.device;
   const list = adminDevice.devices;
-  const isFetching = adminDevice.isFetchingDevicesList || !userContext.connected;
+  const isFetching = adminDevice.isFetchingDevicesList || adminDevice.deviceInProgress || !userContext.connected;
+  const [isEdit, setIsEdit] = useState(false);
 
   const tableHeaders = [
     {
@@ -38,9 +44,17 @@ const DeviceList = () => {
       label: 'Actions',
       width: 150,
       actions: [
-        { id: 'view', component: ViewButton, path: '/devices/view/', buttonType: 'view', useKey: 'deviceId' },
-        { id: 'edit', component: EditButton, path: '/devices/edit/', buttonType: 'edit', useKey: 'deviceId' },
-        { id: 'delete', component: DeleteButton, buttonType: 'delete', useKey: 'deviceId' },
+        { id: 'view', component: ViewButton, path: '/devices/view/', buttonType: 'view' },
+        {
+          id: 'edit',
+          component: EditButton,
+          callback: device => {
+            setIsEdit(true);
+            dispatch(adminDeviceActions.getDevice(device.deviceId)).then(() => dispatch(editorDialogActions.open()));
+          },
+          buttonType: 'edit',
+        },
+        { id: 'delete', component: DeleteButton, buttonType: 'delete' },
       ],
     },
     { id: 'name', sort: true, search: true, align: 'left', label: 'Name', type: 'text', width: 300 },
@@ -80,7 +94,16 @@ const DeviceList = () => {
   ];
 
   const buttons = [
-    { title: 'Add Device', type: 'device', component: AddButton, path: '/devices/new', buttonType: 'add', width: 150 },
+    {
+      title: 'Add Device',
+      type: 'device',
+      component: AddButton,
+      callback: () => {
+        dispatch(editorDialogActions.open());
+      },
+      buttonType: 'add',
+      width: 150,
+    },
   ];
 
   const getList = useCallback(
@@ -95,9 +118,32 @@ const DeviceList = () => {
     [dispatch]
   );
 
+  const onEditorDialogExited = useCallback(() => {
+    setIsEdit(false);
+    dispatch(editorDialogActions.close());
+    adminDeviceActions.clearDevice(dispatch); // Cleanup
+  }, [dispatch]);
+
+  const addDevice = useCallback(
+    values => {
+      let action = adminDeviceActions.addDevice(values);
+      if (isEdit) {
+        action = adminDeviceActions.updateDevice(values, adminDevice.device.deviceId);
+      }
+      dispatch(action).then(() =>
+        dispatch(adminDeviceActions.getDevices({ sortBy: 'createdAt:desc', limit: 10, page: 1 })).then(() =>
+          onEditorDialogExited()
+        )
+      );
+    },
+    [isEdit, dispatch, adminDevice.device.deviceId, onEditorDialogExited]
+  );
+
   const deleteDevice = useCallback(
     deviceId => {
-      dispatch(adminDeviceActions.deleteDevice(deviceId));
+      dispatch(adminDeviceActions.deleteDevice(deviceId)).then(() =>
+        dispatch(adminDeviceActions.getDevices({ sortBy: 'createdAt:desc', limit: 10, page: 1 }))
+      );
     },
     [dispatch]
   );
@@ -142,6 +188,21 @@ const DeviceList = () => {
           {renderList}
         </Paper>
       </div>
+      <AdminUserContextProvider>
+        <EditorDialogContextProvider>
+          <EditorDialog
+            Component={DeviceForm}
+            title={isEdit ? 'Edit Device' : 'Add New Device'}
+            isEdit={isEdit}
+            isFetching={isFetching}
+            handleSubmit={addDevice}
+            submitButtonTitle={isEdit ? 'Save' : 'Add'}
+            params={{ ...device }}
+            data-test="editorDialogComponent"
+            onExited={onEditorDialogExited}
+          />
+        </EditorDialogContextProvider>
+      </AdminUserContextProvider>
     </React.Fragment>
   );
 };

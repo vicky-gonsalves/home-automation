@@ -8,22 +8,16 @@ import LazyLoader from '../../lazy-loader/LazyLoader';
 
 const UserListPage = React.lazy(() => import('../../../modules/Admin/User/UserList/UserListPage'));
 const UserViewPage = React.lazy(() => import('../../../modules/Admin/User/UserView/UserViewPage'));
-const UserEditorPage = React.lazy(() => import('../../../modules/Admin/User/UserEditor/UserEditorPage'));
 const DashboardPage = React.lazy(() => import('../../../modules/Admin/Dashboard/DashboardPage'));
 const DeviceListPage = React.lazy(() => import('../../../modules/Admin/Device/DeviceList/DeviceListPage'));
 const DeviceViewPage = React.lazy(() => import('../../../modules/Admin/Device/DeviceView/DeviceViewPage'));
-const DeviceEditorPage = React.lazy(() => import('../../../modules/Admin/Device/DeviceEditor/DeviceEditorPage'));
 const SubDeviceViewPage = React.lazy(() => import('../../../modules/Admin/SubDevice/SubDeviceView/SubDeviceViewPage'));
 
 function AdminLayout() {
   const userContext = useContext(UserContext);
-  const adminLayoutPath = ['/admin', '/users', '/users/new', '/users/edit/:id', '/users/view/:id'];
-  const deviceLayoutPath = ['/devices', '/devices/new', '/devices/edit/:id', '/devices/view/:id'];
-  const subDeviceLayoutPath = [
-    '/devices/:id/sub-devices/new',
-    '/devices/:id/sub-devices/edit/:subDeviceId',
-    '/devices/:id/sub-devices/view/:subDeviceId',
-  ];
+  const adminLayoutPath = ['/admin', '/users', '/users/view/:id'];
+  const deviceLayoutPath = ['/devices', '/devices/view/:id'];
+  const subDeviceLayoutPath = ['/devices/:id/sub-devices/view/:subDeviceId'];
   const location = useLocation();
   const dispatch = useDispatch();
 
@@ -47,18 +41,12 @@ function AdminLayout() {
       <React.Fragment>
         <AdminRoute exact path={adminLayoutPath[0]} component={LazyLoader(DashboardPage)} />
         <AdminRoute exact path={adminLayoutPath[1]} component={LazyLoader(UserListPage)} />
-        <AdminRoute exact path={adminLayoutPath[2]} component={LazyLoader(UserEditorPage)} />
-        <AdminRoute exact path={adminLayoutPath[3]} component={LazyLoader(UserEditorPage)} />
-        <AdminRoute exact path={adminLayoutPath[4]} component={LazyLoader(UserViewPage)} />
+        <AdminRoute exact path={adminLayoutPath[2]} component={LazyLoader(UserViewPage)} />
 
         <AdminRoute exact path={deviceLayoutPath[0]} component={LazyLoader(DeviceListPage)} />
-        <AdminRoute exact path={deviceLayoutPath[1]} component={LazyLoader(DeviceEditorPage)} />
-        <AdminRoute exact path={deviceLayoutPath[2]} component={LazyLoader(DeviceEditorPage)} />
-        <AdminRoute exact path={deviceLayoutPath[3]} component={LazyLoader(DeviceViewPage)} />
+        <AdminRoute exact path={deviceLayoutPath[1]} component={LazyLoader(DeviceViewPage)} />
 
-        <AdminRoute exact path={subDeviceLayoutPath[0]} component={LazyLoader(DeviceEditorPage)} />
-        <AdminRoute exact path={subDeviceLayoutPath[1]} component={LazyLoader(DeviceEditorPage)} />
-        <AdminRoute exact path={subDeviceLayoutPath[2]} component={LazyLoader(SubDeviceViewPage)} />
+        <AdminRoute exact path={subDeviceLayoutPath[0]} component={LazyLoader(SubDeviceViewPage)} />
       </React.Fragment>
     );
   }, [adminLayoutPath, deviceLayoutPath, subDeviceLayoutPath]);

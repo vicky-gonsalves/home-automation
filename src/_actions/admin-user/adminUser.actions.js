@@ -73,7 +73,6 @@ const addUser = params => async dispatch => {
     dispatch(setUserProgress(true));
     await adminUserService.addUser(params);
     dispatch(setUserProgress(false));
-    history.push('/users');
   } catch (e) {
     dispatch(authInterceptor.disconnect());
   }
@@ -84,7 +83,6 @@ const updateUser = (params, id) => async dispatch => {
     dispatch(setUserProgress(true));
     await adminUserService.updateUser(params, id);
     dispatch(setUserProgress(false));
-    history.push('/users');
   } catch (e) {
     dispatch(authInterceptor.disconnect());
   }

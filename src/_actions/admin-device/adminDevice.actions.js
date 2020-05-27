@@ -73,7 +73,6 @@ const addDevice = params => async dispatch => {
     dispatch(setDeviceProgress(true));
     await adminDeviceService.addDevice(params);
     dispatch(setDeviceProgress(false));
-    history.push('/devices');
   } catch (e) {
     dispatch(authInterceptor.disconnect());
   }
@@ -84,7 +83,6 @@ const updateDevice = (params, id) => async dispatch => {
     dispatch(setDeviceProgress(true));
     await adminDeviceService.updateDevice(params, id);
     dispatch(setDeviceProgress(false));
-    history.push('/devices');
   } catch (e) {
     dispatch(authInterceptor.disconnect());
   }

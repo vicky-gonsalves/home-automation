@@ -53,10 +53,7 @@ const adminUser = (state = initialState, action) => {
       return {
         ...state,
         fetchedEditableUser: false,
-        fetchedUsersList: false,
-        users: [],
         user: {},
-        count: 0,
       };
 
     case adminUserConstants.DELETE_USER:

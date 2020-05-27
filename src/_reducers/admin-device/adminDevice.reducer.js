@@ -53,10 +53,7 @@ const adminDevice = (state = initialState, action) => {
       return {
         ...state,
         fetchedEditableDevice: false,
-        fetchedDevicesList: false,
-        devices: [],
         device: {},
-        count: 0,
       };
 
     case adminDeviceConstants.DELETE_DEVICE:
