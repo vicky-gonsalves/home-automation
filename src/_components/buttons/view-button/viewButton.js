@@ -1,8 +1,8 @@
 import IconButton from '@material-ui/core/IconButton';
 import { makeStyles } from '@material-ui/core/styles';
 import VisibilityIcon from '@material-ui/icons/Visibility';
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
 import { history } from '../../../_helpers/history/history';
 
 const useStyles = makeStyles(theme => ({
@@ -11,7 +11,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const ViewButton = ({ path }) => {
+const ViewButton = ({ path, isFetching }) => {
   const classes = useStyles();
   const handleClick = () => {
     history.push(path);
@@ -23,6 +23,7 @@ const ViewButton = ({ path }) => {
       className={classes.margin}
       size="small"
       onClick={handleClick}
+      disabled={isFetching}
       data-test="viewIconButtonComponent"
     >
       <VisibilityIcon fontSize="small" data-test="viewIconComponent" />
@@ -32,6 +33,7 @@ const ViewButton = ({ path }) => {
 
 ViewButton.propTypes = {
   path: PropTypes.string.isRequired,
+  isFetching: PropTypes.bool,
 };
 
 export default ViewButton;

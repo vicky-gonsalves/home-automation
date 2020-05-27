@@ -11,7 +11,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const EditButton = ({ path, callback, item }) => {
+const EditButton = ({ path, callback, item, isFetching }) => {
   const classes = useStyles();
   const hasCallback = callback && typeof callback === 'function';
   const hasPath = path && path.length;
@@ -28,6 +28,7 @@ const EditButton = ({ path, callback, item }) => {
       className={classes.margin}
       size="small"
       onClick={handleClick}
+      disabled={isFetching}
       data-test="editIconButtonComponent"
     >
       <EditIcon fontSize="small" data-test="editIconComponent" />
@@ -47,6 +48,7 @@ EditButton.propTypes = {
       return new Error(`One of props 'path' or 'callback' was not specified in '${componentName}'.`);
     }
   },
+  isFetching: PropTypes.bool,
 };
 
 export default EditButton;

@@ -11,7 +11,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const DeleteButton = ({ item, callback, useKey }) => {
+const DeleteButton = ({ item, callback, useKey, isFetching }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const handleClick = () => {
@@ -23,6 +23,7 @@ const DeleteButton = ({ item, callback, useKey }) => {
       className={classes.margin}
       size="small"
       onClick={handleClick}
+      disabled={isFetching}
       data-test="deleteIconButtonComponent"
     >
       <DeleteIcon fontSize="small" data-test="deleteIconComponent" />
@@ -34,6 +35,7 @@ DeleteButton.propTypes = {
   item: PropTypes.object.isRequired,
   callback: PropTypes.func.isRequired,
   useKey: PropTypes.string.isRequired,
+  isFetching: PropTypes.bool,
 };
 
 export default DeleteButton;

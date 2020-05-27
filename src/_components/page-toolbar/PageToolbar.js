@@ -18,7 +18,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const PageToolbar = ({ title, buttons }) => {
+const PageToolbar = ({ title, buttons, isFetching }) => {
   const classes = useStyles();
 
   const renderButton = button => {
@@ -27,6 +27,7 @@ const PageToolbar = ({ title, buttons }) => {
         <button.component
           path={button.path}
           callback={button.callback}
+          isFetching={isFetching}
           title={button.title}
           width={button.width || null}
           data-test="toolbarButtonComponent"
@@ -68,6 +69,7 @@ PageToolbar.propTypes = {
     button: PropTypes.string.isRequired,
   }),
   title: PropTypes.string.isRequired,
+  isFetching: PropTypes.bool,
   buttons: PropTypes.arrayOf(
     PropTypes.shape({
       component: PropTypes.func.isRequired,

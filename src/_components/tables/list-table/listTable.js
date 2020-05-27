@@ -474,7 +474,7 @@ const ListTable = ({
 
   return (
     <React.Fragment>
-      <PageToolbar title={title} buttons={buttons} data-test="tableToolbarComponent" />
+      <PageToolbar title={title} buttons={buttons} isFetching={isFetching} data-test="tableToolbarComponent" />
       {renderTable}
     </React.Fragment>
   );

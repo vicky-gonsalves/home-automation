@@ -15,7 +15,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const AddButton = ({ title, path, callback, width }) => {
+const AddButton = ({ title, path, callback, width, isFetching }) => {
   const classes = useStyles();
   const hasCallback = callback && typeof callback === 'function';
   const hasPath = path && path.length;
@@ -37,6 +37,7 @@ const AddButton = ({ title, path, callback, width }) => {
           onClick={handleClick}
           data-test="addButtonComponent"
           style={{ minWidth: width || 0 }}
+          disabled={isFetching}
         >
           {title}
         </Button>
@@ -64,6 +65,7 @@ AddButton.propTypes = {
   },
   title: PropTypes.string.isRequired,
   width: PropTypes.number,
+  isFetching: PropTypes.bool,
 };
 
 export default AddButton;

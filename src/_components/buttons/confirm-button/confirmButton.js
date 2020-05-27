@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { useDispatch } from 'react-redux';
 
-const ConfirmButton = ({ item, callback, cancelCallback, useKey }) => {
+const ConfirmButton = ({ item, callback, cancelCallback, useKey, isFetching }) => {
   const dispatch = useDispatch();
   const handleConfirm = () => callback(item[useKey]);
   const handleCancel = () => {
@@ -14,10 +14,10 @@ const ConfirmButton = ({ item, callback, cancelCallback, useKey }) => {
   const renderButton = () => {
     return (
       <React.Fragment>
-        <IconButton aria-label="confirm" data-test="checkIconButtonComponent" onClick={handleConfirm}>
+        <IconButton aria-label="confirm" data-test="checkIconButtonComponent" onClick={handleConfirm} disabled={isFetching}>
           <CheckIcon fontSize="small" data-test="checkIconComponent" />
         </IconButton>
-        <IconButton aria-label="cancel" data-test="clearIconButtonComponent" onClick={handleCancel}>
+        <IconButton aria-label="cancel" data-test="clearIconButtonComponent" onClick={handleCancel} disabled={isFetching}>
           <ClearIcon fontSize="small" data-test="clearIconComponent" />
         </IconButton>
       </React.Fragment>
@@ -31,6 +31,7 @@ ConfirmButton.propTypes = {
   callback: PropTypes.func.isRequired,
   cancelCallback: PropTypes.func.isRequired,
   useKey: PropTypes.string.isRequired,
+  isFetching: PropTypes.bool,
 };
 
 export default ConfirmButton;
