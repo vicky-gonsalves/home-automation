@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { Redirect, useLocation } from 'react-router';
 import { Route } from 'react-router-dom';
 import { adminUserActions, adminDeviceActions, adminSubDeviceActions } from '../../../_actions';
+import { adminSubDeviceParamActions } from '../../../_actions/admin-sub-device-param/adminSubDeviceParam.actions';
 import { UserContext } from '../../../_contexts/user/UserContext.provider';
 import LazyLoader from '../../lazy-loader/LazyLoader';
 
@@ -55,6 +56,7 @@ function AdminLayout() {
     adminUserActions.clearUser(dispatch); // Cleanup
     adminDeviceActions.clearDevice(dispatch); // Cleanup
     adminSubDeviceActions.clearSubDevice(dispatch); // Cleanup
+    adminSubDeviceParamActions.clearSubDeviceParam(dispatch); // Cleanup
   }, [dispatch, location]);
 
   return <React.Fragment>{renderAdminRoutes}</React.Fragment>;

@@ -10,9 +10,11 @@ import React, { useContext, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router';
 import { adminSubDeviceActions } from '../../_actions';
+import AdminSubDeviceParamContextProvider from '../../_contexts/admin-sub-device-param/AdminSubDeviceParamContext.provider';
 import { AdminSubDeviceContext } from '../../_contexts/admin-sub-device/AdminSubDeviceContext.provider';
 import EditorSkeleton from '../editor-skeleton/EditorSkeleton';
 import PageToolbar from '../page-toolbar/PageToolbar';
+import SubDeviceParamList from '../sub-device-param-list/subDeviceParamList';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -143,9 +145,9 @@ const SubDeviceViewer = () => {
                     </Grid>
                   </Grid>
                 </Grid>
-                {/*<AdminSubDeviceContextProvider>*/}
-                {/*  <SubDeviceList deviceId={deviceId} />*/}
-                {/*</AdminSubDeviceContextProvider>*/}
+                <AdminSubDeviceParamContextProvider>
+                  <SubDeviceParamList subDeviceId={subDeviceId} deviceId={deviceId} />
+                </AdminSubDeviceParamContextProvider>
               </React.Fragment>
             )}
           </Paper>

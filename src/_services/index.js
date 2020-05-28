@@ -5,3 +5,4 @@ export * from './setting/setting.service';
 export * from './admin-user/adminUser.service';
 export * from './admin-device/adminDevice.service';
 export * from './admin-sub-device/adminSubDevice.service';
+export * from './admin-sub-device-param/adminSubDeviceParam.service';

@@ -14,3 +14,4 @@ export * from './site-setting/siteSetting.actions';
 export * from './admin-device/adminDevice.actions';
 export * from './admin-sub-device/adminSubDevice.actions';
 export * from './editor-dialog/editorDialog.actions';
+export * from './admin-sub-device-param/adminSubDeviceParam.actions';
