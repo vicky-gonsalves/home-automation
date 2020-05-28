@@ -1,6 +1,5 @@
+import { editorDialogActions, errorActions } from '..';
 import { adminDeviceConstants } from '../../_constants';
-import { history } from '../../_helpers/history/history';
-import { authInterceptor } from '../../_interceptors/auth/auth.interceptor';
 import { adminDeviceService } from '../../_services';
 
 const storeDevicesList = response => dispatch => {
@@ -43,6 +42,19 @@ const unsetDeviceToBeDeleted = id => dispatch => {
   dispatch({ type: adminDeviceConstants.UNSET_DEVICE_TO_BE_DELETED, payload: id });
 };
 
+const resetEditorDeviceDialog = () => dispatch => {
+  dispatch(editorDialogActions.close());
+  adminDeviceActions.clearDevice(dispatch); // Cleanup
+};
+
+const refresh = (hasDialog = true) => dispatch => {
+  dispatch(adminDeviceActions.getDevices({ sortBy: 'createdAt:desc', limit: 10, page: 1 })).then(() => {
+    if (hasDialog) {
+      dispatch(resetEditorDeviceDialog());
+    }
+  });
+};
+
 const getDevices = params => async dispatch => {
   try {
     dispatch(setFetchedDevices(true));
@@ -51,7 +63,7 @@ const getDevices = params => async dispatch => {
     dispatch(storeDevicesList(response));
     dispatch(setDevicesFetching(false));
   } catch (e) {
-    history.push('/notfound');
+    dispatch(errorActions.setError(e));
   }
 };
 
@@ -64,7 +76,7 @@ const getDevice = id => async dispatch => {
     dispatch(setDeviceProgress(false));
     return response;
   } catch (e) {
-    history.push('/notfound');
+    dispatch(errorActions.setError(e));
   }
 };
 
@@ -73,8 +85,9 @@ const addDevice = params => async dispatch => {
     dispatch(setDeviceProgress(true));
     await adminDeviceService.addDevice(params);
     dispatch(setDeviceProgress(false));
+    dispatch(refresh());
   } catch (e) {
-    dispatch(authInterceptor.disconnect());
+    dispatch(errorActions.setError(e));
   }
 };
 
@@ -83,8 +96,9 @@ const updateDevice = (params, id) => async dispatch => {
     dispatch(setDeviceProgress(true));
     await adminDeviceService.updateDevice(params, id);
     dispatch(setDeviceProgress(false));
+    dispatch(refresh());
   } catch (e) {
-    dispatch(authInterceptor.disconnect());
+    dispatch(errorActions.setError(e));
   }
 };
 
@@ -94,8 +108,9 @@ const deleteDevice = id => async dispatch => {
     await adminDeviceService.deleteDevice(id);
     dispatch(removeDevice(id));
     dispatch(setDeviceProgress(false));
+    dispatch(refresh(false));
   } catch (e) {
-    dispatch(authInterceptor.disconnect());
+    dispatch(errorActions.setError(e));
   }
 };
 
@@ -110,4 +125,6 @@ export const adminDeviceActions = {
   clearDevice,
   setDeviceToBeDeleted,
   unsetDeviceToBeDeleted,
+  resetEditorDeviceDialog,
+  refresh,
 };

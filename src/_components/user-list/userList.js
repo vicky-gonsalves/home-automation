@@ -1,7 +1,7 @@
 import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import React, { useCallback, useContext, useMemo, useState } from 'react';
+import React, { useCallback, useContext, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
 import { adminUserActions, editorDialogActions } from '../../_actions';
 import { AdminUserContext } from '../../_contexts/admin-user/AdminUserContext.provider';
@@ -34,7 +34,7 @@ const UserList = () => {
   const user = adminUser.user;
   const list = adminUser.users;
   const isFetching = adminUser.isFetchingUsersList || adminUser.userInProgress || !userContext.connected;
-  const [isEdit, setIsEdit] = useState(false);
+  const isEdit = useMemo(() => user && user.hasOwnProperty('id'), [user]);
 
   const tableHeaders = [
     {
@@ -48,7 +48,6 @@ const UserList = () => {
           id: 'edit',
           component: EditButton,
           callback: user => {
-            setIsEdit(true);
             dispatch(adminUserActions.getUser(user.id)).then(() => dispatch(editorDialogActions.open()));
           },
           buttonType: 'edit',
@@ -106,31 +105,23 @@ const UserList = () => {
   );
 
   const onEditorDialogExited = useCallback(() => {
-    setIsEdit(false);
-    dispatch(editorDialogActions.close());
-    adminUserActions.clearUser(dispatch); // Cleanup
+    dispatch(adminUserActions.resetEditUserDialog());
   }, [dispatch]);
 
   const addUser = useCallback(
     values => {
       let action = adminUserActions.addUser(values);
       if (isEdit) {
-        action = adminUserActions.updateUser(values, adminUser.user.id);
+        action = adminUserActions.updateUser(values, user.id);
       }
-      dispatch(action).then(() =>
-        dispatch(adminUserActions.getUsers({ sortBy: 'createdAt:desc', limit: 10, page: 1 })).then(() =>
-          onEditorDialogExited()
-        )
-      );
+      dispatch(action);
     },
-    [isEdit, dispatch, adminUser.user.id, onEditorDialogExited]
+    [isEdit, dispatch, user.id]
   );
 
   const deleteUser = useCallback(
     userId => {
-      dispatch(adminUserActions.deleteUser(userId)).then(() =>
-        dispatch(adminUserActions.getUsers({ sortBy: 'createdAt:desc', limit: 10, page: 1 }))
-      );
+      dispatch(adminUserActions.deleteUser(userId));
     },
     [dispatch]
   );

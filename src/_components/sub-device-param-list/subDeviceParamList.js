@@ -1,7 +1,7 @@
 import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import React, { useCallback, useContext, useMemo, useState } from 'react';
+import React, { useCallback, useContext, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
 import { adminSubDeviceParamActions, editorDialogActions } from '../../_actions';
 import { AdminSubDeviceParamContext } from '../../_contexts/admin-sub-device-param/AdminSubDeviceParamContext.provider';
@@ -36,7 +36,7 @@ const SubDeviceParamList = ({ deviceId, subDeviceId }) => {
     adminSubDeviceParam.isFetchingSubDeviceParamsList ||
     adminSubDeviceParam.subDeviceParamInProgress ||
     !userContext.connected;
-  const [isEdit, setIsEdit] = useState(false);
+  const isEdit = useMemo(() => subDeviceParam && subDeviceParam.hasOwnProperty('id'), [subDeviceParam]);
 
   const tableHeaders = [
     {
@@ -49,7 +49,6 @@ const SubDeviceParamList = ({ deviceId, subDeviceId }) => {
           id: 'edit',
           component: EditButton,
           callback: subDeviceParam => {
-            setIsEdit(true);
             dispatch(
               adminSubDeviceParamActions.getSubDeviceParam(deviceId, subDeviceId, subDeviceParam.paramName)
             ).then(() => dispatch(editorDialogActions.open()));
@@ -102,46 +101,23 @@ const SubDeviceParamList = ({ deviceId, subDeviceId }) => {
   );
 
   const onEditorDialogExited = useCallback(() => {
-    setIsEdit(false);
-    dispatch(editorDialogActions.close());
-    adminSubDeviceParamActions.clearSubDeviceParam(dispatch); // Cleanup
+    dispatch(adminSubDeviceParamActions.resetEditorSubDeviceParamDialog());
   }, [dispatch]);
 
   const addSubDeviceParam = useCallback(
     values => {
       let action = adminSubDeviceParamActions.addSubDeviceParam(values, deviceId, subDeviceId);
       if (isEdit) {
-        action = adminSubDeviceParamActions.updateSubDeviceParam(
-          values,
-          deviceId,
-          subDeviceId,
-          adminSubDeviceParam.subDeviceParam.paramName
-        );
+        action = adminSubDeviceParamActions.updateSubDeviceParam(values, deviceId, subDeviceId, subDeviceParam.paramName);
       }
-      dispatch(action).then(() =>
-        dispatch(
-          adminSubDeviceParamActions.getSubDeviceParams(deviceId, subDeviceId, {
-            sortBy: 'createdAt:desc',
-            limit: 10,
-            page: 1,
-          })
-        ).then(() => onEditorDialogExited())
-      );
+      dispatch(action);
     },
-    [deviceId, subDeviceId, isEdit, dispatch, adminSubDeviceParam.subDeviceParam.paramName, onEditorDialogExited]
+    [deviceId, subDeviceId, isEdit, dispatch, subDeviceParam.paramName]
   );
 
   const deleteSubDeviceParam = useCallback(
     paramName => {
-      dispatch(adminSubDeviceParamActions.deleteSubDeviceParam(deviceId, subDeviceId, paramName)).then(() =>
-        dispatch(
-          adminSubDeviceParamActions.getSubDeviceParams(deviceId, subDeviceId, {
-            sortBy: 'createdAt:desc',
-            limit: 10,
-            page: 1,
-          })
-        )
-      );
+      dispatch(adminSubDeviceParamActions.deleteSubDeviceParam(deviceId, subDeviceId, paramName));
     },
     [deviceId, dispatch, subDeviceId]
   );

@@ -1,7 +1,7 @@
 import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import React, { useCallback, useContext, useMemo, useState } from 'react';
+import React, { useCallback, useContext, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
 import { adminSubDeviceActions, editorDialogActions } from '../../_actions';
 import { AdminSubDeviceContext } from '../../_contexts/admin-sub-device/AdminSubDeviceContext.provider';
@@ -34,7 +34,7 @@ const SubDeviceList = ({ deviceId, variant }) => {
   const subDevice = adminSubDevice.subDevice;
   const list = adminSubDevice.subDevices;
   const isFetching = adminSubDevice.isFetchingSubDevicesList || adminSubDevice.subDeviceInProgress || !userContext.connected;
-  const [isEdit, setIsEdit] = useState(false);
+  const isEdit = useMemo(() => subDevice && subDevice.hasOwnProperty('id'), [subDevice]);
 
   const tableHeaders = [
     {
@@ -53,7 +53,6 @@ const SubDeviceList = ({ deviceId, variant }) => {
           id: 'edit',
           component: EditButton,
           callback: subDevice => {
-            setIsEdit(true);
             dispatch(adminSubDeviceActions.getSubDevice(subDevice.deviceId, subDevice.subDeviceId)).then(() =>
               dispatch(editorDialogActions.open())
             );
@@ -114,31 +113,23 @@ const SubDeviceList = ({ deviceId, variant }) => {
   );
 
   const onEditorDialogExited = useCallback(() => {
-    setIsEdit(false);
-    dispatch(editorDialogActions.close());
-    adminSubDeviceActions.clearSubDevice(dispatch); // Cleanup
+    dispatch(adminSubDeviceActions.resetEditorSubDeviceDialog(dispatch));
   }, [dispatch]);
 
   const addSubDevice = useCallback(
     values => {
       let action = adminSubDeviceActions.addSubDevice(values, deviceId);
       if (isEdit) {
-        action = adminSubDeviceActions.updateSubDevice(values, deviceId, adminSubDevice.subDevice.subDeviceId);
+        action = adminSubDeviceActions.updateSubDevice(values, deviceId, subDevice.subDeviceId);
       }
-      dispatch(action).then(() =>
-        dispatch(adminSubDeviceActions.getSubDevices(deviceId, { sortBy: 'createdAt:desc', limit: 10, page: 1 })).then(() =>
-          onEditorDialogExited()
-        )
-      );
+      dispatch(action);
     },
-    [deviceId, isEdit, dispatch, adminSubDevice.subDevice.subDeviceId, onEditorDialogExited]
+    [deviceId, isEdit, dispatch, subDevice.subDeviceId]
   );
 
   const deleteSubDevice = useCallback(
     subDeviceId => {
-      dispatch(adminSubDeviceActions.deleteSubDevice(deviceId, subDeviceId)).then(() =>
-        dispatch(adminSubDeviceActions.getSubDevices(deviceId, { sortBy: 'createdAt:desc', limit: 10, page: 1 }))
-      );
+      dispatch(adminSubDeviceActions.deleteSubDevice(deviceId, subDeviceId));
     },
     [deviceId, dispatch]
   );

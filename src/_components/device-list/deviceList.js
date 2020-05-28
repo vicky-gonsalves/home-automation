@@ -1,7 +1,7 @@
 import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import React, { useCallback, useContext, useMemo, useState } from 'react';
+import React, { useCallback, useContext, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
 import { adminDeviceActions, editorDialogActions } from '../../_actions';
 import { AdminDeviceContext } from '../../_contexts/admin-device/AdminDeviceContext.provider';
@@ -35,7 +35,7 @@ const DeviceList = () => {
   const device = adminDevice.device;
   const list = adminDevice.devices;
   const isFetching = adminDevice.isFetchingDevicesList || adminDevice.deviceInProgress || !userContext.connected;
-  const [isEdit, setIsEdit] = useState(false);
+  const isEdit = useMemo(() => device && device.hasOwnProperty('id'), [device]);
 
   const tableHeaders = [
     {
@@ -49,7 +49,6 @@ const DeviceList = () => {
           id: 'edit',
           component: EditButton,
           callback: device => {
-            setIsEdit(true);
             dispatch(adminDeviceActions.getDevice(device.deviceId)).then(() => dispatch(editorDialogActions.open()));
           },
           buttonType: 'edit',
@@ -119,24 +118,18 @@ const DeviceList = () => {
   );
 
   const onEditorDialogExited = useCallback(() => {
-    setIsEdit(false);
-    dispatch(editorDialogActions.close());
-    adminDeviceActions.clearDevice(dispatch); // Cleanup
+    dispatch(adminDeviceActions.resetEditorDeviceDialog());
   }, [dispatch]);
 
   const addDevice = useCallback(
     values => {
       let action = adminDeviceActions.addDevice(values);
       if (isEdit) {
-        action = adminDeviceActions.updateDevice(values, adminDevice.device.deviceId);
+        action = adminDeviceActions.updateDevice(values, device.deviceId);
       }
-      dispatch(action).then(() =>
-        dispatch(adminDeviceActions.getDevices({ sortBy: 'createdAt:desc', limit: 10, page: 1 })).then(() =>
-          onEditorDialogExited()
-        )
-      );
+      dispatch(action);
     },
-    [isEdit, dispatch, adminDevice.device.deviceId, onEditorDialogExited]
+    [isEdit, dispatch, device.deviceId]
   );
 
   const deleteDevice = useCallback(

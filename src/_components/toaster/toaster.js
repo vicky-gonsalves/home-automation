@@ -4,6 +4,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { errorActions } from '../../_actions';
 import { deviceSettingActions } from '../../_actions/device-setting/deviceSetting.actions';
 import { subDeviceParamActions } from '../../_actions/sub-device-param/subDeviceParam.actions';
 import { subDeviceSettingActions } from '../../_actions/sub-device-setting/subDeviceSetting.actions';
@@ -17,7 +18,7 @@ export class Toaster extends Component {
   }
 
   componentDidUpdate() {
-    const { loginError, settingError, subDeviceSettingError, subDeviceParamError } = this.props;
+    const { message, loginError, settingError, subDeviceSettingError, subDeviceParamError } = this.props;
     const { open } = this.state;
     if (!!loginError && !open) {
       this.setState({ open: true });
@@ -27,11 +28,14 @@ export class Toaster extends Component {
       this.setState({ open: true });
     } else if (!!subDeviceParamError && !open) {
       this.setState({ open: true });
+    } else if (!!message && !open) {
+      this.setState({ open: true });
     }
   }
 
   handleClose() {
     const {
+      message,
       loginError,
       settingError,
       subDeviceSettingError,
@@ -40,6 +44,7 @@ export class Toaster extends Component {
       clearDeviceSettingError,
       clearSubDeviceSettingError,
       clearSubDeviceParamError,
+      clearError,
     } = this.props;
     const { open } = this.state;
     if (loginError && open) {
@@ -50,12 +55,14 @@ export class Toaster extends Component {
       clearSubDeviceSettingError(null);
     } else if (subDeviceParamError && open) {
       clearSubDeviceParamError(null);
+    } else if (message && open) {
+      clearError(null);
     }
     this.setState({ open: false });
   }
 
   render() {
-    const { loginError, settingError, subDeviceSettingError, subDeviceParamError } = this.props;
+    const { message, loginError, settingError, subDeviceSettingError, subDeviceParamError } = this.props;
     const { open } = this.state;
     return (
       <Snackbar
@@ -67,7 +74,7 @@ export class Toaster extends Component {
         open={open}
         autoHideDuration={6000}
         onClose={this.handleClose}
-        message={loginError || settingError || subDeviceSettingError || subDeviceParamError}
+        message={message || loginError || settingError || subDeviceSettingError || subDeviceParamError}
         action={
           <React.Fragment>
             <IconButton size="small" aria-label="close" color="inherit" onClick={this.handleClose} data-test="closeButton">
@@ -81,14 +88,16 @@ export class Toaster extends Component {
 }
 
 function mapState(state) {
+  const { message } = state.error;
   const { loginError } = state.user;
   const { settingError } = state.deviceSetting;
   const { subDeviceSettingError } = state.subDeviceSetting;
   const { subDeviceParamError } = state.subDeviceParam;
-  return { loginError, settingError, subDeviceSettingError, subDeviceParamError };
+  return { message, loginError, settingError, subDeviceSettingError, subDeviceParamError };
 }
 
 const actionCreators = {
+  clearError: errorActions.clearError,
   clearLoginError: userActions.setLoginError,
   clearDeviceSettingError: deviceSettingActions.setDeviceSettingError,
   clearSubDeviceSettingError: subDeviceSettingActions.setSubDeviceSettingError,
@@ -98,6 +107,7 @@ const connectedToaster = connect(mapState, actionCreators)(Toaster);
 
 Toaster.propTypes = {
   'data-test': PropTypes.string.isRequired,
+  message: PropTypes.string,
   loginError: PropTypes.string,
   settingError: PropTypes.string,
   subDeviceSettingError: PropTypes.string,
@@ -106,6 +116,7 @@ Toaster.propTypes = {
   clearDeviceSettingError: PropTypes.func.isRequired,
   clearSubDeviceSettingError: PropTypes.func.isRequired,
   clearSubDeviceParamError: PropTypes.func.isRequired,
+  clearError: PropTypes.func.isRequired,
 };
 
 export default connectedToaster;

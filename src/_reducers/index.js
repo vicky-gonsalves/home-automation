@@ -20,6 +20,7 @@ import subDeviceParam from './sub-device-param/subDeviceParam.reducer';
 import subDeviceSetting from './sub-device-setting/subDeviceSetting.reducer';
 import subDevice from './sub-device/subDevice.reducer';
 import user from './user/user.reducer';
+import error from './error/error.reducer';
 
 const appReducer = combineReducers({
   user,
@@ -41,6 +42,7 @@ const appReducer = combineReducers({
   siteSetting,
   editorDialog,
   adminSubDeviceParam,
+  error,
 });
 
 const rootReducer = (state, action) => {

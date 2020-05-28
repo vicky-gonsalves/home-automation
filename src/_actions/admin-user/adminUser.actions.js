@@ -1,6 +1,5 @@
+import { editorDialogActions, errorActions } from '..';
 import { adminUserConstants } from '../../_constants';
-import { history } from '../../_helpers/history/history';
-import { authInterceptor } from '../../_interceptors/auth/auth.interceptor';
 import { adminUserService } from '../../_services';
 
 const storeUsersList = response => dispatch => {
@@ -43,6 +42,18 @@ const unsetUserToBeDeleted = id => dispatch => {
   dispatch({ type: adminUserConstants.UNSET_USER_TO_BE_DELETED, payload: id });
 };
 
+const resetEditUserDialog = () => dispatch => {
+  dispatch(editorDialogActions.close());
+  adminUserActions.clearUser(dispatch); // Cleanup
+};
+
+const refresh = (hasDialog = true) => dispatch =>
+  dispatch(adminUserActions.getUsers({ sortBy: 'createdAt:desc', limit: 10, page: 1 })).then(() => {
+    if (hasDialog) {
+      dispatch(resetEditUserDialog());
+    }
+  });
+
 const getUsers = params => async dispatch => {
   try {
     dispatch(setFetchedUsers(true));
@@ -51,7 +62,8 @@ const getUsers = params => async dispatch => {
     dispatch(storeUsersList(response));
     dispatch(setUsersFetching(false));
   } catch (e) {
-    dispatch(authInterceptor.disconnect());
+    dispatch(errorActions.setError(e));
+    dispatch(setUsersFetching(false));
   }
 };
 
@@ -64,7 +76,8 @@ const getUser = id => async dispatch => {
     dispatch(setUserProgress(false));
     return response;
   } catch (e) {
-    history.push('/notfound');
+    dispatch(errorActions.setError(e));
+    dispatch(setUserProgress(false));
   }
 };
 
@@ -73,8 +86,10 @@ const addUser = params => async dispatch => {
     dispatch(setUserProgress(true));
     await adminUserService.addUser(params);
     dispatch(setUserProgress(false));
+    dispatch(refresh());
   } catch (e) {
-    dispatch(authInterceptor.disconnect());
+    dispatch(errorActions.setError(e));
+    dispatch(setUserProgress(false));
   }
 };
 
@@ -83,8 +98,10 @@ const updateUser = (params, id) => async dispatch => {
     dispatch(setUserProgress(true));
     await adminUserService.updateUser(params, id);
     dispatch(setUserProgress(false));
+    dispatch(refresh());
   } catch (e) {
-    dispatch(authInterceptor.disconnect());
+    dispatch(errorActions.setError(e));
+    dispatch(setUserProgress(false));
   }
 };
 
@@ -94,8 +111,10 @@ const deleteUser = id => async dispatch => {
     await adminUserService.deleteUser(id);
     dispatch(removeUser(id));
     dispatch(setUserProgress(false));
+    dispatch(refresh(false));
   } catch (e) {
-    dispatch(authInterceptor.disconnect());
+    dispatch(errorActions.setError(e));
+    dispatch(setUserProgress(false));
   }
 };
 
@@ -110,4 +129,6 @@ export const adminUserActions = {
   clearUser,
   setUserToBeDeleted,
   unsetUserToBeDeleted,
+  resetEditUserDialog,
+  refresh,
 };

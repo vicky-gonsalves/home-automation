@@ -1,6 +1,5 @@
+import { editorDialogActions, errorActions } from '..';
 import { adminSubDeviceParamConstants } from '../../_constants';
-import { history } from '../../_helpers/history/history';
-import { authInterceptor } from '../../_interceptors/auth/auth.interceptor';
 import { adminSubDeviceParamService } from '../../_services';
 
 const storeSubDeviceParamsList = response => dispatch => {
@@ -43,6 +42,24 @@ const unsetSubDeviceParamToBeDeleted = paramName => dispatch => {
   dispatch({ type: adminSubDeviceParamConstants.UNSET_SUB_DEVICE_PARAM_TO_BE_DELETED, payload: paramName });
 };
 
+const resetEditorSubDeviceParamDialog = () => dispatch => {
+  dispatch(editorDialogActions.close());
+  clearSubDeviceParam(dispatch); // Cleanup
+};
+
+const refresh = (deviceId, subDeviceId, hasDialog = true) => dispatch =>
+  dispatch(
+    getSubDeviceParams(deviceId, subDeviceId, {
+      sortBy: 'createdAt:desc',
+      limit: 10,
+      page: 1,
+    })
+  ).then(() => {
+    if (hasDialog) {
+      dispatch(resetEditorSubDeviceParamDialog());
+    }
+  });
+
 const getSubDeviceParams = (deviceId, subDeviceId, params) => async dispatch => {
   try {
     dispatch(setFetchedSubDeviceParams(true));
@@ -51,7 +68,8 @@ const getSubDeviceParams = (deviceId, subDeviceId, params) => async dispatch => 
     dispatch(storeSubDeviceParamsList(response));
     dispatch(setSubDeviceParamsFetching(false));
   } catch (e) {
-    history.push('/notfound');
+    dispatch(errorActions.setError(e));
+    dispatch(setSubDeviceParamsFetching(false));
   }
 };
 
@@ -64,7 +82,8 @@ const getSubDeviceParam = (deviceId, subDeviceId, paramName) => async dispatch =
     dispatch(setSubDeviceParamProgress(false));
     return response;
   } catch (e) {
-    history.push('/notfound');
+    dispatch(errorActions.setError(e));
+    dispatch(setSubDeviceParamProgress(false));
   }
 };
 
@@ -73,8 +92,10 @@ const addSubDeviceParam = (params, deviceId, subDeviceId) => async dispatch => {
     dispatch(setSubDeviceParamProgress(true));
     await adminSubDeviceParamService.addSubDeviceParam(params, deviceId, subDeviceId);
     dispatch(setSubDeviceParamProgress(false));
+    dispatch(refresh(deviceId, subDeviceId));
   } catch (e) {
-    dispatch(authInterceptor.disconnect());
+    dispatch(errorActions.setError(e));
+    dispatch(setSubDeviceParamProgress(false));
   }
 };
 
@@ -83,8 +104,10 @@ const updateSubDeviceParam = (params, deviceId, subDeviceId, paramName) => async
     dispatch(setSubDeviceParamProgress(true));
     await adminSubDeviceParamService.updateSubDeviceParam(params, deviceId, subDeviceId, paramName);
     dispatch(setSubDeviceParamProgress(false));
+    dispatch(refresh(deviceId, subDeviceId));
   } catch (e) {
-    dispatch(authInterceptor.disconnect());
+    dispatch(errorActions.setError(e));
+    dispatch(setSubDeviceParamProgress(false));
   }
 };
 
@@ -94,8 +117,10 @@ const deleteSubDeviceParam = (deviceId, subDeviceId, paramName) => async dispatc
     await adminSubDeviceParamService.deleteSubDeviceParam(deviceId, subDeviceId, paramName);
     dispatch(removeSubDeviceParam(paramName));
     dispatch(setSubDeviceParamProgress(false));
+    dispatch(refresh(deviceId, subDeviceId, false));
   } catch (e) {
-    dispatch(authInterceptor.disconnect());
+    dispatch(errorActions.setError(e));
+    dispatch(setSubDeviceParamProgress(false));
   }
 };
 
@@ -110,4 +135,6 @@ export const adminSubDeviceParamActions = {
   clearSubDeviceParam,
   setSubDeviceParamToBeDeleted,
   unsetSubDeviceParamToBeDeleted,
+  resetEditorSubDeviceParamDialog,
+  refresh,
 };
