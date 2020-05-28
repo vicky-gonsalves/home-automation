@@ -384,7 +384,7 @@ const ListTable = ({
     () => () => {
       const itemsToBeDeleted = list.filter(item => item.toBeDeleted);
       const itemToBeDeleted = itemsToBeDeleted.length > 0 ? itemsToBeDeleted[0] : null;
-      if (list.length <= 0) {
+      if (list.length <= 0 && !count) {
         return (
           <TableRow>
             <TableCell colSpan={headCells.length} align={'left'} className={classes.alert}>
@@ -420,7 +420,16 @@ const ListTable = ({
         });
       }
     },
-    [cancelDeleteCallback, classes.alert, headCells.length, list, postDeleteCallback, renderDeleteRowCells, renderRowCells]
+    [
+      cancelDeleteCallback,
+      classes.alert,
+      count,
+      headCells.length,
+      list,
+      postDeleteCallback,
+      renderDeleteRowCells,
+      renderRowCells,
+    ]
   );
 
   const renderOverlay = useMemo(
@@ -448,16 +457,18 @@ const ListTable = ({
           </Table>
           {renderOverlay()}
         </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={config.table.rowsPerPageOptions}
-          component="div"
-          count={count}
-          rowsPerPage={limit}
-          page={page}
-          onChangePage={handleChangePage}
-          onChangeRowsPerPage={handleChangeLimit}
-          data-test="tablePaginationComponent"
-        />
+        {count && (
+          <TablePagination
+            rowsPerPageOptions={config.table.rowsPerPageOptions}
+            component="div"
+            count={count}
+            rowsPerPage={limit}
+            page={page}
+            onChangePage={handleChangePage}
+            onChangeRowsPerPage={handleChangeLimit}
+            data-test="tablePaginationComponent"
+          />
+        )}
       </div>
     );
   }, [
@@ -517,7 +528,7 @@ ListTable.propTypes = {
     })
   ).isRequired,
   list: PropTypes.arrayOf(PropTypes.object).isRequired,
-  count: PropTypes.number.isRequired,
+  count: PropTypes.number,
   getList: PropTypes.func.isRequired,
   preDeleteCallback: PropTypes.func,
   postDeleteCallback: PropTypes.func,
