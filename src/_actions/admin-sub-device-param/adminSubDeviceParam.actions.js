@@ -43,7 +43,7 @@ const unsetSubDeviceParamToBeDeleted = paramName => dispatch => {
 };
 
 const resetEditorSubDeviceParamDialog = () => dispatch => {
-  dispatch(editorDialogActions.close());
+  dispatch(editorDialogActions.close('subDeviceParam'));
   clearSubDeviceParam(dispatch); // Cleanup
 };
 

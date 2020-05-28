@@ -6,3 +6,4 @@ export * from './admin-user/adminUser.service';
 export * from './admin-device/adminDevice.service';
 export * from './admin-sub-device/adminSubDevice.service';
 export * from './admin-sub-device-param/adminSubDeviceParam.service';
+export * from './admin-shared-device-access/adminSharedDeviceAccess.service';

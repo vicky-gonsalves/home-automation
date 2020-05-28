@@ -3,17 +3,16 @@ import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import React, { useCallback, useContext, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
-import { adminDeviceActions, editorDialogActions } from '../../_actions';
-import { AdminDeviceContext } from '../../_contexts/admin-device/AdminDeviceContext.provider';
+import { adminSharedDeviceAccessActions, editorDialogActions } from '../../_actions';
+import { AdminSharedDeviceAccessContext } from '../../_contexts/admin-shared-device-access/AdminSharedDeviceAccessContext.provider';
 import AdminUserContextProvider from '../../_contexts/admin-user/AdminUserContext.provider';
 import EditorDialogContextProvider from '../../_contexts/editor-dialog/EditorDialogContext.provider';
 import { UserContext } from '../../_contexts/user/UserContext.provider';
 import AddButton from '../buttons/add-button/addButton';
 import DeleteButton from '../buttons/delete-button/deleteButton';
 import EditButton from '../buttons/edit-button/editButton';
-import ViewButton from '../buttons/view-button/viewButton';
 import EditorDialog from '../dialogs/editor-dialog/editorDialog';
-import DeviceForm from '../forms/device-form/DeviceForm';
+import SharedDeviceAccessForm from '../forms/shared-device-access-form/SharedDeviceAccessForm';
 import ListTable from '../tables/list-table/listTable';
 
 const useStyles = makeStyles(theme => ({
@@ -26,17 +25,20 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const DeviceList = () => {
+const SharedDeviceAccessList = ({ deviceId }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const userContext = useContext(UserContext);
-  const adminDeviceContext = useContext(AdminDeviceContext);
-  const adminDevice = adminDeviceContext.adminDevice;
-  const device = adminDevice.device;
-  const list = adminDevice.devices;
-  const isFetching = adminDevice.isFetchingDevicesList || adminDevice.deviceInProgress || !userContext.connected;
-  const isEdit = useMemo(() => device && device.hasOwnProperty('id'), [device]);
-  const editorDialog = 'device';
+  const adminSharedDeviceAccessContext = useContext(AdminSharedDeviceAccessContext);
+  const sharedDeviceAccesses = adminSharedDeviceAccessContext.adminSharedDeviceAccesses;
+  const sharedDeviceAccess = sharedDeviceAccesses.sharedDeviceAccess;
+  const list = sharedDeviceAccesses.sharedDeviceAccesses;
+  const isFetching =
+    sharedDeviceAccesses.isFetchingSharedDeviceAccessList ||
+    sharedDeviceAccesses.sharedDeviceAccessInProgress ||
+    !userContext.connected;
+  const isEdit = useMemo(() => sharedDeviceAccess && sharedDeviceAccess.hasOwnProperty('id'), [sharedDeviceAccess]);
+  const editorDialog = 'sharedDeviceAccess';
 
   const tableHeaders = [
     {
@@ -45,12 +47,11 @@ const DeviceList = () => {
       label: 'Actions',
       width: 150,
       actions: [
-        { id: 'view', component: ViewButton, path: '/devices/view/', buttonType: 'view' },
         {
           id: 'edit',
           component: EditButton,
-          callback: device => {
-            dispatch(adminDeviceActions.getDevice(device.deviceId)).then(() =>
+          callback: sharedDeviceAccess => {
+            dispatch(adminSharedDeviceAccessActions.getSharedDeviceAccess(sharedDeviceAccess.id)).then(() =>
               dispatch(editorDialogActions.open(editorDialog))
             );
           },
@@ -60,28 +61,9 @@ const DeviceList = () => {
       ],
     },
     { id: 'name', sort: true, search: true, align: 'left', label: 'Name', type: 'text', width: 300 },
-    { id: 'deviceId', sort: true, search: true, align: 'left', label: 'Device Id', type: 'text', width: 300 },
-    { id: 'deviceOwner', sort: true, search: true, align: 'left', label: 'Device Owner', type: 'email', width: 300 },
-    {
-      id: 'type',
-      sort: true,
-      search: true,
-      align: 'left',
-      label: 'Type',
-      type: 'select',
-      options: ['arduino', 'raspberrypi', 'nodeMCU'],
-      width: 250,
-    },
-    {
-      id: 'variant',
-      sort: true,
-      search: true,
-      align: 'left',
-      label: 'Variant',
-      type: 'select',
-      options: ['tank', 'smartSwitch'],
-      width: 250,
-    },
+    { id: 'email', sort: true, search: true, align: 'left', label: 'Email', type: 'text', width: 300 },
+    { id: 'sharedBy', sort: true, search: true, align: 'left', label: 'Shared By', type: 'text', width: 300 },
+
     {
       id: 'isDisabled',
       sort: true,
@@ -97,14 +79,14 @@ const DeviceList = () => {
 
   const buttons = [
     {
-      title: 'Add Device',
-      type: 'device',
+      title: 'Add Shared Device Access',
+      type: 'sharedDeviceAccess',
       component: AddButton,
       callback: () => {
         dispatch(editorDialogActions.open(editorDialog));
       },
       buttonType: 'add',
-      width: 150,
+      width: 270,
     },
   ];
 
@@ -112,45 +94,45 @@ const DeviceList = () => {
     (isLoggedIn, isConnected, sortBy, limit, page, searchFilter) => {
       const fetchList = () => {
         if (isLoggedIn && isConnected) {
-          dispatch(adminDeviceActions.getDevices({ sortBy, limit, page, ...searchFilter }));
+          dispatch(
+            adminSharedDeviceAccessActions.getSharedDeviceAccesses(deviceId, { sortBy, limit, page, ...searchFilter })
+          );
         }
       };
       fetchList();
     },
-    [dispatch]
+    [deviceId, dispatch]
   );
 
   const onEditorDialogExited = useCallback(() => {
-    dispatch(adminDeviceActions.resetEditorDeviceDialog());
+    dispatch(adminSharedDeviceAccessActions.resetEditorSharedDeviceAccessDialog(dispatch));
   }, [dispatch]);
 
-  const addDevice = useCallback(
+  const addSharedDeviceAccess = useCallback(
     values => {
-      let action = adminDeviceActions.addDevice(values);
+      let action = adminSharedDeviceAccessActions.addSharedDeviceAccess(values, deviceId);
       if (isEdit) {
-        action = adminDeviceActions.updateDevice(values, device.deviceId);
+        action = adminSharedDeviceAccessActions.updateSharedDeviceAccess(values, deviceId, sharedDeviceAccess.id);
       }
       dispatch(action);
     },
-    [isEdit, dispatch, device.deviceId]
+    [deviceId, isEdit, dispatch, sharedDeviceAccess.id]
   );
 
-  const deleteDevice = useCallback(
-    deviceId => {
-      dispatch(adminDeviceActions.deleteDevice(deviceId)).then(() =>
-        dispatch(adminDeviceActions.getDevices({ sortBy: 'createdAt:desc', limit: 10, page: 1 }))
-      );
+  const deleteSharedDeviceAccess = useCallback(
+    id => {
+      dispatch(adminSharedDeviceAccessActions.deleteSharedDeviceAccess(deviceId, id));
     },
-    [dispatch]
+    [deviceId, dispatch]
   );
 
   const renderList = useMemo(() => {
     return (
       <ListTable
-        type="device"
-        title="Devices"
+        type="shared device access"
+        title="Shared Device Access"
         tableHeaders={tableHeaders}
-        count={adminDevice.count}
+        count={sharedDeviceAccesses.count}
         list={list}
         getList={getList}
         isLoggedIn={userContext.isLoggedIn}
@@ -159,16 +141,16 @@ const DeviceList = () => {
         buttons={buttons}
         initialSort={{ order: 'desc', orderBy: 'createdAt' }}
         data-test="listTableComponent"
-        preDeleteCallback={adminDeviceActions.setDeviceToBeDeleted}
-        postDeleteCallback={deleteDevice}
-        cancelDeleteCallback={adminDeviceActions.unsetDeviceToBeDeleted}
-        useKey={'deviceId'}
+        preDeleteCallback={adminSharedDeviceAccessActions.setSharedDeviceAccessToBeDeleted}
+        postDeleteCallback={deleteSharedDeviceAccess}
+        cancelDeleteCallback={adminSharedDeviceAccessActions.unsetSharedDeviceAccessToBeDeleted}
+        useKey={'id'}
       />
     );
   }, [
-    adminDevice.count,
+    sharedDeviceAccesses.count,
     buttons,
-    deleteDevice,
+    deleteSharedDeviceAccess,
     getList,
     isFetching,
     list,
@@ -188,13 +170,13 @@ const DeviceList = () => {
         <EditorDialogContextProvider>
           <EditorDialog
             name={editorDialog}
-            Component={DeviceForm}
-            title={isEdit ? 'Edit Device' : 'Add New Device'}
+            Component={SharedDeviceAccessForm}
+            title={isEdit ? 'Edit Shared Device Access' : 'Add Shared Device Access'}
             isEdit={isEdit}
             isFetching={isFetching}
-            handleSubmit={addDevice}
+            handleSubmit={addSharedDeviceAccess}
             submitButtonTitle={isEdit ? 'Save' : 'Add'}
-            params={{ ...device }}
+            params={{ ...sharedDeviceAccess }}
             data-test="editorDialogComponent"
             onExited={onEditorDialogExited}
           />
@@ -204,11 +186,12 @@ const DeviceList = () => {
   );
 };
 
-DeviceList.propTypes = {
+SharedDeviceAccessList.propTypes = {
   classes: PropTypes.shape({
     root: PropTypes.string.isRequired,
     paper: PropTypes.string.isRequired,
   }),
+  deviceId: PropTypes.string.isRequired,
 };
 
-export default DeviceList;
+export default SharedDeviceAccessList;

@@ -43,7 +43,7 @@ const unsetSubDeviceToBeDeleted = id => dispatch => {
 };
 
 const resetEditorSubDeviceDialog = () => dispatch => {
-  dispatch(editorDialogActions.close());
+  dispatch(editorDialogActions.close('subDevice'));
   clearSubDevice(dispatch); // Cleanup
 };
 

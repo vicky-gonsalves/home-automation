@@ -43,7 +43,7 @@ const unsetUserToBeDeleted = id => dispatch => {
 };
 
 const resetEditUserDialog = () => dispatch => {
-  dispatch(editorDialogActions.close());
+  dispatch(editorDialogActions.close('user'));
   adminUserActions.clearUser(dispatch); // Cleanup
 };
 

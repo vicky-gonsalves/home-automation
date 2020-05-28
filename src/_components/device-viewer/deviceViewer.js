@@ -11,9 +11,11 @@ import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router';
 import { adminDeviceActions } from '../../_actions';
 import { AdminDeviceContext } from '../../_contexts/admin-device/AdminDeviceContext.provider';
+import AdminSharedDeviceAccessContextProvider from '../../_contexts/admin-shared-device-access/AdminSharedDeviceAccessContext.provider';
 import AdminSubDeviceContextProvider from '../../_contexts/admin-sub-device/AdminSubDeviceContext.provider';
 import EditorSkeleton from '../editor-skeleton/EditorSkeleton';
 import PageToolbar from '../page-toolbar/PageToolbar';
+import SharedDeviceAccessList from '../shared-device-access-list/sharedDeviceAccessList';
 import SubDeviceList from '../sub-device-list/subDeviceList';
 
 const useStyles = makeStyles(theme => ({
@@ -167,6 +169,9 @@ const DeviceViewer = () => {
                 <AdminSubDeviceContextProvider>
                   <SubDeviceList deviceId={deviceId} variant={adminDevice.device.variant} />
                 </AdminSubDeviceContextProvider>
+                <AdminSharedDeviceAccessContextProvider>
+                  <SharedDeviceAccessList deviceId={deviceId} />
+                </AdminSharedDeviceAccessContextProvider>
               </React.Fragment>
             )}
           </Paper>

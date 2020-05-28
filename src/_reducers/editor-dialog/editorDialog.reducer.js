@@ -1,7 +1,7 @@
 import { editorDialogConstants } from '../../_constants';
 
 const initialState = {
-  open: false,
+  open: [],
 };
 
 const editorDialog = (state = initialState, action) => {
@@ -9,13 +9,13 @@ const editorDialog = (state = initialState, action) => {
     case editorDialogConstants.OPEN_EDITOR:
       return {
         ...state,
-        open: true,
+        open: [...state.open, action.payload],
       };
 
     case editorDialogConstants.CLOSE_EDITOR:
       return {
         ...state,
-        open: false,
+        open: state.open.filter(name => name !== action.payload),
       };
 
     default:

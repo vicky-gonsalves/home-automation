@@ -43,7 +43,7 @@ const unsetDeviceToBeDeleted = id => dispatch => {
 };
 
 const resetEditorDeviceDialog = () => dispatch => {
-  dispatch(editorDialogActions.close());
+  dispatch(editorDialogActions.close('device'));
   adminDeviceActions.clearDevice(dispatch); // Cleanup
 };
 

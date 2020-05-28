@@ -16,3 +16,4 @@ export * from './admin-sub-device/adminSubDevice.actions';
 export * from './editor-dialog/editorDialog.actions';
 export * from './admin-sub-device-param/adminSubDeviceParam.actions';
 export * from './error/error.actions';
+export * from './admin-shared-device-access/adminSharedDeviceAccess.actions';

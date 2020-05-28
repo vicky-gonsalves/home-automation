@@ -37,6 +37,7 @@ const SubDeviceParamList = ({ deviceId, subDeviceId }) => {
     adminSubDeviceParam.subDeviceParamInProgress ||
     !userContext.connected;
   const isEdit = useMemo(() => subDeviceParam && subDeviceParam.hasOwnProperty('id'), [subDeviceParam]);
+  const editorDialog = 'subDeviceParam';
 
   const tableHeaders = [
     {
@@ -51,7 +52,7 @@ const SubDeviceParamList = ({ deviceId, subDeviceId }) => {
           callback: subDeviceParam => {
             dispatch(
               adminSubDeviceParamActions.getSubDeviceParam(deviceId, subDeviceId, subDeviceParam.paramName)
-            ).then(() => dispatch(editorDialogActions.open()));
+            ).then(() => dispatch(editorDialogActions.open(editorDialog)));
           },
           buttonType: 'edit',
         },
@@ -79,7 +80,7 @@ const SubDeviceParamList = ({ deviceId, subDeviceId }) => {
       type: 'subDeviceParam',
       component: AddButton,
       callback: () => {
-        dispatch(editorDialogActions.open());
+        dispatch(editorDialogActions.open(editorDialog));
       },
       buttonType: 'add',
       width: 250,
@@ -164,6 +165,7 @@ const SubDeviceParamList = ({ deviceId, subDeviceId }) => {
       </div>
       <EditorDialogContextProvider>
         <EditorDialog
+          name={editorDialog}
           Component={SubDeviceParamForm}
           title={isEdit ? 'Edit Sub-device-param' : 'Add New Sub-device-param'}
           isEdit={isEdit}

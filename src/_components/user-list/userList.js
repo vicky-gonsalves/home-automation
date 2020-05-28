@@ -35,6 +35,7 @@ const UserList = () => {
   const list = adminUser.users;
   const isFetching = adminUser.isFetchingUsersList || adminUser.userInProgress || !userContext.connected;
   const isEdit = useMemo(() => user && user.hasOwnProperty('id'), [user]);
+  const editorDialog = 'user';
 
   const tableHeaders = [
     {
@@ -48,7 +49,7 @@ const UserList = () => {
           id: 'edit',
           component: EditButton,
           callback: user => {
-            dispatch(adminUserActions.getUser(user.id)).then(() => dispatch(editorDialogActions.open()));
+            dispatch(adminUserActions.getUser(user.id)).then(() => dispatch(editorDialogActions.open(editorDialog)));
           },
           buttonType: 'edit',
         },
@@ -86,7 +87,7 @@ const UserList = () => {
       type: 'user',
       component: AddButton,
       callback: () => {
-        dispatch(editorDialogActions.open());
+        dispatch(editorDialogActions.open(editorDialog));
       },
       buttonType: 'add',
     },
@@ -170,6 +171,7 @@ const UserList = () => {
       </div>
       <EditorDialogContextProvider>
         <EditorDialog
+          name={editorDialog}
           Component={UserForm}
           title={isEdit ? 'Edit User' : 'Add New User'}
           isEdit={isEdit}

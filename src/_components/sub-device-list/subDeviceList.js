@@ -35,6 +35,7 @@ const SubDeviceList = ({ deviceId, variant }) => {
   const list = adminSubDevice.subDevices;
   const isFetching = adminSubDevice.isFetchingSubDevicesList || adminSubDevice.subDeviceInProgress || !userContext.connected;
   const isEdit = useMemo(() => subDevice && subDevice.hasOwnProperty('id'), [subDevice]);
+  const editorDialog = 'subDevice';
 
   const tableHeaders = [
     {
@@ -54,7 +55,7 @@ const SubDeviceList = ({ deviceId, variant }) => {
           component: EditButton,
           callback: subDevice => {
             dispatch(adminSubDeviceActions.getSubDevice(subDevice.deviceId, subDevice.subDeviceId)).then(() =>
-              dispatch(editorDialogActions.open())
+              dispatch(editorDialogActions.open(editorDialog))
             );
           },
           buttonType: 'edit',
@@ -93,7 +94,7 @@ const SubDeviceList = ({ deviceId, variant }) => {
       type: 'subDevice',
       component: AddButton,
       callback: () => {
-        dispatch(editorDialogActions.open());
+        dispatch(editorDialogActions.open(editorDialog));
       },
       buttonType: 'add',
       width: 180,
@@ -176,6 +177,7 @@ const SubDeviceList = ({ deviceId, variant }) => {
       </div>
       <EditorDialogContextProvider>
         <EditorDialog
+          name={editorDialog}
           Component={SubDeviceForm}
           title={isEdit ? 'Edit Sub-Device' : 'Add New Sub-Device'}
           isEdit={isEdit}

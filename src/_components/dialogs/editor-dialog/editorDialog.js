@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import React, { useContext } from 'react';
 import { EditorDialogContext } from '../../../_contexts/editor-dialog/EditorDialogContext.provider';
 
-const EditorDialog = ({ Component, title, isEdit, handleSubmit, isFetching, submitButtonTitle, params, onExited }) => {
+const EditorDialog = ({ name, Component, title, isEdit, handleSubmit, isFetching, submitButtonTitle, params, onExited }) => {
   const editorDialogContext = useContext(EditorDialogContext);
   const editorDialog = editorDialogContext.editorDialog;
 
@@ -43,7 +43,7 @@ const EditorDialog = ({ Component, title, isEdit, handleSubmit, isFetching, subm
           disableBackdropClick={true}
           disableEscapeKeyDown={true}
           fullWidth={true}
-          open={editorDialog.open}
+          open={editorDialog.open.indexOf(name) > -1}
           aria-labelledby={editorDialog.title}
           data-test="editorDialogComponent"
         >
@@ -58,6 +58,7 @@ const EditorDialog = ({ Component, title, isEdit, handleSubmit, isFetching, subm
 };
 
 EditorDialog.propTypes = {
+  name: PropTypes.string.isRequired,
   Component: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
   isEdit: PropTypes.bool.isRequired,

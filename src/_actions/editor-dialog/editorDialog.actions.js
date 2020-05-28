@@ -1,8 +1,8 @@
 import { editorDialogConstants } from '../../_constants';
 
-const open = () => dispatch => dispatch({ type: editorDialogConstants.OPEN_EDITOR });
+const open = name => dispatch => dispatch({ type: editorDialogConstants.OPEN_EDITOR, payload: name });
 
-const close = () => dispatch => dispatch({ type: editorDialogConstants.CLOSE_EDITOR });
+const close = name => dispatch => dispatch({ type: editorDialogConstants.CLOSE_EDITOR, payload: name });
 
 export const editorDialogActions = {
   open,
