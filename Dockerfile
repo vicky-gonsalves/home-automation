@@ -1,5 +1,6 @@
 FROM node:12.15-alpine
-FROM python:2.7
+
+RUN apk add g++ make python
 
 RUN mkdir -p /usr/src/home-automation
 
