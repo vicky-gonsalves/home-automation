@@ -6,7 +6,7 @@ WORKDIR /usr/src/home-automation
 
 COPY package.json yarn.lock ./
 
-RUN yarn install --pure-lockfile
+RUN yarn install --pure-lockfile --network-timeout 1000000
 
 COPY . .
 
