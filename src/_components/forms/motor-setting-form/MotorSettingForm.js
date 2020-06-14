@@ -134,68 +134,68 @@ export const SimpleMotorSettingForm = props => {
   };
 
   const renderForm = () => {
-    if (values.preferredSubDevice !== '' && values.autoShutDownTime !== '' && values.waterLevelToStart) {
-      return (
-        <form className={classes.form} onSubmit={handleSubmit} noValidate data-test="motorSettingFormComponent">
-          {renderPreferredSubDevice()}
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            id="autoShutDownTime"
-            label="Auto Shut Down Time"
-            type="number"
-            name="autoShutDownTime"
-            onChange={handleChange}
-            onBlur={handleBlur}
+    // if (values.preferredSubDevice !== '' && values.autoShutDownTime !== '' && values.waterLevelToStart) {
+    return (
+      <form className={classes.form} onSubmit={handleSubmit} noValidate data-test="motorSettingFormComponent">
+        {renderPreferredSubDevice()}
+        <TextField
+          variant="outlined"
+          margin="normal"
+          required
+          fullWidth
+          id="autoShutDownTime"
+          label="Auto Shut Down Time"
+          type="number"
+          name="autoShutDownTime"
+          onChange={handleChange}
+          onBlur={handleBlur}
+          disabled={isFetching}
+          error={errors && errors.autoShutDownTime && touched.autoShutDownTime}
+          helperText={errors && errors.autoShutDownTime && touched && touched.autoShutDownTime && errors.autoShutDownTime}
+          data-test="motorAutoShutDownTimeInput"
+          value={values.autoShutDownTime}
+        />
+        <TextField
+          variant="outlined"
+          margin="normal"
+          required
+          fullWidth
+          name="waterLevelToStart"
+          label="Water Level in Percentage for Auto Start"
+          type="number"
+          id="waterLevelToStart"
+          onChange={handleChange}
+          onBlur={handleBlur}
+          disabled={isFetching}
+          error={errors && errors.waterLevelToStart && touched.waterLevelToStart}
+          helperText={errors && touched && touched.waterLevelToStart && errors.waterLevelToStart}
+          data-test="motorWaterLevelToStartInput"
+          value={values.waterLevelToStart}
+        />
+        <div className={classes.dialogAction}>
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            className={classes.submit}
             disabled={isFetching}
-            error={errors && errors.autoShutDownTime && touched.autoShutDownTime}
-            helperText={errors && errors.autoShutDownTime && touched && touched.autoShutDownTime && errors.autoShutDownTime}
-            data-test="motorAutoShutDownTimeInput"
-            value={values.autoShutDownTime}
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            name="waterLevelToStart"
-            label="Water Level in Percentage for Auto Start"
-            type="number"
-            id="waterLevelToStart"
-            onChange={handleChange}
-            onBlur={handleBlur}
+            data-test="motorSettingSubmitButton"
+          >
+            Save Settings
+          </Button>
+          <Button
+            type="button"
+            className={classes.submit}
             disabled={isFetching}
-            error={errors && errors.waterLevelToStart && touched.waterLevelToStart}
-            helperText={errors && touched && touched.waterLevelToStart && errors.waterLevelToStart}
-            data-test="motorWaterLevelToStartInput"
-            value={values.waterLevelToStart}
-          />
-          <div className={classes.dialogAction}>
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              className={classes.submit}
-              disabled={isFetching}
-              data-test="motorSettingSubmitButton"
-            >
-              Save Settings
-            </Button>
-            <Button
-              type="button"
-              className={classes.submit}
-              disabled={isFetching}
-              onClick={handleClose}
-              data-test="motorSettingCancelButton"
-            >
-              Cancel
-            </Button>
-          </div>
-        </form>
-      );
-    }
+            onClick={handleClose}
+            data-test="motorSettingCancelButton"
+          >
+            Cancel
+          </Button>
+        </div>
+      </form>
+    );
+    // }
   };
 
   return (
