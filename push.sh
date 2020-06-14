@@ -31,15 +31,23 @@ upload_files() {
 }
 
 cleanup() {
-  echo "cleaning up"
-  cd ..
-  rm -R build
-  rm -R home-automation
+  echo "finished"
 }
 
+# Deploy only if it's not a pull request
+if [ -z "$TRAVIS_PULL_REQUEST" ] || [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
+# Deploy only if we're testing the master branch
+if [ "$TRAVIS_BRANCH" == "master" ] || [ "$TRAVIS_BRANCH" == "development" ]; then
+echo "Deploying $TRAVIS_BRANCH"
 setup_git
 clone_repo
 move_build
 commit_website_files
 upload_files
 cleanup
+else
+echo "Skipping deploy because it's not an allowed branch"
+fi
+else
+echo "Skipping deploy because it's a PR"
+fi
