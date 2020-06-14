@@ -7,7 +7,7 @@ setup_git() {
 
 clone_repo(){
   cd ..
-  git clone https://github.com/vicky-gonsalves/build.git
+  git clone https://$GIT_PERSONAL_ACCESS_TOKEN:x-oauth-basic@github.com/vicky-gonsalves/build.git
 }
 
 move_build(){
