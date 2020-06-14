@@ -6,6 +6,7 @@ setup_git() {
 }
 
 clone_repo(){
+  cd ..
   git clone https://github.com/vicky-gonsalves/build.git
 }
 
