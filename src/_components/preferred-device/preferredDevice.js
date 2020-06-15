@@ -9,6 +9,7 @@ const useStyles = makeStyles(theme => ({
   typo: {
     display: 'flex',
     flexDirection: 'row',
+    marginBottom: theme.spacing(2),
   },
   icon: {
     marginTop: theme.spacing(-0.2),

@@ -1,4 +1,6 @@
+import FormLabel from '@material-ui/core/FormLabel';
 import Grid from '@material-ui/core/Grid';
+import { makeStyles } from '@material-ui/core/styles';
 import Switch from '@material-ui/core/Switch';
 import Typography from '@material-ui/core/Typography';
 import Alert from '@material-ui/lab/Alert';
@@ -8,8 +10,15 @@ import { useDispatch } from 'react-redux';
 import { subDeviceParamActions } from '../../../_actions';
 import { SubDeviceParamsContext } from '../../../_contexts/sub-device-param/SubDeviceParamContext.provider';
 
+const useStyles = makeStyles(theme => ({
+  label: {
+    marginBottom: theme.spacing(0),
+  },
+}));
+
 const MotorSwitch = props => {
   let thisSubDeviceParams;
+  const classes = useStyles();
   const dispatch = useDispatch();
   const subDeviceParamsContext = useContext(SubDeviceParamsContext);
   const subDeviceParams = subDeviceParamsContext.subDeviceParams;
@@ -38,9 +47,12 @@ const MotorSwitch = props => {
         </Alert>
       )}
       {thisSubDeviceParams && thisSubDeviceParams.length > 0 && (
-        <Grid component="label" container alignItems="center" spacing={1} data-test="motorSwitchContainer">
+        <Grid container alignItems="center" data-test="motorSwitchContainer">
+          <Grid item xs={12} className={classes.label}>
+            <FormLabel>{props.name}</FormLabel>
+          </Grid>
           <Grid item data-test="motorSwitchOffLabelItemComponent">
-            {props.name} OFF
+            OFF
           </Grid>
           <Grid item>
             <Switch
@@ -52,7 +64,7 @@ const MotorSwitch = props => {
             />
           </Grid>
           <Grid item data-test="motorSwitchOnLabelItemComponent">
-            {props.name} ON
+            ON
           </Grid>
         </Grid>
       )}

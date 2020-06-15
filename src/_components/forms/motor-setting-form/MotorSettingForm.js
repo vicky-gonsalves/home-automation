@@ -42,6 +42,7 @@ const getDeviceSettings = (deviceSettings, deviceId) => {
     preferredSubDevice: null,
     autoShutDownTime: null,
     waterLevelToStart: null,
+    waterLevelToStop: null,
   };
   if (deviceSettings && deviceSettings.length) {
     deviceSettings.forEach(setting => {
@@ -53,6 +54,8 @@ const getDeviceSettings = (deviceSettings, deviceId) => {
           ALL_SETTINGS.autoShutDownTime = setting;
         } else if (paramName === 'waterLevelToStart') {
           ALL_SETTINGS.waterLevelToStart = setting;
+        } else if (paramName === 'waterLevelToStop') {
+          ALL_SETTINGS.waterLevelToStop = setting;
         }
       }
     });
@@ -88,7 +91,12 @@ export const SimpleMotorSettingForm = props => {
   };
 
   const renderMotorSettingAlert = () => {
-    if (values.preferredSubDevice === '' && values.autoShutDownTime === '' && values.waterLevelToStart === '') {
+    if (
+      values.preferredSubDevice === '' &&
+      values.autoShutDownTime === '' &&
+      values.waterLevelToStart === '' &&
+      values.waterLevelToStop === ''
+    ) {
       return (
         <Alert className={classes.extraMargin} severity="info" data-test="motorSettingAlert">
           It seems there are no settings available for this device.
@@ -172,6 +180,23 @@ export const SimpleMotorSettingForm = props => {
           data-test="motorWaterLevelToStartInput"
           value={values.waterLevelToStart}
         />
+        <TextField
+          variant="outlined"
+          margin="normal"
+          required
+          fullWidth
+          name="waterLevelToStop"
+          label="Water Level in Percentage for Auto Stop"
+          type="number"
+          id="waterLevelToStop"
+          onChange={handleChange}
+          onBlur={handleBlur}
+          disabled={isFetching}
+          error={errors && errors.waterLevelToStop && touched.waterLevelToStop}
+          helperText={errors && touched && touched.waterLevelToStop && errors.waterLevelToStop}
+          data-test="motorWaterLevelToStopInput"
+          value={values.waterLevelToStop}
+        />
         <div className={classes.dialogAction}>
           <Button
             type="submit"
@@ -211,6 +236,7 @@ export const MotorSettingForm = withFormik({
     preferredSubDevice: getSettingValue(deviceSettings, deviceId, 'preferredSubDevice'),
     autoShutDownTime: getSettingValue(deviceSettings, deviceId, 'autoShutDownTime'),
     waterLevelToStart: getSettingValue(deviceSettings, deviceId, 'waterLevelToStart'),
+    waterLevelToStop: getSettingValue(deviceSettings, deviceId, 'waterLevelToStop'),
   }),
   validationSchema: yup.object().shape({
     preferredSubDevice: yup.string().required('Please select preferred device'),
@@ -218,18 +244,28 @@ export const MotorSettingForm = withFormik({
       .number()
       .min(0, 'Auto shutdown time cannot be negative')
       .typeError('Please enter auto shutdown time in minutes (minutes must be a number)')
-      .required('Please enter auto shutdown time. `0` indicates no auto shutdown.'),
+      .required(
+        'Please enter auto shutdown time. `0` indicates no auto shutdown but it will respect water level to stop value.'
+      ),
     waterLevelToStart: yup
       .number()
       .min(0, 'Water level value cannot be negative')
       .typeError('Please enter water level value in number format')
       .required('Please enter water level value in percentage to start the motor automatically'),
+    waterLevelToStop: yup
+      .number()
+      .min(0, 'Water level value cannot be negative')
+      .typeError('Please enter water level value in number format')
+      .required(
+        'Please enter water level value in percentage to stop the motor automatically. `0` indicates no auto shutdown even though tank overflows.'
+      ),
   }),
   handleSubmit: (values, { props: { deviceId, deviceSettings, saveSettings } }) => {
     const allSettings = getDeviceSettings(deviceSettings, deviceId);
     allSettings.preferredSubDevice.paramValue = values.preferredSubDevice;
     allSettings.autoShutDownTime.paramValue = values.autoShutDownTime;
     allSettings.waterLevelToStart.paramValue = values.waterLevelToStart;
+    allSettings.waterLevelToStop.paramValue = values.waterLevelToStop;
     saveSettings(allSettings);
   },
   displayName: 'motorSettingForm',
