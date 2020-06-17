@@ -43,6 +43,7 @@ const getDeviceSettings = (deviceSettings, deviceId) => {
     autoShutDownTime: null,
     waterLevelToStart: null,
     waterLevelToStop: null,
+    coolDownTime: null,
   };
   if (deviceSettings && deviceSettings.length) {
     deviceSettings.forEach(setting => {
@@ -56,6 +57,8 @@ const getDeviceSettings = (deviceSettings, deviceId) => {
           ALL_SETTINGS.waterLevelToStart = setting;
         } else if (paramName === 'waterLevelToStop') {
           ALL_SETTINGS.waterLevelToStop = setting;
+        } else if (paramName === 'coolDownTime') {
+          ALL_SETTINGS.coolDownTime = setting;
         }
       }
     });
@@ -197,6 +200,23 @@ export const SimpleMotorSettingForm = props => {
           data-test="motorWaterLevelToStopInput"
           value={values.waterLevelToStop}
         />
+        <TextField
+          variant="outlined"
+          margin="normal"
+          required
+          fullWidth
+          name="coolDownTime"
+          label="Cool Down time in seconds after motor turns off automatically"
+          type="number"
+          id="coolDownTime"
+          onChange={handleChange}
+          onBlur={handleBlur}
+          disabled={isFetching}
+          error={errors && errors.coolDownTime && touched.coolDownTime}
+          helperText={errors && touched && touched.coolDownTime && errors.coolDownTime}
+          data-test="coolDownTimeInput"
+          value={values.coolDownTime}
+        />
         <div className={classes.dialogAction}>
           <Button
             type="submit"
@@ -237,6 +257,7 @@ export const MotorSettingForm = withFormik({
     autoShutDownTime: getSettingValue(deviceSettings, deviceId, 'autoShutDownTime'),
     waterLevelToStart: getSettingValue(deviceSettings, deviceId, 'waterLevelToStart'),
     waterLevelToStop: getSettingValue(deviceSettings, deviceId, 'waterLevelToStop'),
+    coolDownTime: getSettingValue(deviceSettings, deviceId, 'coolDownTime'),
   }),
   validationSchema: yup.object().shape({
     preferredSubDevice: yup.string().required('Please select preferred device'),
@@ -259,6 +280,11 @@ export const MotorSettingForm = withFormik({
       .required(
         'Please enter water level value in percentage to stop the motor automatically. `0` indicates no auto shutdown even though tank overflows.'
       ),
+    coolDownTime: yup
+      .number()
+      .min(10, 'Min Cool down value has to be 10')
+      .typeError('Please enter cool down value in number format')
+      .required('Please enter cool down value in seconds to start the motor automatically.'),
   }),
   handleSubmit: (values, { props: { deviceId, deviceSettings, saveSettings } }) => {
     const allSettings = getDeviceSettings(deviceSettings, deviceId);
@@ -266,6 +292,7 @@ export const MotorSettingForm = withFormik({
     allSettings.autoShutDownTime.paramValue = values.autoShutDownTime;
     allSettings.waterLevelToStart.paramValue = values.waterLevelToStart;
     allSettings.waterLevelToStop.paramValue = values.waterLevelToStop;
+    allSettings.coolDownTime.paramValue = values.coolDownTime;
     saveSettings(allSettings);
   },
   displayName: 'motorSettingForm',
