@@ -29,9 +29,17 @@ const saveDeviceSettings = settings => async dispatch => {
   const preferredSubDevice = pickFilteredParams(settings.preferredSubDevice);
   const autoShutDownTime = pickFilteredParams(settings.autoShutDownTime);
   const waterLevelToStart = pickFilteredParams(settings.waterLevelToStart);
+  const waterLevelToStop = pickFilteredParams(settings.waterLevelToStop);
+  const coolDownTime = pickFilteredParams(settings.coolDownTime);
   try {
     dispatch(setProgress(true));
-    await settingService.updateSettings([preferredSubDevice, autoShutDownTime, waterLevelToStart]);
+    await settingService.updateSettings([
+      preferredSubDevice,
+      autoShutDownTime,
+      waterLevelToStart,
+      waterLevelToStop,
+      coolDownTime,
+    ]);
     dispatch(setProgress(false));
     dispatch(settingDialogActions.close());
   } catch (error) {

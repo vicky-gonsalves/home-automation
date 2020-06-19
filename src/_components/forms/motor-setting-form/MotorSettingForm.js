@@ -270,16 +270,21 @@ export const MotorSettingForm = withFormik({
       ),
     waterLevelToStart: yup
       .number()
-      .min(0, 'Water level value cannot be negative')
-      .typeError('Please enter water level value in number format')
-      .required('Please enter water level value in percentage to start the motor automatically'),
+      .min(0, 'Water level to start value cannot be negative')
+      .typeError('Please enter Water level to start value in number format')
+      .required('Please enter Water level to start value in percentage to start the motor automatically'),
     waterLevelToStop: yup
       .number()
-      .min(0, 'Water level value cannot be negative')
-      .typeError('Please enter water level value in number format')
+      .typeError('Please enter Water level to stop value in number format')
       .required(
-        'Please enter water level value in percentage to stop the motor automatically. `0` indicates no auto shutdown even though tank overflows.'
-      ),
+        'Please enter Water level to stop value in percentage to stop the motor automatically. `0` indicates no auto shutdown even though tank overflows.'
+      )
+      .when('waterLevelToStart', (waterLevelToStart, schema) => {
+        return schema.test({
+          test: waterLevelToStop => waterLevelToStop > waterLevelToStart || waterLevelToStop === 0,
+          message: 'Water level to stop value must be greater than water level to start value',
+        });
+      }),
     coolDownTime: yup
       .number()
       .min(10, 'Min Cool down value has to be 10')
