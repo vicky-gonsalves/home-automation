@@ -156,7 +156,7 @@ const TankCard = ({ deviceId, deviceName }) => {
         className={classes.update}
         data-test="tankUpdateContainer"
       >
-        {`Updated ${lastUpdated}`}
+        {`Updated ${lastUpdated === 'in a few seconds' ? 'just now' : lastUpdated}`}
       </Typography>
     );
   };
