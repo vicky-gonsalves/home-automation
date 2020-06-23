@@ -10,6 +10,7 @@ import CountDownTimer from '../../count-down-timer/CountDownTimer';
 
 const TankAlert = props => {
   let autoShutDownTime;
+  let coolDownTime;
   const socketIdContext = useContext(SocketIdContext);
   const subDevicesContext = useContext(SubDeviceContext);
   const deviceSettingContext = useContext(DeviceSettingContext);
@@ -21,6 +22,9 @@ const TankAlert = props => {
   const thisDeviceParams = subDeviceParams.filter(
     param => param.deviceId === props.deviceId && param.paramName === 'status' && param.paramValue === 'on'
   );
+  const thisDeviceCooldownParams = subDeviceParams.filter(
+    param => param.deviceId === props.deviceId && param.paramName === 'condition' && param.paramValue === 'hot'
+  );
   autoShutDownTime = deviceSettings.filter(setting => {
     const { paramValue, idType, paramName, bindedTo, type } = setting;
     return (
@@ -31,8 +35,19 @@ const TankAlert = props => {
       idType === 'deviceId'
     );
   })[0];
+  coolDownTime = deviceSettings.filter(setting => {
+    const { paramValue, idType, paramName, bindedTo, type } = setting;
+    return (
+      bindedTo === props.deviceId &&
+      paramName === 'coolDownTime' &&
+      paramValue > 0 &&
+      type === 'device' &&
+      idType === 'deviceId'
+    );
+  })[0];
 
   const getEndTime = startTime => moment(startTime).add(autoShutDownTime.paramValue, 'minutes');
+  const getCoolDownEndTime = startTime => moment(startTime).add(coolDownTime.paramValue, 'minutes');
 
   const thisOnlineDevice = onlineDevices.filter(
     onlineDevice => onlineDevice && onlineDevice.bindedTo && onlineDevice.bindedTo === props.deviceId
@@ -57,6 +72,20 @@ const TankAlert = props => {
     }
   };
 
+  const renderCoolDownTimer = param => {
+    const subDeviceName = getSubDeviceName(param);
+    if (thisOnlineDevice && subDeviceName) {
+      return (
+        <Typography component="div" color="primary" variant="body2" data-test="coolDownAlertComponent">
+          {subDeviceName} cut-off will be released in &nbsp;
+          <strong>
+            <CountDownTimer endTime={getCoolDownEndTime(param.updatedAt)} />
+          </strong>
+        </Typography>
+      );
+    }
+  };
+
   const renderAlert = () => {
     return (
       autoShutDownTime &&
@@ -65,7 +94,20 @@ const TankAlert = props => {
     );
   };
 
-  return <div data-test="alertContainer">{renderAlert()}</div>;
+  const renderCoolDownAlert = () => {
+    return (
+      coolDownTime &&
+      coolDownTime.paramValue &&
+      thisDeviceCooldownParams.map(param => <div key={param.id}>{renderCoolDownTimer(param)}</div>)
+    );
+  };
+
+  return (
+    <div data-test="alertContainer">
+      <div>{renderAlert()}</div>
+      <div>{renderCoolDownAlert()}</div>
+    </div>
+  );
 };
 
 TankAlert.propTypes = {
