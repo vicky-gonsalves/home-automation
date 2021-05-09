@@ -151,7 +151,7 @@ describe('CountDownTimer', () => {
       });
       expect(setInterval).toHaveBeenLastCalledWith(expect.any(Function), 1000);
       expect(component.text()).toMatch(
-        /^(in 98 years, 11 months, 28 days, 23 hours, 59 minutes, 59 seconds)|(in 99 years)$/
+        /^(in 98 years, 11 months, 29 days, 23 hours, 59 minutes, 59 seconds)|(in 99 years)$/
       );
     });
   });
