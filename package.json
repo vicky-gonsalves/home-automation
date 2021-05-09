@@ -85,6 +85,7 @@
     ]
   },
   "devDependencies": {
+    "@babel/helper-builder-react-jsx-experimental": "^7.12.11",
     "@babel/helper-compilation-targets": "^7.8.7",
     "check-prop-types": "^1.1.2",
     "coveralls": "^3.0.11",
@@ -95,7 +96,7 @@
     "eslint-config-prettier": "^6.10.1",
     "eslint-plugin-import": "^2.20.1",
     "eslint-plugin-jest": "^23.8.2",
-    "eslint-plugin-prettier": "^3.1.2",
+    "eslint-plugin-prettier": "^3.4.0",
     "eslint-plugin-security": "^1.4.0",
     "faker": "^4.1.0",
     "husky": "^4.2.3",
