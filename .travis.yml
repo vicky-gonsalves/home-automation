@@ -1,8 +1,8 @@
 language: node_js
 node_js:
   - '14.16.0'
-services:
-  - docker
+#services:
+#  - docker
 branches:
   only:
     - master
@@ -11,11 +11,11 @@ branches:
 cache:
   directories:
     - node_modules
-  yarn: true
+  yarn: false
 script:
   - yarn lint
   - yarn build
   - yarn coverage:coveralls
-after_success:
-  - bash deploy.sh
-  - bash ecs_deploy.sh
+#after_success:
+#  - bash deploy.sh
+#  - bash ecs_deploy.sh
